@@ -1,0 +1,35 @@
+\section{CRun\-Thick Class Reference}
+\label{classCRunThick}\index{CRunThick@{CRunThick}}
+example of fusion with root histograms  
+
+
+{\tt \#include $<$CRun\-Thick.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+\bf{CRun\-Thick} (int i\-Z, int i\-A, float f\-Ex\_\-min, float f\-Ex\_\-max, float l0\_\-min, float l0\_\-Max, float d0, int lmax, float plb, int n\-Bins, int num\-Tot, string title0, float vcm=0., float theta\-Det\-Min=0., float theta\-Det\-Max=360.)
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+example of fusion with root histograms 
+
+!
+
+class that I use to simulate statistical decay in fusion reactions where there is a thick target. It produces a number of histograms, such a mass, charge and evaporation spectra - The output is stored in root file 
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{CRunThick@{CRun\-Thick}!CRunThick@{CRunThick}}
+\index{CRunThick@{CRunThick}!CRunThick@{CRun\-Thick}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}CRun\-Thick::CRun\-Thick (int {\em i\-Zcn}, int {\em i\-Acn}, float {\em f\-Ex\_\-min}, float {\em f\-Ex\_\-max}, float {\em l0\_\-min}, float {\em l0\_\-max}, float {\em d0}, int {\em lmax}, float {\em plb}, int {\em n\-Bins}, int {\em num\-Tot}, string {\em title0}, float {\em vcm} = {\tt 0.}, float {\em theta\-Det\-Min} = {\tt 0.}, float {\em theta\-Det\-Max} = {\tt 360.})}\label{classCRunThick_e3d2dd1c5910701d1859181a67036be0}
+
+
+this constructor is everything at the moment. /param i\-Zcn - CN proton number /param i\-Acn is the mass number /param f\-Ex is the excitation energy in Me\-V /param l0 is the critical spin , specifying the max spin in fusion (unit hbar) /param d0 is the diffuseness of the spin distribution (units hbar) /param lmax is the maximum spin value considered. ($<$l0 for just er info) /param plb is pi-lambda-bar squared in mb /param num\-Tot is number of Monte Carlo simulations /param title0 is name of output root file (without \char`\"{}.root\char`\"{} extension) 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+CRun\-Thick.h\item 
+Run\-Thick.cpp\end{CompactItemize}

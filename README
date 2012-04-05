@@ -1,0 +1,28 @@
+This directory contains GEMINI++, a c++ version of GEMINI
+used to model the statistical decay of a compound nuclei.
+
+The main c++ class is CNucleus. An example of how to use
+this is a c++ program can be found in testDecay.cpp.
+
+The file gemini.cpp is for fortran users. An example of how to use 
+this in a fortran program can be found in testGemini.f
+
+These two example programs can be compiled with
+make testDecay
+or
+make testGemini
+
+Note the directories tbl and tl contain input data which are
+read in each time one uses these classes. Use can use the variable GINPUT 
+to point to the gemini directory if you are not running the code in this
+directory. Use the export command 
+.e.q. in .bashrc I have set
+export GINPUT=/home/charity/gemini++
+
+
+
+More details can be found in the doxygen documentation
+i.e in directory html try
+firefox index.html
+
+
