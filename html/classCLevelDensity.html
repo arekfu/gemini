@@ -506,7 +506,7 @@ Returns the spin independent Fermi-gas level density <dl compact><dt><b>Paramete
 <div class="memdoc">
 
 <p>
-Returns the natural logrithm of the spin dependent level density in MeV-1 <dl compact><dt><b>Parameters:</b></dt><dd>
+Returns the natural logrithm of the spin dependent level density in MeV-1 if fJ &lt; 0, then littleA is calculated taking into account the spin reduction of paring, but subsequentally the level density is calculated for zero spin. This is done when using Weisskopf formalism for evaporation. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>iA</em>&nbsp;</td><td>is the mass number </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>fU0</em>&nbsp;</td><td>is the thermal excitation energy in MeV </td></tr>
@@ -659,7 +659,7 @@ Sets the constants for level-density parameter where <img class="formulaInl" alt
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="CLevelDensity_8h-source.html">CLevelDensity.h</a><li>LevelDensity.cpp</ul>
-<hr size="1"><address style="align: right;"><small>Generated on Tue Aug 2 09:28:22 2011 by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Apr 5 14:15:31 2012 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

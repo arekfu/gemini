@@ -1050,6 +1050,8 @@ void CNucleus::force8Be()
   daughterHeavy->origin = origin;
   daughterLight->parent = this;
   daughterHeavy->parent = this;
+  daughterHeavy->notStatistical = false;
+  daughterLight->notStatistical = false;
   daughterLight->excite(0.,0.);
   daughterHeavy->excite(0.,0.);
   daughterLight->bStable = 1;      
@@ -1102,6 +1104,8 @@ void CNucleus::force5Li()
   daughterHeavy->origin = origin;
   daughterLight->parent = this;
   daughterHeavy->parent = this;
+  daughterHeavy->notStatistical = false;
+  daughterLight->notStatistical = false;
   daughterLight->excite(0.,0.5);
   daughterHeavy->excite(0.,0.);
   daughterLight->bStable = 1;      
@@ -1152,6 +1156,8 @@ void CNucleus::force5He()
   daughterHeavy->origin = origin;
   daughterLight->parent = this;
   daughterHeavy->parent = this;
+  daughterHeavy->notStatistical = false;
+  daughterLight->notStatistical = false;
   daughterLight->excite(0.,0.5);
   daughterHeavy->excite(0.,0.);
   daughterLight->bStable = 1;      
@@ -1206,6 +1212,14 @@ void CNucleus::force9B()
   daughterHeavy->bStable = 1;  
   daughterLight->parent = this;
   daughterHeavy->parent = this;    
+  daughterHeavy->notStatistical = false;
+  daughterLight->notStatistical = false;
+
+  float const width = .54E-3;
+  float decayTime = timeSinceStart+ran.expDecayTime(width);
+  daughterLight->timeSinceStart = decayTime;
+  daughterHeavy->timeSinceStart = decayTime;
+
   EvapLPlusS = fJ;
   EvapL = (int)(fJ-0.5);
   EvapS1 = 0.;
@@ -3682,6 +3696,27 @@ bool CNucleus::isAsymmetricFission()
 bool CNucleus::isResidue()
 {
   return bResidue;
+}
+
+//*****************************************************************
+  /**
+   * returns a true value if the fragment does not undergo 
+   * statistical decay, for example a particular excited state of 
+   * a nucleus. These nuclei are produced in evaporation processes.
+   */
+bool CNucleus::isNotStatistical()
+{
+  return notStatistical;
+}
+//****************************************************************
+  /**
+   *  returns true if the nucleus is undergoing a saddle to scission
+   *  transition.  All symmetric fission events, pass thought this 
+   *  stage and some emit light particles during this stage.
+   */
+bool CNucleus::isSaddleToScission()
+{
+  return saddleToSciss;
 }
 //****************************************************************
 int CNucleus::getMultPost()

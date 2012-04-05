@@ -187,7 +187,7 @@ Returns the spin independent Fermi-gas level density \begin{Desc}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CLevel\-Density::get\-Log\-Level\-Density\-Spherical (int {\em i\-A}, float {\em f\-U0}, float {\em f\-Pairing}, float {\em f\-Shell}, float {\em f\-J}, float {\em f\-Minertia}, short {\em i\-Fission} = {\tt 0})}\label{classCLevelDensity_4bac625039f18d6d02c6a72070ae3ff3}
 
 
-Returns the natural logrithm of the spin dependent level density in Me\-V-1 \begin{Desc}
+Returns the natural logrithm of the spin dependent level density in Me\-V-1 if f\-J $<$ 0, then little\-A is calculated taking into account the spin reduction of paring, but subsequentally the level density is calculated for zero spin. This is done when using Weisskopf formalism for evaporation. \begin{Desc}
 \item[Parameters:]
 \begin{description}
 \item[{\em i\-A}]is the mass number \item[{\em f\-U0}]is the thermal excitation energy in Me\-V \item[{\em f\-Pairing}]is the pairing energy in Me\-V \item[{\em f\-Shell}]is the shell correction in Me\-V \item[{\em f\-J}]is the spin in hbar \item[{\em f\-Minertia}]is the moment of inertia in nucleon mass$\ast$ fm$^\wedge$2 \item[{\em i\-Fission}]indicates its for the saddle-point configuration \end{description}

@@ -111,7 +111,13 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#e414504f1a90beb2fd2e3ade9917b7f7">decay</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#1f4f1cc2222fce845eafc42f20744028">isFission</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#da54846d9f110338e519f560bd5770d8">isAsymmetricFission</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#14210efc10a5d14ce319011b9051d79c">isSymmetricFission</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#41775f39b8b9c52a32a8441d56544c96">isNotStatistical</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#4b7d4e3cd61bb0e148a0014b446d39e5">isSaddleToScission</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#297b37b019c09d3f61a712b11e2a1a45">isResidue</a> ()</td></tr>
 
@@ -271,7 +277,7 @@ bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a8a6f095fac5317ace58834b19694dd7"></a><!-- doxytag: member="CNucleus::notStatisticalMode" ref="a8a6f095fac5317ace58834b19694dd7" args="" -->
 short unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#a8a6f095fac5317ace58834b19694dd7">notStatisticalMode</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">specifies tyoe of nonStatisical decay <br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">specifies type of nonStatisical decay <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="75e46b261560250eaf707dc70f0ef5c2"></a><!-- doxytag: member="CNucleus::fPairing" ref="75e46b261560250eaf707dc70f0ef5c2" args="" -->
 float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#75e46b261560250eaf707dc70f0ef5c2">fPairing</a></td></tr>
 
@@ -504,10 +510,14 @@ int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#6c9c08f0b5d1597a2480e4645a41cd70">bResidue</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">true if decay produced an evaporation residue <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="00d6ffabcecd4cde1b6244071eb06c44"></a><!-- doxytag: member="CNucleus::bFission" ref="00d6ffabcecd4cde1b6244071eb06c44" args="" -->
-bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#00d6ffabcecd4cde1b6244071eb06c44">bFission</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="332fd860f164e7a4e671285e5a5db0d5"></a><!-- doxytag: member="CNucleus::bSymmetricFission" ref="332fd860f164e7a4e671285e5a5db0d5" args="" -->
+bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#332fd860f164e7a4e671285e5a5db0d5">bSymmetricFission</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">true if decay resulted in fission <br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">true if decay resulted in symmetric fission <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="9eff0ffee9653dbd75ff2b665e2ebd26"></a><!-- doxytag: member="CNucleus::bAsymmetricFission" ref="9eff0ffee9653dbd75ff2b665e2ebd26" args="" -->
+bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#9eff0ffee9653dbd75ff2b665e2ebd26">bAsymmetricFission</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">true if decay resulted in asymmetric fission <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="516d49562c7f5d6af98a7dc5a293f5fe"></a><!-- doxytag: member="CNucleus::multPostLight" ref="516d49562c7f5d6af98a7dc5a293f5fe" args="" -->
 int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCNucleus.html#516d49562c7f5d6af98a7dc5a293f5fe">multPostLight</a></td></tr>
 
@@ -2089,12 +2099,12 @@ Calculated the Hauser-Feshbach decay width in MeV for a given channel <dl compac
 
 </div>
 </div><p>
-<a class="anchor" name="1f4f1cc2222fce845eafc42f20744028"></a><!-- doxytag: member="CNucleus::isFission" ref="1f4f1cc2222fce845eafc42f20744028" args="()" -->
+<a class="anchor" name="da54846d9f110338e519f560bd5770d8"></a><!-- doxytag: member="CNucleus::isAsymmetricFission" ref="da54846d9f110338e519f560bd5770d8" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool CNucleus::isFission           </td>
+          <td class="memname">bool CNucleus::isAsymmetricFission           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -2105,7 +2115,26 @@ Calculated the Hauser-Feshbach decay width in MeV for a given channel <dl compac
 <div class="memdoc">
 
 <p>
-Returns a true value if a fission occurred 
+Returns a true value if an asymmetyric fission occurred Only use this function for the compound nucleus object, otherwise the output is garbage. 
+</div>
+</div><p>
+<a class="anchor" name="41775f39b8b9c52a32a8441d56544c96"></a><!-- doxytag: member="CNucleus::isNotStatistical" ref="41775f39b8b9c52a32a8441d56544c96" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CNucleus::isNotStatistical           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+returns a true value if the fragment does not undergo statistical decay, for example a particular excited state of a nucleus. These nuclei are produced in evaporation processes. 
 </div>
 </div><p>
 <a class="anchor" name="297b37b019c09d3f61a712b11e2a1a45"></a><!-- doxytag: member="CNucleus::isResidue" ref="297b37b019c09d3f61a712b11e2a1a45" args="()" -->
@@ -2124,7 +2153,45 @@ Returns a true value if a fission occurred
 <div class="memdoc">
 
 <p>
-Returns a true value if the event doesn't fission and has an evaporation residue 
+Returns a true value if the event doesn't fission and has an evaporation residue. Only use this function for the compound nucleus object, otherwise the output is garbage. 
+</div>
+</div><p>
+<a class="anchor" name="4b7d4e3cd61bb0e148a0014b446d39e5"></a><!-- doxytag: member="CNucleus::isSaddleToScission" ref="4b7d4e3cd61bb0e148a0014b446d39e5" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CNucleus::isSaddleToScission           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+returns true if the nucleus is undergoing a saddle to scission transition. All symmetric fission events, pass thought this stage and some emit light particles during this stage. 
+</div>
+</div><p>
+<a class="anchor" name="14210efc10a5d14ce319011b9051d79c"></a><!-- doxytag: member="CNucleus::isSymmetricFission" ref="14210efc10a5d14ce319011b9051d79c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CNucleus::isSymmetricFission           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns a true value if a symmetric fission occurred Only use this function for the compound nucleus object, otherwise the output is garbage. 
 </div>
 </div><p>
 <a class="anchor" name="cd4ecfb81537b8a7bc792d0781b077f7"></a><!-- doxytag: member="CNucleus::LestoneCorrection" ref="cd4ecfb81537b8a7bc792d0781b077f7" args="(float Usaddle, float momInertiaEff, short iAfAn)" -->
@@ -3116,7 +3183,7 @@ Calculated the evaporation decay width of a channel in MeV using the Weisskopf f
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="CNucleus_8h-source.html">CNucleus.h</a><li>Nucleus.cpp</ul>
-<hr size="1"><address style="align: right;"><small>Generated on Tue Aug 2 09:28:22 2011 by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Apr 5 14:15:31 2012 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

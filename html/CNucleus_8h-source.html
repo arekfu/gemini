@@ -218,117 +218,121 @@
 <a name="l00236"></a>00236 
 <a name="l00237"></a>00237 
 <a name="l00238"></a><a class="code" href="classCNucleus.html#6c9c08f0b5d1597a2480e4645a41cd70">00238</a>   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#6c9c08f0b5d1597a2480e4645a41cd70">bResidue</a>; 
-<a name="l00239"></a><a class="code" href="classCNucleus.html#00d6ffabcecd4cde1b6244071eb06c44">00239</a>   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#00d6ffabcecd4cde1b6244071eb06c44">bFission</a>; 
-<a name="l00240"></a><a class="code" href="classCNucleus.html#516d49562c7f5d6af98a7dc5a293f5fe">00240</a>   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#516d49562c7f5d6af98a7dc5a293f5fe">multPostLight</a>; 
-<a name="l00241"></a><a class="code" href="classCNucleus.html#ca92f7a4d81ab39e230c3c20d6b0b3a8">00241</a>   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#ca92f7a4d81ab39e230c3c20d6b0b3a8">multPostHeavy</a>; 
-<a name="l00242"></a><a class="code" href="classCNucleus.html#e1d40b4b343bd28a243c6c44c5f5e3d3">00242</a>   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#e1d40b4b343bd28a243c6c44c5f5e3d3">multPreSaddle</a>; 
-<a name="l00243"></a>00243   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#561b70bf56addf062d1e95c0793a5568">multSaddleToScission</a>; 
-<a name="l00245"></a>00245 
+<a name="l00239"></a><a class="code" href="classCNucleus.html#332fd860f164e7a4e671285e5a5db0d5">00239</a>   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#332fd860f164e7a4e671285e5a5db0d5">bSymmetricFission</a>; 
+<a name="l00240"></a><a class="code" href="classCNucleus.html#9eff0ffee9653dbd75ff2b665e2ebd26">00240</a>   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#9eff0ffee9653dbd75ff2b665e2ebd26">bAsymmetricFission</a>; 
+<a name="l00241"></a><a class="code" href="classCNucleus.html#516d49562c7f5d6af98a7dc5a293f5fe">00241</a>   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#516d49562c7f5d6af98a7dc5a293f5fe">multPostLight</a>; 
+<a name="l00242"></a><a class="code" href="classCNucleus.html#ca92f7a4d81ab39e230c3c20d6b0b3a8">00242</a>   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#ca92f7a4d81ab39e230c3c20d6b0b3a8">multPostHeavy</a>; 
+<a name="l00243"></a><a class="code" href="classCNucleus.html#e1d40b4b343bd28a243c6c44c5f5e3d3">00243</a>   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#e1d40b4b343bd28a243c6c44c5f5e3d3">multPreSaddle</a>; 
+<a name="l00244"></a>00244   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#561b70bf56addf062d1e95c0793a5568">multSaddleToScission</a>; 
 <a name="l00246"></a>00246 
-<a name="l00247"></a><a class="code" href="classCNucleus.html#4335fec8a155079842040f691b25b770">00247</a>   <span class="keyword">static</span> <span class="keywordtype">float</span> <span class="keyword">const</span> <a class="code" href="classCNucleus.html#4335fec8a155079842040f691b25b770">kRotate</a>; 
-<a name="l00248"></a>00248   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#88a6c44e58c18a94e139ce3d64cf5bd7">split</a>(<a class="code" href="classCAngle.html">CAngle</a>);
-<a name="l00249"></a>00249 
-<a name="l00250"></a><a class="code" href="classCNucleus.html#144194ae9e50c871ddf8c71e8eef8056">00250</a>   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#144194ae9e50c871ddf8c71e8eef8056">sigma2</a>; 
-<a name="l00251"></a><a class="code" href="classCNucleus.html#e33ebad4f9ae1e3b63e09f786d6027f0">00251</a>   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#e33ebad4f9ae1e3b63e09f786d6027f0">symSaddlePoint</a>;
-<a name="l00252"></a><a class="code" href="classCNucleus.html#0f81e0be4be19db07d1b819ba5902947">00252</a>   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#0f81e0be4be19db07d1b819ba5902947">sumGammaEnergy</a>; 
-<a name="l00253"></a>00253 
-<a name="l00254"></a>00254  <span class="keyword">public</span>:
-<a name="l00255"></a>00255 
+<a name="l00247"></a>00247 
+<a name="l00248"></a><a class="code" href="classCNucleus.html#4335fec8a155079842040f691b25b770">00248</a>   <span class="keyword">static</span> <span class="keywordtype">float</span> <span class="keyword">const</span> <a class="code" href="classCNucleus.html#4335fec8a155079842040f691b25b770">kRotate</a>; 
+<a name="l00249"></a>00249   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#88a6c44e58c18a94e139ce3d64cf5bd7">split</a>(<a class="code" href="classCAngle.html">CAngle</a>);
+<a name="l00250"></a>00250 
+<a name="l00251"></a><a class="code" href="classCNucleus.html#144194ae9e50c871ddf8c71e8eef8056">00251</a>   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#144194ae9e50c871ddf8c71e8eef8056">sigma2</a>; 
+<a name="l00252"></a><a class="code" href="classCNucleus.html#e33ebad4f9ae1e3b63e09f786d6027f0">00252</a>   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#e33ebad4f9ae1e3b63e09f786d6027f0">symSaddlePoint</a>;
+<a name="l00253"></a><a class="code" href="classCNucleus.html#0f81e0be4be19db07d1b819ba5902947">00253</a>   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#0f81e0be4be19db07d1b819ba5902947">sumGammaEnergy</a>; 
+<a name="l00254"></a>00254 
+<a name="l00255"></a>00255  <span class="keyword">public</span>:
 <a name="l00256"></a>00256 
-<a name="l00257"></a><a class="code" href="classCNucleus.html#e7093b3a71b1ef30c899afe2bff3a75a">00257</a>   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#e7093b3a71b1ef30c899afe2bff3a75a">abortEvent</a>; 
-<a name="l00258"></a>00258   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#44f15257eef18d22cf4110848b2228fc">evaporationWidth</a>();
-<a name="l00259"></a>00259   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#72124c9eef6ad020639229cbfd422743">BohrWheelerWidth</a>();
-<a name="l00260"></a>00260   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#ba2f4b9bce3d9b38afb02d7e6ffd3dc3">LestoneFissionWidth</a>();
-<a name="l00261"></a>00261   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#cd4ecfb81537b8a7bc792d0781b077f7">LestoneCorrection</a>(<span class="keywordtype">float</span> Usaddle, <span class="keywordtype">float</span> momInertiaEff,<span class="keywordtype">short</span> iAfAn);
-<a name="l00262"></a><a class="code" href="classCNucleus.html#878957182a445fb6769a817f312204c1">00262</a>   <span class="keyword">static</span> <a class="code" href="classCRandom.html">CRandom</a> <a class="code" href="classCNucleus.html#878957182a445fb6769a817f312204c1">ran</a>; 
-<a name="l00263"></a><a class="code" href="classCNucleus.html#8b2e3247e90428054c7018ce3a9795dd">00263</a>   <span class="keyword">static</span> <span class="keywordtype">float</span> <span class="keyword">const</span> <a class="code" href="classCNucleus.html#8b2e3247e90428054c7018ce3a9795dd">pi</a>; 
-<a name="l00264"></a>00264   <span class="comment">//functions</span>
-<a name="l00265"></a>00265   <a class="code" href="classCNucleus.html#b884bdacef32d64c58c60f36aa358ccd">CNucleus</a>(<span class="keywordtype">int</span> <a class="code" href="classCNuclide.html#9442a34164e471af32a1efe2a73068ea">iZ</a>,<span class="keywordtype">int</span> <a class="code" href="classCNuclide.html#07b50da4719f3ab76d904561db2dca2e">iA</a>);
-<a name="l00266"></a>00266   <a class="code" href="classCNucleus.html#b884bdacef32d64c58c60f36aa358ccd">CNucleus</a>(<span class="keywordtype">int</span> <a class="code" href="classCNuclide.html#9442a34164e471af32a1efe2a73068ea">iZ</a>,<span class="keywordtype">int</span> <a class="code" href="classCNuclide.html#07b50da4719f3ab76d904561db2dca2e">iA</a>, <span class="keywordtype">float</span> <a class="code" href="classCNuclide.html#33f3a6977a3ac4e8451d11b2821e8c71">fEx</a>, <span class="keywordtype">float</span> <a class="code" href="classCNuclide.html#1365035203a9bc504512037f9e92efb8">fJ</a>);
-<a name="l00267"></a>00267   <a class="code" href="classCNucleus.html#22e62673e10ef95522adef084f84880b">~CNucleus</a>();
-<a name="l00268"></a>00268   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#bab92068ba771e2c4d3ad63775e8cdb0">getSumGammaEnergy</a>();
-<a name="l00269"></a>00269   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#7c0d19915a89d7e89239c9692ad08321">getTime</a>();
-<a name="l00270"></a>00270 
-<a name="l00271"></a>00271   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#955af881b3d6e6f1b18bdf9e657e9969">setNewIsotope</a>(<span class="keywordtype">int</span> iZ0, <span class="keywordtype">int</span> iA0, <span class="keywordtype">float</span> fEx0, <span class="keywordtype">float</span> fJ0); 
-<a name="l00272"></a>00272 
-<a name="l00273"></a>00273   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#b5ed12a63dc406732d5cb88fbc985cad">setCompoundNucleus</a>(<span class="keywordtype">float</span> fEx0,<span class="keywordtype">float</span> fJ0);
-<a name="l00274"></a>00274   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#b5ed12a63dc406732d5cb88fbc985cad">setCompoundNucleus</a>(<span class="keywordtype">float</span> fEx0,<span class="keywordtype">double</span> dJ0);
-<a name="l00275"></a>00275   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#b5ed12a63dc406732d5cb88fbc985cad">setCompoundNucleus</a>(<span class="keywordtype">double</span> dEx0,<span class="keywordtype">float</span> fJ0);
-<a name="l00276"></a>00276   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#b5ed12a63dc406732d5cb88fbc985cad">setCompoundNucleus</a>(<span class="keywordtype">double</span> dEx0,<span class="keywordtype">double</span> dJ0);
-<a name="l00277"></a>00277 
-<a name="l00278"></a>00278   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#492c4d6c1a82a65a8a66a744764320dc">setSpinAxis</a>(<a class="code" href="classCAngle.html">CAngle</a> angle);
-<a name="l00279"></a>00279   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#0d11f76c565f03f7114f0e64668d565e">setSpinAxisDegrees</a>(<a class="code" href="classCAngle.html">CAngle</a> angle);
-<a name="l00280"></a>00280   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#249afb7c43af967be5a45af7a56c5fa1">setVelocityPolar</a>(<span class="keywordtype">float</span> =0.,<span class="keywordtype">float</span>=0.,<span class="keywordtype">float</span>=0.);
-<a name="l00281"></a>00281   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#fe218bbad1e3ecef4c6831bbf9e541df">setVelocityCartesian</a>(<span class="keywordtype">float</span> vx=0.,<span class="keywordtype">float</span> vy=0.,<span class="keywordtype">float</span> vz=0.);
-<a name="l00282"></a>00282 
-<a name="l00283"></a>00283   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#97e6e6c689b76070ccda6b3782a71357">reset</a>();
-<a name="l00284"></a>00284   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#67c1979e134cce02741e114cd5f08004">resetGlobal</a>();
-<a name="l00285"></a>00285 
-<a name="l00286"></a>00286   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#06c61edbd4feab341f28c7ee01d58073">print</a>();
-<a name="l00287"></a>00287   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#f9daedff5975907358ad946069ebae18">printStableProducts</a>();
-<a name="l00288"></a>00288   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#e0368f4a725e5e77d5cfffb468567cb1">printAllProducts</a>();
-<a name="l00289"></a>00289   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#285e6c7d73857d28ee677f118bef1089">vCMofAllProducts</a>();
-<a name="l00290"></a>00290   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#eba9bd42d98c2a41fa74212aa1b79ea2">energyConservation</a>();
-<a name="l00291"></a>00291 
+<a name="l00257"></a>00257 
+<a name="l00258"></a><a class="code" href="classCNucleus.html#e7093b3a71b1ef30c899afe2bff3a75a">00258</a>   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#e7093b3a71b1ef30c899afe2bff3a75a">abortEvent</a>; 
+<a name="l00259"></a>00259   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#44f15257eef18d22cf4110848b2228fc">evaporationWidth</a>();
+<a name="l00260"></a>00260   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#72124c9eef6ad020639229cbfd422743">BohrWheelerWidth</a>();
+<a name="l00261"></a>00261   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#ba2f4b9bce3d9b38afb02d7e6ffd3dc3">LestoneFissionWidth</a>();
+<a name="l00262"></a>00262   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#cd4ecfb81537b8a7bc792d0781b077f7">LestoneCorrection</a>(<span class="keywordtype">float</span> Usaddle, <span class="keywordtype">float</span> momInertiaEff,<span class="keywordtype">short</span> iAfAn);
+<a name="l00263"></a><a class="code" href="classCNucleus.html#878957182a445fb6769a817f312204c1">00263</a>   <span class="keyword">static</span> <a class="code" href="classCRandom.html">CRandom</a> <a class="code" href="classCNucleus.html#878957182a445fb6769a817f312204c1">ran</a>; 
+<a name="l00264"></a><a class="code" href="classCNucleus.html#8b2e3247e90428054c7018ce3a9795dd">00264</a>   <span class="keyword">static</span> <span class="keywordtype">float</span> <span class="keyword">const</span> <a class="code" href="classCNucleus.html#8b2e3247e90428054c7018ce3a9795dd">pi</a>; 
+<a name="l00265"></a>00265   <span class="comment">//functions</span>
+<a name="l00266"></a>00266   <a class="code" href="classCNucleus.html#b884bdacef32d64c58c60f36aa358ccd">CNucleus</a>(<span class="keywordtype">int</span> <a class="code" href="classCNuclide.html#9442a34164e471af32a1efe2a73068ea">iZ</a>,<span class="keywordtype">int</span> <a class="code" href="classCNuclide.html#07b50da4719f3ab76d904561db2dca2e">iA</a>);
+<a name="l00267"></a>00267   <a class="code" href="classCNucleus.html#b884bdacef32d64c58c60f36aa358ccd">CNucleus</a>(<span class="keywordtype">int</span> <a class="code" href="classCNuclide.html#9442a34164e471af32a1efe2a73068ea">iZ</a>,<span class="keywordtype">int</span> <a class="code" href="classCNuclide.html#07b50da4719f3ab76d904561db2dca2e">iA</a>, <span class="keywordtype">float</span> <a class="code" href="classCNuclide.html#33f3a6977a3ac4e8451d11b2821e8c71">fEx</a>, <span class="keywordtype">float</span> <a class="code" href="classCNuclide.html#1365035203a9bc504512037f9e92efb8">fJ</a>);
+<a name="l00268"></a>00268   <a class="code" href="classCNucleus.html#22e62673e10ef95522adef084f84880b">~CNucleus</a>();
+<a name="l00269"></a>00269   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#bab92068ba771e2c4d3ad63775e8cdb0">getSumGammaEnergy</a>();
+<a name="l00270"></a>00270   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#7c0d19915a89d7e89239c9692ad08321">getTime</a>();
+<a name="l00271"></a>00271 
+<a name="l00272"></a>00272   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#955af881b3d6e6f1b18bdf9e657e9969">setNewIsotope</a>(<span class="keywordtype">int</span> iZ0, <span class="keywordtype">int</span> iA0, <span class="keywordtype">float</span> fEx0, <span class="keywordtype">float</span> fJ0); 
+<a name="l00273"></a>00273 
+<a name="l00274"></a>00274   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#b5ed12a63dc406732d5cb88fbc985cad">setCompoundNucleus</a>(<span class="keywordtype">float</span> fEx0,<span class="keywordtype">float</span> fJ0);
+<a name="l00275"></a>00275   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#b5ed12a63dc406732d5cb88fbc985cad">setCompoundNucleus</a>(<span class="keywordtype">float</span> fEx0,<span class="keywordtype">double</span> dJ0);
+<a name="l00276"></a>00276   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#b5ed12a63dc406732d5cb88fbc985cad">setCompoundNucleus</a>(<span class="keywordtype">double</span> dEx0,<span class="keywordtype">float</span> fJ0);
+<a name="l00277"></a>00277   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#b5ed12a63dc406732d5cb88fbc985cad">setCompoundNucleus</a>(<span class="keywordtype">double</span> dEx0,<span class="keywordtype">double</span> dJ0);
+<a name="l00278"></a>00278 
+<a name="l00279"></a>00279   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#492c4d6c1a82a65a8a66a744764320dc">setSpinAxis</a>(<a class="code" href="classCAngle.html">CAngle</a> angle);
+<a name="l00280"></a>00280   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#0d11f76c565f03f7114f0e64668d565e">setSpinAxisDegrees</a>(<a class="code" href="classCAngle.html">CAngle</a> angle);
+<a name="l00281"></a>00281   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#249afb7c43af967be5a45af7a56c5fa1">setVelocityPolar</a>(<span class="keywordtype">float</span> =0.,<span class="keywordtype">float</span>=0.,<span class="keywordtype">float</span>=0.);
+<a name="l00282"></a>00282   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#fe218bbad1e3ecef4c6831bbf9e541df">setVelocityCartesian</a>(<span class="keywordtype">float</span> vx=0.,<span class="keywordtype">float</span> vy=0.,<span class="keywordtype">float</span> vz=0.);
+<a name="l00283"></a>00283 
+<a name="l00284"></a>00284   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#97e6e6c689b76070ccda6b3782a71357">reset</a>();
+<a name="l00285"></a>00285   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#67c1979e134cce02741e114cd5f08004">resetGlobal</a>();
+<a name="l00286"></a>00286 
+<a name="l00287"></a>00287   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#06c61edbd4feab341f28c7ee01d58073">print</a>();
+<a name="l00288"></a>00288   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#f9daedff5975907358ad946069ebae18">printStableProducts</a>();
+<a name="l00289"></a>00289   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#e0368f4a725e5e77d5cfffb468567cb1">printAllProducts</a>();
+<a name="l00290"></a>00290   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#285e6c7d73857d28ee677f118bef1089">vCMofAllProducts</a>();
+<a name="l00291"></a>00291   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#eba9bd42d98c2a41fa74212aa1b79ea2">energyConservation</a>();
 <a name="l00292"></a>00292 
-<a name="l00293"></a>00293   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#ab2364563d124bbdc1f34f666d905024">getProducts</a>(<span class="keywordtype">int</span>=-1);
-<a name="l00294"></a>00294   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#1b051a6014f0da0a030a23d4c92be3d5">getParent</a>();
-<a name="l00295"></a>00295   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#c60029827d9cdf0cde1bcfce370f55f6">getLightDaughter</a>();
-<a name="l00296"></a>00296   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#54899d78693911b9470a0f6204b89a1a">getHeavyDaughter</a>();
-<a name="l00297"></a>00297   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#fa70515bff631e4c941d7940f95cf279">getCompoundNucleus</a>();
-<a name="l00298"></a>00298 
+<a name="l00293"></a>00293 
+<a name="l00294"></a>00294   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#ab2364563d124bbdc1f34f666d905024">getProducts</a>(<span class="keywordtype">int</span>=-1);
+<a name="l00295"></a>00295   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#1b051a6014f0da0a030a23d4c92be3d5">getParent</a>();
+<a name="l00296"></a>00296   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#c60029827d9cdf0cde1bcfce370f55f6">getLightDaughter</a>();
+<a name="l00297"></a>00297   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#54899d78693911b9470a0f6204b89a1a">getHeavyDaughter</a>();
+<a name="l00298"></a>00298   <a class="code" href="classCNucleus.html">CNucleus</a>* <a class="code" href="classCNucleus.html#fa70515bff631e4c941d7940f95cf279">getCompoundNucleus</a>();
 <a name="l00299"></a>00299 
-<a name="l00300"></a>00300   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#25459bd9663fe925a571edcebae9664a">getNumberOfProducts</a>();
-<a name="l00301"></a>00301 
-<a name="l00302"></a>00302   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#5ae77465ee3d72ef5803d1582cd561f4">getTheta</a>();
-<a name="l00303"></a>00303   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#5186d0048e4a2736634f19e40000e1ac">getThetaDegrees</a>();
-<a name="l00304"></a>00304   <a class="code" href="classCAngle.html">CAngle</a> <a class="code" href="classCNucleus.html#4147ae6c7b16bc27ffcafad1b4ec8291">getAngle</a>();
-<a name="l00305"></a>00305   <a class="code" href="classCAngle.html">CAngle</a> <a class="code" href="classCNucleus.html#17ba9afdcbdb6c2220156bae44ebfea5">getAngleDegrees</a>();
-<a name="l00306"></a>00306   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#3a98d5c9f9cd91cff00eeb78d6a6a6f0">getKE</a>();
-<a name="l00307"></a>00307   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#c488acfc03e1fa8061c879cb42945984">getVelocity</a>();
-<a name="l00308"></a>00308   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#f892eb68af466cbb5c806f696f2d70e1">getMomentum</a>();
-<a name="l00309"></a>00309   <span class="keywordtype">float</span>* <a class="code" href="classCNucleus.html#f4309a70fbcdc7aece710575935705ed">getVelocityVector</a>();
-<a name="l00310"></a>00310   <span class="keywordtype">float</span>* <a class="code" href="classCNucleus.html#04d461c337f552e27da166c9c5838e41">getMomentumVector</a>();
-<a name="l00311"></a>00311 
-<a name="l00312"></a>00312   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#53851b56477ab8f14da1eb4717f19b62">setTimeTransient</a>(<span class="keywordtype">float</span> time);
-<a name="l00313"></a>00313   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#d9fbe3764358e2dc8bc06f241ea870fc">setFissionScaleFactor</a>(<span class="keywordtype">float</span> factor);
-<a name="l00314"></a>00314   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#1df965db8b139df3becad15ec0264e3a">setBarWidth</a>(<span class="keywordtype">float</span> width);
-<a name="l00315"></a>00315   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#a98f8f109225bea58c6bd4ae92fd75a6">setDeltaE</a>(<span class="keywordtype">float</span> de0);
-<a name="l00316"></a>00316   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#f8212643187604a4f1592737b50de9fe">setThreshold</a>(<span class="keywordtype">float</span> threshold0);
-<a name="l00317"></a>00317   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#6c544517fdd84827a4161204ae2566b0">setAddToFisBarrier</a>(<span class="keywordtype">float</span> barAdd0);
-<a name="l00318"></a>00318   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#596a536fee72bec439a3c3ed349b5c8f">setNoIMF</a>();
-<a name="l00319"></a>00319   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#6301dd45688740864f522e6f54dfa9e6">setYesIMF</a>();
-<a name="l00320"></a>00320   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#653684b28f5a3ba95829b1525fdd2aca">setLestone</a>();
-<a name="l00321"></a>00321   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#9e0c42ec027d86fd52788647233b4fff">setBohrWheeler</a>();
-<a name="l00322"></a>00322   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#e54511a1cfe3b29d97a1128e545dbe47">setSolution</a>(<span class="keywordtype">int</span> isol);
-<a name="l00323"></a>00323   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#941d8b06ac725cf5d35dd72bee0b97a5">setEvapMode</a>(<span class="keywordtype">int</span> iHF0=2);
-<a name="l00324"></a>00324 
-<a name="l00325"></a>00325   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#d3e8082a938e245a0ba970167474f08d">getTimeTransient</a>();
-<a name="l00326"></a>00326   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#eda3b1e3b0c817200887d84239b77a6f">getFissionScaleFactor</a>();
-<a name="l00327"></a>00327   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#6b5a748989b35cba181e6a73eb492a2d">getBarWidth</a>();
-<a name="l00328"></a>00328   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#99961708b5bb4d53a2f0728409c8eafc">getDeltaE</a>();
-<a name="l00329"></a>00329   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#f08738abd53981ef8704ff9fc727214a">getThreshold</a>();
-<a name="l00330"></a>00330   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#a5d5789f655337fcc9d859bf06cd533b">getAddToFisBarrier</a>();
-<a name="l00331"></a>00331 
-<a name="l00332"></a>00332   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#e414504f1a90beb2fd2e3ade9917b7f7">decay</a>();
-<a name="l00333"></a>00333   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#1f4f1cc2222fce845eafc42f20744028">isFission</a>();
-<a name="l00334"></a>00334   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#297b37b019c09d3f61a712b11e2a1a45">isResidue</a>();
-<a name="l00335"></a>00335   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#b701f5f1d82a28e63cbe379f199ebf16">getMultPost</a>();
-<a name="l00336"></a>00336   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#6e24cae37b7b582362e645f147c3356c">getMultPre</a>();
-<a name="l00337"></a>00337   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#2cf890ba04e9bca92990e209cc176acb">getMultPostLight</a>();
-<a name="l00338"></a>00338   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#05eced236c74e84b00180f793b1a1b0c">getMultPostHeavy</a>();
-<a name="l00339"></a>00339   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#342ba999ffb45356b423cbff51b255d7">getMultPreSaddle</a>();
-<a name="l00340"></a>00340   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#7f4bd1aa6e54ad2c147e9bee6457ae47">getMultSaddleToScission</a>();
-<a name="l00341"></a><a class="code" href="classCNucleus.html#f4e2c66d862fe72f2152a3fea8f14590">00341</a>   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#f4e2c66d862fe72f2152a3fea8f14590">origin</a>; 
-<a name="l00342"></a>00342 
-<a name="l00343"></a>00343   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#0d97bbd5940bf93c2a01f87de0edf379">printParameters</a>();
-<a name="l00344"></a>00344 
-<a name="l00345"></a>00345 
-<a name="l00346"></a>00346   <span class="comment">//*******ROOT********</span>
-<a name="l00347"></a>00347     <span class="comment">//ClassDef(CNucleus,1)  //Gemini Nucleus</span>
-<a name="l00348"></a>00348 };
-<a name="l00349"></a>00349 <span class="preprocessor">#endif </span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Tue Aug 2 09:28:22 2011 by&nbsp;
+<a name="l00300"></a>00300 
+<a name="l00301"></a>00301   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#25459bd9663fe925a571edcebae9664a">getNumberOfProducts</a>();
+<a name="l00302"></a>00302 
+<a name="l00303"></a>00303   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#5ae77465ee3d72ef5803d1582cd561f4">getTheta</a>();
+<a name="l00304"></a>00304   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#5186d0048e4a2736634f19e40000e1ac">getThetaDegrees</a>();
+<a name="l00305"></a>00305   <a class="code" href="classCAngle.html">CAngle</a> <a class="code" href="classCNucleus.html#4147ae6c7b16bc27ffcafad1b4ec8291">getAngle</a>();
+<a name="l00306"></a>00306   <a class="code" href="classCAngle.html">CAngle</a> <a class="code" href="classCNucleus.html#17ba9afdcbdb6c2220156bae44ebfea5">getAngleDegrees</a>();
+<a name="l00307"></a>00307   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#3a98d5c9f9cd91cff00eeb78d6a6a6f0">getKE</a>();
+<a name="l00308"></a>00308   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#c488acfc03e1fa8061c879cb42945984">getVelocity</a>();
+<a name="l00309"></a>00309   <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#f892eb68af466cbb5c806f696f2d70e1">getMomentum</a>();
+<a name="l00310"></a>00310   <span class="keywordtype">float</span>* <a class="code" href="classCNucleus.html#f4309a70fbcdc7aece710575935705ed">getVelocityVector</a>();
+<a name="l00311"></a>00311   <span class="keywordtype">float</span>* <a class="code" href="classCNucleus.html#04d461c337f552e27da166c9c5838e41">getMomentumVector</a>();
+<a name="l00312"></a>00312 
+<a name="l00313"></a>00313   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#53851b56477ab8f14da1eb4717f19b62">setTimeTransient</a>(<span class="keywordtype">float</span> time);
+<a name="l00314"></a>00314   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#d9fbe3764358e2dc8bc06f241ea870fc">setFissionScaleFactor</a>(<span class="keywordtype">float</span> factor);
+<a name="l00315"></a>00315   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#1df965db8b139df3becad15ec0264e3a">setBarWidth</a>(<span class="keywordtype">float</span> width);
+<a name="l00316"></a>00316   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#a98f8f109225bea58c6bd4ae92fd75a6">setDeltaE</a>(<span class="keywordtype">float</span> de0);
+<a name="l00317"></a>00317   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#f8212643187604a4f1592737b50de9fe">setThreshold</a>(<span class="keywordtype">float</span> threshold0);
+<a name="l00318"></a>00318   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#6c544517fdd84827a4161204ae2566b0">setAddToFisBarrier</a>(<span class="keywordtype">float</span> barAdd0);
+<a name="l00319"></a>00319   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#596a536fee72bec439a3c3ed349b5c8f">setNoIMF</a>();
+<a name="l00320"></a>00320   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#6301dd45688740864f522e6f54dfa9e6">setYesIMF</a>();
+<a name="l00321"></a>00321   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#653684b28f5a3ba95829b1525fdd2aca">setLestone</a>();
+<a name="l00322"></a>00322   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#9e0c42ec027d86fd52788647233b4fff">setBohrWheeler</a>();
+<a name="l00323"></a>00323   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#e54511a1cfe3b29d97a1128e545dbe47">setSolution</a>(<span class="keywordtype">int</span> isol);
+<a name="l00324"></a>00324   <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#941d8b06ac725cf5d35dd72bee0b97a5">setEvapMode</a>(<span class="keywordtype">int</span> iHF0=2);
+<a name="l00325"></a>00325 
+<a name="l00326"></a>00326   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#d3e8082a938e245a0ba970167474f08d">getTimeTransient</a>();
+<a name="l00327"></a>00327   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#eda3b1e3b0c817200887d84239b77a6f">getFissionScaleFactor</a>();
+<a name="l00328"></a>00328   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#6b5a748989b35cba181e6a73eb492a2d">getBarWidth</a>();
+<a name="l00329"></a>00329   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#99961708b5bb4d53a2f0728409c8eafc">getDeltaE</a>();
+<a name="l00330"></a>00330   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#f08738abd53981ef8704ff9fc727214a">getThreshold</a>();
+<a name="l00331"></a>00331   <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classCNucleus.html#a5d5789f655337fcc9d859bf06cd533b">getAddToFisBarrier</a>();
+<a name="l00332"></a>00332 
+<a name="l00333"></a>00333   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#e414504f1a90beb2fd2e3ade9917b7f7">decay</a>();
+<a name="l00334"></a>00334   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#da54846d9f110338e519f560bd5770d8">isAsymmetricFission</a>();
+<a name="l00335"></a>00335   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#14210efc10a5d14ce319011b9051d79c">isSymmetricFission</a>();
+<a name="l00336"></a>00336   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#41775f39b8b9c52a32a8441d56544c96">isNotStatistical</a>();
+<a name="l00337"></a>00337   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#4b7d4e3cd61bb0e148a0014b446d39e5">isSaddleToScission</a>();
+<a name="l00338"></a>00338   <span class="keywordtype">bool</span> <a class="code" href="classCNucleus.html#297b37b019c09d3f61a712b11e2a1a45">isResidue</a>();
+<a name="l00339"></a>00339   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#b701f5f1d82a28e63cbe379f199ebf16">getMultPost</a>();
+<a name="l00340"></a>00340   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#6e24cae37b7b582362e645f147c3356c">getMultPre</a>();
+<a name="l00341"></a>00341   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#2cf890ba04e9bca92990e209cc176acb">getMultPostLight</a>();
+<a name="l00342"></a>00342   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#05eced236c74e84b00180f793b1a1b0c">getMultPostHeavy</a>();
+<a name="l00343"></a>00343   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#342ba999ffb45356b423cbff51b255d7">getMultPreSaddle</a>();
+<a name="l00344"></a>00344   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#7f4bd1aa6e54ad2c147e9bee6457ae47">getMultSaddleToScission</a>();
+<a name="l00345"></a><a class="code" href="classCNucleus.html#f4e2c66d862fe72f2152a3fea8f14590">00345</a>   <span class="keywordtype">int</span> <a class="code" href="classCNucleus.html#f4e2c66d862fe72f2152a3fea8f14590">origin</a>; 
+<a name="l00346"></a>00346 
+<a name="l00347"></a>00347   <span class="keywordtype">void</span> <a class="code" href="classCNucleus.html#0d97bbd5940bf93c2a01f87de0edf379">printParameters</a>();
+<a name="l00348"></a>00348 
+<a name="l00349"></a>00349 
+<a name="l00350"></a>00350   <span class="comment">//*******ROOT********</span>
+<a name="l00351"></a>00351     <span class="comment">//ClassDef(CNucleus,1)  //Gemini Nucleus</span>
+<a name="l00352"></a>00352 };
+<a name="l00353"></a>00353 <span class="preprocessor">#endif </span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Thu Apr 5 14:15:31 2012 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

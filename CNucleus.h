@@ -81,7 +81,7 @@ class CNucleus : public CNuclide, public CWeight
 
   bool notStatistical; //!< this does not decay statistically, evap. frag. only
 
-  short unsigned notStatisticalMode;//!< specifies tyoe of nonStatisical decay
+  short unsigned notStatisticalMode;//!< specifies type of nonStatisical decay
   float fPairing; //!< pairing energy
   float fShell; //!<shell correction
   float fU0; //!< thermal excitation energy
@@ -333,6 +333,8 @@ class CNucleus : public CNuclide, public CWeight
   void decay();
   bool isAsymmetricFission();
   bool isSymmetricFission();
+  bool isNotStatistical();
+  bool isSaddleToScission();
   bool isResidue();
   int getMultPost();
   int getMultPre();

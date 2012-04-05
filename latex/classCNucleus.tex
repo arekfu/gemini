@@ -94,7 +94,13 @@ float $\ast$ \bf{get\-Momentum\-Vector} ()
 \item 
 void \bf{decay} ()
 \item 
-bool \bf{is\-Fission} ()
+bool \bf{is\-Asymmetric\-Fission} ()
+\item 
+bool \bf{is\-Symmetric\-Fission} ()
+\item 
+bool \bf{is\-Not\-Statistical} ()
+\item 
+bool \bf{is\-Saddle\-To\-Scission} ()
 \item 
 bool \bf{is\-Residue} ()
 \item 
@@ -257,7 +263,7 @@ bool \bf{not\-Statistical}\label{classCNucleus_8674956cb95a57c427bf686dcaa36d15}
 \begin{CompactList}\small\item\em this does not decay statistically, evap. frag. only \item\end{CompactList}\item 
 short unsigned \bf{not\-Statistical\-Mode}\label{classCNucleus_a8a6f095fac5317ace58834b19694dd7}
 
-\begin{CompactList}\small\item\em specifies tyoe of non\-Statisical decay \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em specifies type of non\-Statisical decay \item\end{CompactList}\item 
 float \bf{f\-Pairing}\label{classCNucleus_75e46b261560250eaf707dc70f0ef5c2}
 
 \begin{CompactList}\small\item\em pairing energy \item\end{CompactList}\item 
@@ -432,9 +438,12 @@ int \bf{Gamma\-L}\label{classCNucleus_6bc78a6013952ac73a35eb406a773301}
 bool \bf{b\-Residue}\label{classCNucleus_6c9c08f0b5d1597a2480e4645a41cd70}
 
 \begin{CompactList}\small\item\em true if decay produced an evaporation residue \item\end{CompactList}\item 
-bool \bf{b\-Fission}\label{classCNucleus_00d6ffabcecd4cde1b6244071eb06c44}
+bool \bf{b\-Symmetric\-Fission}\label{classCNucleus_332fd860f164e7a4e671285e5a5db0d5}
 
-\begin{CompactList}\small\item\em true if decay resulted in fission \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em true if decay resulted in symmetric fission \item\end{CompactList}\item 
+bool \bf{b\-Asymmetric\-Fission}\label{classCNucleus_9eff0ffee9653dbd75ff2b665e2ebd26}
+
+\begin{CompactList}\small\item\em true if decay resulted in asymmetric fission \item\end{CompactList}\item 
 int \bf{mult\-Post\-Light}\label{classCNucleus_516d49562c7f5d6af98a7dc5a293f5fe}
 
 \begin{CompactList}\small\item\em number of post-fission neutrons for lighter ff \item\end{CompactList}\item 
@@ -970,17 +979,32 @@ Calculated the Hauser-Feshbach decay width in Me\-V for a given channel \begin{D
 \begin{description}
 \item[{\em i\-Channel}]is the channel of the evaporated particle \end{description}
 \end{Desc}
-\index{CNucleus@{CNucleus}!isFission@{isFission}}
-\index{isFission@{isFission}!CNucleus@{CNucleus}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool CNucleus::is\-Fission ()}\label{classCNucleus_1f4f1cc2222fce845eafc42f20744028}
+\index{CNucleus@{CNucleus}!isAsymmetricFission@{isAsymmetricFission}}
+\index{isAsymmetricFission@{isAsymmetricFission}!CNucleus@{CNucleus}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool CNucleus::is\-Asymmetric\-Fission ()}\label{classCNucleus_da54846d9f110338e519f560bd5770d8}
 
 
-Returns a true value if a fission occurred \index{CNucleus@{CNucleus}!isResidue@{isResidue}}
+Returns a true value if an asymmetyric fission occurred Only use this function for the compound nucleus object, otherwise the output is garbage. \index{CNucleus@{CNucleus}!isNotStatistical@{isNotStatistical}}
+\index{isNotStatistical@{isNotStatistical}!CNucleus@{CNucleus}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool CNucleus::is\-Not\-Statistical ()}\label{classCNucleus_41775f39b8b9c52a32a8441d56544c96}
+
+
+returns a true value if the fragment does not undergo statistical decay, for example a particular excited state of a nucleus. These nuclei are produced in evaporation processes. \index{CNucleus@{CNucleus}!isResidue@{isResidue}}
 \index{isResidue@{isResidue}!CNucleus@{CNucleus}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool CNucleus::is\-Residue ()}\label{classCNucleus_297b37b019c09d3f61a712b11e2a1a45}
 
 
-Returns a true value if the event doesn't fission and has an evaporation residue \index{CNucleus@{CNucleus}!LestoneCorrection@{LestoneCorrection}}
+Returns a true value if the event doesn't fission and has an evaporation residue. Only use this function for the compound nucleus object, otherwise the output is garbage. \index{CNucleus@{CNucleus}!isSaddleToScission@{isSaddleToScission}}
+\index{isSaddleToScission@{isSaddleToScission}!CNucleus@{CNucleus}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool CNucleus::is\-Saddle\-To\-Scission ()}\label{classCNucleus_4b7d4e3cd61bb0e148a0014b446d39e5}
+
+
+returns true if the nucleus is undergoing a saddle to scission transition. All symmetric fission events, pass thought this stage and some emit light particles during this stage. \index{CNucleus@{CNucleus}!isSymmetricFission@{isSymmetricFission}}
+\index{isSymmetricFission@{isSymmetricFission}!CNucleus@{CNucleus}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool CNucleus::is\-Symmetric\-Fission ()}\label{classCNucleus_14210efc10a5d14ce319011b9051d79c}
+
+
+Returns a true value if a symmetric fission occurred Only use this function for the compound nucleus object, otherwise the output is garbage. \index{CNucleus@{CNucleus}!LestoneCorrection@{LestoneCorrection}}
 \index{LestoneCorrection@{LestoneCorrection}!CNucleus@{CNucleus}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CNucleus::Lestone\-Correction (float {\em Usaddle}, float {\em mom\-Inertia\-Eff}, short {\em i\-Af\-An})}\label{classCNucleus_cd4ecfb81537b8a7bc792d0781b077f7}
 
