@@ -187,3 +187,5 @@
 	           notStatistical = false, left an excited alpha.
 	           We now let all the excitation energy go into kinetic energy
 	        These three changes were made to Nucleus.cpp
+4th April 2012 force9B didn't assign times to products. fixed.	
+5th April 2012 added the class History writtem by Davide Mancusi	
