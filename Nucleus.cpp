@@ -225,7 +225,7 @@ void CNucleus::binaryDecay()
     }
 
   //"statistical" decays into alpha plus ligher partner
-  if (fEx > 0. && (iZ == 3 || iZ == 2&& iA == 5))
+  if (fEx > 0. && (iZ == 3 || (iZ == 2&& iA == 5)))
     {
       daughterLight = new CNucleus(iZ-2,iA-4);
       daughterHeavy = new CNucleus(2,4);
@@ -1270,7 +1270,7 @@ void CNucleus:: recursiveDecay()
      }
 
 
-  if (bStable)
+  if (bStable) {
 
    //first force the decay of fragments that are unstable in their ground state
     if (iZ==4 && iA == 8) force8Be();
@@ -1291,6 +1291,7 @@ void CNucleus:: recursiveDecay()
   
         return;
       }
+  }
 
   //daughterLight->print();
   if (daughterLight != NULL) 
@@ -1464,7 +1465,7 @@ void CNucleus::excite(float fEx0, float fJ0)
 
   //decide if to use Hauser-Feshback calculation
   HF = 0;
-  if ( Erot > fU0/4. && fJ > 10 || iHF == 1) HF = 1;
+  if ( (Erot > fU0/4. && fJ > 10) || iHF == 1) HF = 1;
 
   logLevelDensity = levelDensity.getLogLevelDensitySpherical(
 		   	     iA,fU0,fPairing,fShell,fJ,fMInertia);
@@ -2156,8 +2157,8 @@ float CNucleus::BohrWheelerWidth()
   symSaddlePoint = yrast.getSymmetricSaddleEnergy(iZ,iA,fJ) + barAdd;
   if (iZ > Zshell) symSaddlePoint -= fPairing + fShell; 
 
-  float fJJ = fJ;
-  if (fJ > yrast.Jmax) fJJ = yrast.Jmax;
+  /*float fJJ = fJ;
+  if (fJ > yrast.Jmax) fJJ = yrast.Jmax;*/
   short iAfAn = 1;
   float gamma = getWidthZA(symSaddlePoint,iAfAn)*fissionScaleFactor;
   return gamma;

@@ -285,21 +285,20 @@ void CMass::ReadFRDMFile()
   while (!ifFile.eof())
     {
       char integ[6]={"     "};
-      int izz,iaa,inn;
+      int izz,iaa;
       for (int i=0;i<5;i++) integ[i] = ifFile.get();
       izz = atoi(integ);
       for (int i=0;i<5;i++) integ[i] = ifFile.get();
-      inn = atoi(integ);
+      // inn = atoi(integ); // Unused
 
       for (int i=0;i<5;i++) integ[i] = ifFile.get();
       iaa = atoi(integ);
 
       char floaty[11]={"          "};
-      float fb;
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
-      fb = atof(floaty);
+      // fb = atof(floaty); // Unused
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
@@ -307,7 +306,7 @@ void CMass::ReadFRDMFile()
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
 
-      float f1,f2,f3,f4,f5,f6;
+      float f1,f2,f3;
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
       f1 = atof(floaty);
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
@@ -320,11 +319,11 @@ void CMass::ReadFRDMFile()
 	}
       f3 = atof(floaty);//experimental mass
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
-      f4 = atof(floaty);
+      // f4 = atof(floaty); // Unused
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
-      f5 = atof(floaty);
+      // f5 = atof(floaty); // Unused
       for (int i=0;i<10;i++) floaty[i] = ifFile.get();
-      f6 = atof(floaty);
+      // f6 = atof(floaty); // Unused
 
 
       //read to end of line
@@ -386,20 +385,20 @@ void CMass::ReadThomasFermiFile()
     {
       char integ3[4]={"   "};
       
-      int izz,iaa,inn;
+      int izz,iaa;
       for (int i=0;i<3;i++) integ3[i] = ifFile.get();
       char integ4[5]={"    "};
       izz = atoi(integ3);
 
       for (int i=0;i<4;i++) integ4[i] = ifFile.get();
-      inn = atoi(integ4);
+      // inn = atoi(integ4); Unused
       for (int i=0;i<4;i++) integ4[i] = ifFile.get();
       iaa = atoi(integ4);
       char float5[11]={"          "};
       for (int i=0;i<5;i++) float5[i] = ifFile.get();
       for (int i=0;i<5;i++) float5[i] = ifFile.get();
-      char float8[9]={"        "};
-      for (int i=0;i<8;i++) float8[i] = ifFile.get();
+      // char float8[9]={"        "}; // Unused
+      for (int i=0;i<8;i++) float5[i] = ifFile.get();
 
       char float6[7]={"      "};
       for (int i=0;i<6;i++) float6[i] = ifFile.get();
@@ -408,7 +407,7 @@ void CMass::ReadThomasFermiFile()
       for (int i=0;i<5;i++) float5[i] = ifFile.get();
       float fPairing = atof(float5);
       for (int i=0;i<6;i++) float6[i] = ifFile.get();
-      for (int i=0;i<8;i++) float8[i] = ifFile.get();
+      for (int i=0;i<8;i++) float5[i] = ifFile.get();
       char float7[8]={"       "};
       for (int i=0;i<7;i++) float7[i] = ifFile.get();
       float f1 = atof(float7);
