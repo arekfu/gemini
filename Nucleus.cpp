@@ -1,4 +1,7 @@
 #include "CNucleus.h"
+
+
+float const CNucleus::EkFraction = 0.01;
 bool const Isig  = 1;    //in weisskopf, use parametrized Inverse Section
                          // otherwise calculated them from transmission coeff.
 int  CNucleus::iHF = 2; //1=Hauser Feshback,0= Weisskopf,2=switches from 0 to 1
@@ -60,8 +63,8 @@ float CNucleus::threshold = .001;
  */
 CNucleus::CNucleus(int iZ0, int iA0) : CNuclide(iZ0,iA0)
 {
-  bStable = 0;
-  saddleToSciss = 0;
+  bStable = false;
+  saddleToSciss = false;
   timeSinceSaddle = 0.;
   velocity[0] = 0.;
   velocity[1] = 0.;
@@ -104,8 +107,8 @@ CNucleus::CNucleus(int iZ0, int iA0, float fEx0, float fJ0)
     : CNuclide(iZ0,iA0)
 {
   //alternative constructor
-  bStable = 0;
-  saddleToSciss = 0;
+  bStable = false;
+  saddleToSciss = false;
   timeSinceSaddle = 0.;
   velocity[0] = 0.;
   velocity[1] = 0.;
@@ -135,10 +138,10 @@ void CNucleus::print()
   cout << "Ex = " << fEx << endl;
   cout << "spin axis, theta = " << spin.theta*180./pi << " phi= "
        << spin.phi*180/pi << " deg" << endl;
-  if (origin == 0) cout << " preSaddle emission" << endl; 
-  else if (origin == 1) cout << "saddle-to-scission emission" << endl;
-  else if (origin == 2) cout << "from light  fission fragment" << endl;
-  else if (origin == 3) cout << "from heavy  fission fragment" << endl;
+  if (origin2 == 0) cout << " preSaddle emission" << endl; 
+  else if (origin2 == 1) cout << "saddle-to-scission emission" << endl;
+  else if (origin2 == 2) cout << "from light  fission fragment" << endl;
+  else if (origin2 == 3) cout << "from heavy  fission fragment" << endl;
 
 
   cout << "emission time = " << timeSinceStart << " zs" << endl; 
@@ -163,6 +166,9 @@ void CNucleus::binaryDecay()
                                 iA-evap.decay[notStatisticalMode].A1);
      daughterLight->origin = origin;
      daughterHeavy->origin = origin;
+
+     daughterLight->origin2 = origin2;
+     daughterHeavy->origin2 = origin2;
 
      daughterLight->parent = this;
      daughterHeavy->parent = this;
@@ -240,8 +246,12 @@ void CNucleus::binaryDecay()
           daughterLight = NULL;
 
           daughterHeavy = new CNucleus(iZ,iA);
+
           daughterHeavy->origin = origin;
+          daughterHeavy->origin2 = origin2;
           daughterHeavy->parent = this;
+
+
           daughterHeavy->timeSinceStart = timeSinceStart;
           daughterHeavy->excite(0.,0.);
           daughterHeavy->iWeight = iWeight;
@@ -264,6 +274,8 @@ void CNucleus::binaryDecay()
 
          daughterLight->origin = origin;
          daughterHeavy->origin = origin;
+         daughterLight->origin2 = origin2;
+         daughterHeavy->origin2 = origin2;
 
          daughterLight->parent = this;
          daughterHeavy->parent = this;
@@ -472,6 +484,9 @@ void CNucleus::binaryDecay()
      daughterLight->origin = origin;
      daughterHeavy->origin = origin;
 
+     daughterLight->origin2 = origin2;
+     daughterHeavy->origin2 = origin2;
+
      daughterLight->iWeight = 0;
      daughterHeavy->iWeight = iWeight;
      daughterLight->runningWeight = runningWeight;
@@ -519,14 +534,17 @@ void CNucleus::binaryDecay()
     }
   else if (iChan == 1) //complex fragment or asymmetric fission decay
     {
-
-      getCompoundNucleus()->bResidue = false;
-      getCompoundNucleus()->bAsymmetricFission = true;
+      CNucleus * com = getCompoundNucleus();
+      com->bResidue = false;
+      com->bAsymmetricFission = true;
      daughterLight = new CNucleus(fissionZ,fissionA);
      daughterHeavy = new CNucleus(iZ-fissionZ,iA-fissionA);
 
-     daughterLight->origin = 2;//origin;
-     daughterHeavy->origin = 3;//origin;
+     daughterLight->origin = 2;
+     daughterHeavy->origin = 3;
+
+     daughterLight->origin2 = origin2;
+     daughterHeavy->origin2 = origin2;
 
      daughterLight->iWeight = 0;
      daughterHeavy->iWeight = 0;
@@ -585,7 +603,7 @@ void CNucleus::binaryDecay()
          sumE[ie] = prob;
          if (ie > 0) sumE[ie] += sumE[ie-1];
          ie ++;
-         if (prob < .01) break;
+         if (prob < EkFraction) break;
          if (ie >= nE) break;
 
        }
@@ -629,8 +647,9 @@ void CNucleus::binaryDecay()
     }
   else if (iChan == 2) //fission decay
     {
-      getCompoundNucleus()->bResidue = false;
-      getCompoundNucleus()->bSymmetricFission = true;
+      CNucleus * com = getCompoundNucleus();
+      com->bResidue = false;
+      com->bSymmetricFission = true;
 
       // start saddle to scission transition
       float Esaddle = yrast.getSymmetricSaddleEnergy(iZ,iA,fJ);
@@ -681,6 +700,7 @@ void CNucleus::binaryDecay()
       daughterHeavy->timeSinceSaddle = 0.;
       daughterHeavy->timeSinceStart = timeSinceStart + decayTime;
       daughterHeavy->origin = 1;
+      daughterHeavy->origin2 = 1;
       daughterHeavy->parent = this;
       daughterHeavy->setVelocityCartesian(velocity[0],velocity[1],velocity[2]);
       daughterHeavy->setSpinAxis(spin);
@@ -705,6 +725,8 @@ void CNucleus::binaryDecay()
      daughterLight = NULL;
      daughterHeavy = new CNucleus(iZ,iA);
      daughterHeavy->origin = origin;
+     daughterHeavy->origin2 = origin2;
+
      daughterHeavy->parent = this;
      daughterHeavy->timeSinceStart = timeSinceStart + decayTime;
      daughterHeavy->excite(GammaEx,GammaJ);
@@ -906,6 +928,8 @@ void CNucleus::saddleToScission()
     {
       daughterLight = new CNucleus(EvapZ1,EvapA1);
       daughterLight->origin = 1;
+      daughterLight->origin2 = 1;
+      daughterLight->saddleToSciss = true;
       daughterLight->iWeight = 0;
       daughterLight->runningWeight = runningWeight;
       daughterLight->fact = fact;
@@ -915,6 +939,7 @@ void CNucleus::saddleToScission()
       daughterHeavy = new CNucleus(EvapZ2,EvapA2);
       daughterHeavy->timeSinceSaddle = newTime; 
       daughterHeavy->origin = 1;
+      daughterHeavy->origin2 = 1;
       daughterHeavy->iWeight = 0;
       daughterHeavy->runningWeight = runningWeight;
       daughterHeavy->fact = fact;
@@ -992,6 +1017,7 @@ void CNucleus::saddleToScission()
 
       daughterLight = new CNucleus(fissionZ,fissionA);
       daughterLight->origin = 2;
+      daughterLight->origin2 = 2;
       daughterLight->parent = this;
       daughterLight->iWeight = 0;
       daughterLight->runningWeight = runningWeight;
@@ -1003,6 +1029,7 @@ void CNucleus::saddleToScission()
 
       daughterHeavy = new CNucleus(iZ-fissionZ,iA-fissionA);
       daughterHeavy->origin = 3;
+      daughterHeavy->origin2 = 3;
       daughterHeavy->parent = this;
       daughterHeavy->iWeight = 0;
       daughterHeavy->runningWeight = runningWeight;
@@ -1048,6 +1075,8 @@ void CNucleus::force8Be()
   daughterHeavy = new CNucleus(2,4);
   daughterLight->origin = origin;
   daughterHeavy->origin = origin;
+  daughterLight->origin2 = origin2;
+  daughterHeavy->origin2 = origin2;
   daughterLight->parent = this;
   daughterHeavy->parent = this;
   daughterHeavy->notStatistical = false;
@@ -1102,6 +1131,8 @@ void CNucleus::force5Li()
   daughterHeavy = new CNucleus(2,4);
   daughterLight->origin = origin;
   daughterHeavy->origin = origin;
+  daughterLight->origin2 = origin2;
+  daughterHeavy->origin2 = origin2;
   daughterLight->parent = this;
   daughterHeavy->parent = this;
   daughterHeavy->notStatistical = false;
@@ -1154,6 +1185,8 @@ void CNucleus::force5He()
   daughterHeavy = new CNucleus(2,4);
   daughterLight->origin = origin;
   daughterHeavy->origin = origin;
+  daughterLight->origin2 = origin2;
+  daughterHeavy->origin2 = origin2;
   daughterLight->parent = this;
   daughterHeavy->parent = this;
   daughterHeavy->notStatistical = false;
@@ -1206,6 +1239,8 @@ void CNucleus::force9B()
   daughterHeavy = new CNucleus(4,8);
   daughterLight->origin = origin;
   daughterHeavy->origin = origin;
+  daughterLight->origin2 = origin2;
+  daughterHeavy->origin2 = origin2;
   daughterLight->excite(0.,0.5);
   daughterHeavy->excite(0.,0.);
   daughterLight->bStable = 1;      
@@ -1263,7 +1298,7 @@ void CNucleus:: recursiveDecay()
 
   if (!bStable)
     {
-     if (saddleToSciss) saddleToScission();
+     if (saddleToSciss && fEx > 0.) saddleToScission();
      else binaryDecay();
   
      if (abortEvent) return;
@@ -1349,6 +1384,9 @@ void CNucleus::reset()
   daughterLight = NULL;
   daughterHeavy = NULL;
   bStable = 0;
+  bResidue = true;
+  bSymmetricFission = false;
+  bAsymmetricFission = false;
 
 }
 //***************************************************
@@ -1548,8 +1586,8 @@ void CNucleus::excite(float fEx0)
 void CNucleus::exciteScission(float fEx0,float fJ0,bool sym/*=1*/)
 {
 
-  saddleToSciss = 1;
-  notStatistical = 0;
+  saddleToSciss = true;
+  notStatistical = false;
   HF = 0;
   fEx = fEx0;
   //make sure we have either interg spin for even mass or half interger
@@ -3495,6 +3533,7 @@ void CNucleus::setCompoundNucleus(float fEx0, float fJ0)
   //initialize as a compound nucleus ready for decay
   excite(fEx0,fJ0);
   origin = 0;
+  origin2 = 0;
   timeSinceStart = 0.;
   sumGammaEnergy = 0.;
   iPoint = -1;
@@ -3660,10 +3699,10 @@ void CNucleus::decay()
     {
       if (stableProducts[i]->iZ == 0 && stableProducts[i]->iA == 1)
 	{
-	  if (stableProducts[i]->origin == 2) multPostLight++;
-	  if (stableProducts[i]->origin == 3) multPostHeavy++;
-	  if (stableProducts[i]->origin == 1) multSaddleToScission++;
-	  if (stableProducts[i]->origin == 0) multPreSaddle++;
+	  if (stableProducts[i]->origin2 == 2) multPostLight++;
+	  if (stableProducts[i]->origin2 == 3) multPostHeavy++;
+	  if (stableProducts[i]->origin2 == 1) multSaddleToScission++;
+	  if (stableProducts[i]->origin2 == 0) multPreSaddle++;
 	}
     }
 }
@@ -4292,7 +4331,7 @@ float CNucleus::EkLoop()
       float gamma = EkWidth(ek);
       gammaMax = max(gammaMax,gamma);
       width += gamma;
-      if (gamma < 0.01*gammaMax) break;
+      if (gamma < EkFraction*gammaMax) break;
       ek += sign*de;
 
     } 
@@ -4307,7 +4346,7 @@ float CNucleus::EkLoop()
       float gamma = EkWidth(ek);
       gammaMax = max(gammaMax,gamma);
       width += gamma;
-      if (gamma < 0.01*gammaMax) break;
+      if (gamma < EkFraction*gammaMax) break;
       ek += sign*de;
 
     } 
@@ -4614,4 +4653,12 @@ void CNucleus::getSpin(bool saddle)
 void CNucleus::setEvapMode(int iHF0/*=2*/)
 {
   iHF = iHF0;
+}
+//*****************************************************
+  /**
+   * returns the max Z for evaporation
+   */
+int CNucleus::getZmaxEvap()
+{
+  return evap.maxZ;
 }

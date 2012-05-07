@@ -262,6 +262,8 @@ class CNucleus : public CNuclide, public CWeight
   float LestoneCorrection(float Usaddle, float momInertiaEff,short iAfAn);
   static CRandom ran; //!< pointer to random number generator
   static float const pi; //!< 3.14159
+  static float const EkFraction; // !< calculates the Ek spectra down to this 
+                                 // fraction of the maximum
   //functions
   CNucleus(int iZ,int iA);
   CNucleus(int iZ,int iA, float fEx, float fJ);
@@ -299,6 +301,7 @@ class CNucleus : public CNuclide, public CWeight
 
 
   int getNumberOfProducts();
+  int getZmaxEvap();
 
   float getTheta();
   float getThetaDegrees();
@@ -343,7 +346,7 @@ class CNucleus : public CNuclide, public CWeight
   int getMultPreSaddle();
   int getMultSaddleToScission();
   int origin; //!< specifies the origin of the fragment, prefission, post , etc
-
+  int origin2; //!< specifies the origin of the fragment, prefission, post , etc
   void printParameters();
 
 

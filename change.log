@@ -188,4 +188,41 @@
 	           We now let all the excitation energy go into kinetic energy
 	        These three changes were made to Nucleus.cpp
 4th April 2012 force9B didn't assign times to products. fixed.	
-5th April 2012 added the class History writtem by Davide Mancusi	
+5th April 2012 added the class History writtem by Davide Mancusi
+10th April 2012 Davide Mancusi modified the code to remove some compiler 
+	         warning on his computer	
+23rd April 2012 a)added a sample heavy ion fusion main code to calculate so 
+	        simple quentities. This should be easily expanded to suit
+	        the needs of most users.
+	        b)created a getZmaxEvap() function to return the max Z for 
+	        evaporation. 
+
+	        c)Fixed isSaddleToScission() function.
+
+	        d)Now have tow origin parameters
+
+	        origin = 0 then not from fission fragment or IMF
+	        origin = 1 then saddle to scission
+	        origin = 2 from light fission fragment or IMF
+	        origin = 3 from heavy fission fragment or heavy 
+	                   daughter after IMF emission
+
+	        origin2 = 0 then not from a fission fragment
+	        origin2 = 1 the saddle to scission
+	        origin2 = 2 from light fission fragment
+	        origin2 = 3 from heavy fission fragment
+
+	        note in origin, fission and IMF emission are treated the same
+	        whereas for origin2, evaporation and IMF emission are 
+	        treated the same.
+
+      	        e) introduced a EkFraction static variable in CNucleus 
+	           to allow peaople to easily extent how far out in 
+	           Ek they go, if you are trying to make EK spectra 
+	
+7th May 2012   a) the functions isResidue(), isSymmetricFission, and 
+	       isAsymmetricFission() were not 
+	       working. Needed to reset the logical in the Reset function
+	       b)stopped multiple called to getCompoundNucleus which 
+	       were not needed. might save a tiny little bit of time, 
+	       but probably not important.

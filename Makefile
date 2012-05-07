@@ -10,6 +10,9 @@ COMPILER= c++
 testDecay:  testDecay.o $(OBJECTS)
 	$(COMPILER) -o testDecay testDecay.o $(OBJECTS)  
 
+testFusion:  testFusion.o $(OBJECTS)
+	$(COMPILER) -o testFusion testFusion.o $(OBJECTS)  
+
 testGemini:: testGemini.o gemini.o $(OBJECTS)
 	f77 -o testGemini testGemini.o gemini.o $(OBJECTS) -lstdc++
 
