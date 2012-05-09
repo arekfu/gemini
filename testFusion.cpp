@@ -8,15 +8,16 @@
 
 int main()
 {
-  int Zp = 9; // proton number of projectile
-  int Ap = 19; // mass number of projectile
-  int Zt = 73; // proton number of target
-  int At = 181; //mass number of target
-  float Elab = 100.; // labe energy in MeV
+  int Zp = 8; // proton number of projectile
+  int Ap = 16; // mass number of projectile
+  int Zt = 6; // proton number of target
+  int At = 12; //mass number of target
+  float Elab = 160.; // labe energy in MeV
   float dif = 2; //diffuseness of fusion spin distribution in hbar
 
   CFus fus(Zp,Ap,Zt,At,Elab,dif);
-  float l0 = fus.getBassL();  // get maximum spin from Bass model
+  //float l0 = fus.getBassL();  // get maximum spin from Bass model
+  float l0 = 23;  // get maximum spin from paper
 
 
 
@@ -47,6 +48,7 @@ int main()
   cout << " compound Nucleus is " << CN.getName() << endl;
   cout << " E* = " << fEx << " critical spin = " << l0 << endl;
   cout << " fusion xsection = " << sum*fus.plb << " mb" << endl;
+  float xfus = sum*fus.plb;
 
   CN.setEvapMode(1);  // force a fully Hauser-Feshbach calculation
 
@@ -85,7 +87,17 @@ int main()
   float alpMultEv = 0.;
   float gammaEnergy = 0.;
 
-  for (int i=0;i<300;i++)
+
+  float sum3 = 0.;
+  float sum4 = 0.;
+  float sum5 = 0.;
+  float sum6 = 0.;
+
+
+  int Nevents = 5000;
+  float Sconst = xfus/(float)Nevents;
+
+  for (int i=0;i<Nevents;i++)
     {
       //choose the spin of the CN from the determed spin distribution
       float ran = CN.ran.Rndm();
@@ -163,27 +175,32 @@ int main()
           Zres += products->iZ;
           resTotal += weight;
           gammaEnergy += weight*products->getSumGammaEnergy();
-
-	  products = CN.getProducts(0);  // go to first evaporated particle
-          for (int i=0;i<Nfrag-1;i++)
+       }
+     products = CN.getProducts(0);  // go to first evaporated particle
+     for (int i=0;i<Nfrag-1;i++)
+        {
+	  if (products->iZ == 0 && products->iA == 1 && CN.isResidue())  //neutrons
 	    {
-              if (products->iZ == 0 && products->iA == 1)  //neutrons
-		{
-                  neutMultEv += weight;
-		}
-              else if (products->iZ == 1 && products->iA == 1) //protons
-		{
-                  protMultEv += weight;
-		}
-              else if (products->iZ == 2 && products->iA == 4)//alpha particles
-		{
-                  alpMultEv += weight;
-		}
-	      // go to next particle
-	      products = CN.getProducts();
+              neutMultEv += weight;
 	    }
+	  else if (products->iZ == 1 && products->iA == 1 && CN.isResidue()) //protons
+	    {
+             protMultEv += weight;
+	    }
+	  else if (products->iZ == 2 && products->iA == 4 && CN.isResidue())//alpha particles
+	    {
+             alpMultEv += weight;
+            }
 
-       }        
+	   else if (products->iZ == 3) sum3 += weight;
+           else if (products->iZ == 4) sum4 += weight;
+           else if (products->iZ == 5) sum5 += weight;
+           else if (products->iZ == 6) sum6 += weight; 
+	   // go to next particle
+	   products = CN.getProducts();
+         }
+
+
 
 
 
@@ -193,7 +210,7 @@ int main()
 
   cout << endl;
   cout << "fission probability = " << Nfission/total << "  xsection = " <<
-    Nfission*fus.plb << " mb" <<endl;
+    Nfission*Sconst << " mb" <<endl;
 
   if (Nfission > 0.)
     {
@@ -205,12 +222,11 @@ int main()
       cout << endl;
     }
 
-  cout << " intermediate Mass Fragment (Z > " << CN.getZmaxEvap() << ") (IMF) " << endl;
-  cout << " IMF prob = " << Nimf/total 
-        << " xsection = " << Nimf*fus.plb << " mb" <<endl;
+
   cout << endl;
 
-  cout << " residue xsection = " << resTotal*fus.plb << " mb" << endl;
+  cout << "residue (no IMF or Symmetric fission emissions)" << endl;
+  cout << " residue xsection = " << resTotal*Sconst << " mb" << endl;
   if (resTotal > 0.)
     {
   cout << "  average residue is Z = " << Zres/resTotal << " A = " 
@@ -219,7 +235,18 @@ int main()
   cout << "  average neutron multiplicity = " << neutMultEv/resTotal << endl;
   cout << "  average proton multiplicity = " << protMultEv/resTotal << endl;
   cout << "  average alpha multiplicity = " << alpMultEv/resTotal << endl;
-  cout << " average energy in gamma rays = " << gammaEnergy/resTotal << endl;
+  cout << " average energy in gamma rays = " << gammaEnergy/resTotal << 
+    " MeV" << endl;
+
+  cout << endl;
+  cout << " intermediate Mass Fragment (Z > " << CN.getZmaxEvap() << ") (IMF) " << endl;
+  cout << " IMF prob = " << Nimf/total 
+        << " xsection = " << Nimf*Sconst << " mb" <<endl;
+  cout << " IMF yields" << endl;
+  cout << " xsection of Z=3 " << sum3*Sconst << " mb" << endl;
+  cout << " xsection of Z=4 " << sum4*Sconst << " mb" << endl;
+  cout << " xsection of Z=5 " << sum5*Sconst << " mb" << endl;
+  cout << " xsection of Z=6 " << sum6*Sconst << " mb" << endl;
 
     }
 
