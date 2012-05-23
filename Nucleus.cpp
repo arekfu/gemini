@@ -3434,6 +3434,7 @@ float CNucleus::weiskopf( bool saddle)
       lightP->storeEvap[lightP->iStore].gamma = gamma;
       if (lightP->iStore > 0) lightP->storeEvap[lightP->iStore].gamma += lightP->storeEvap[lightP->iStore-1].gamma;
       lightP->storeEvap[lightP->iStore].energy = fEk;
+      lightP->storeEvap[lightP->iStore].L = 0;
       lightP->iStore++;
       if (lightP->iStore == lightP->nStore)
 	{
@@ -4462,14 +4463,28 @@ void CNucleus::getSpin(bool saddle)
      for (;;)
        {
          Ek = lightP->storeEvap[i].energy + (1.-2.*ran.Rndm())*de/2.;
+         const float S2MinRes = (lightP->residue.iA%2==0 ? 0.0 : 0.5);
+         const float EYrastRes = yrast.getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
          Ex = fEx - lightP->separationEnergy - Ek;
-         if (Ek >= 0. && Ex >= 0.) break;
+         if (Ek >= 0. && Ex >= EYrastRes) break;
          if (iTry ==4) 
-	   {
-	     Ek = lightP->storeEvap[i].energy;
-             Ex = fEx - lightP->separationEnergy - Ek;
-             break;
-   	   }
+         {
+           if(Ek>0.) { // all goes into kinetic energy -- assume maximum L and minimum S2
+             EvapEk = fEx - lightP->separationEnergy - EYrastRes;
+             EvapEx2 = EYrastRes;
+             EvapS2 = S2MinRes;
+             lPlusSMax = fJ + S2MinRes;    //maximum value of (l+s) vector
+             lMax = (int)round(lPlusSMax+lightP->fJ); //maximum value of l vector
+             if (lMax > lMaxQuantum) lMax = lMaxQuantum;
+             EvapL = lMax;
+           } else { // all goes into excitation energy -- assume L=0 and S2=fJ-lightP->fJ
+             EvapEk = 0.;
+             EvapEx2 = fEx - lightP->separationEnergy;
+             EvapL = 0.;
+             EvapS2 = fabs(fJ - lightP->fJ);
+           }
+           return;
+         }
          iTry++;
        }
   
@@ -4500,14 +4515,28 @@ void CNucleus::getSpin(bool saddle)
   for (;;)
     {
       Ek = lightP->storeEvap[i].energy + (1.-2.*ran.Rndm())*de/2.;
+      const float S2MinRes = (lightP->residue.iA%2==0 ? 0.0 : 0.5);
+      const float EYrastRes = yrast.getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
       Ex = fEx - lightP->separationEnergy - Ek;
-      if (Ek >= 0. && Ex >= 0.) break;
+      if (Ek >= 0. && Ex >= EYrastRes) break;
       if (iTry ==4) 
-	{
-	  Ek = lightP->storeEvap[i].energy;
-          Ex = fEx - lightP->separationEnergy - Ek;
-          break;
-	}
+      {
+        if(Ek>0.) { // all goes into kinetic energy -- assume maximum L and minimum S2
+          EvapEk = fEx - lightP->separationEnergy - EYrastRes;
+          EvapEx2 = EYrastRes;
+          EvapS2 = S2MinRes;
+          lPlusSMax = fJ + S2MinRes;    //maximum value of (l+s) vector
+          lMax = (int)round(lPlusSMax+lightP->fJ); //maximum value of l vector
+          if (lMax > lMaxQuantum) lMax = lMaxQuantum;
+          EvapL = lMax;
+        } else { // all goes into excitation energy -- assume L=0 and S2=fJ-lightP->fJ
+          EvapEk = 0.;
+          EvapEx2 = fEx - lightP->separationEnergy;
+          EvapL = 0.;
+          EvapS2 = fabs(fJ - lightP->fJ);
+        }
+        return;
+      }
       iTry++;
     }
 
@@ -4534,6 +4563,16 @@ void CNucleus::getSpin(bool saddle)
      //prepare transmission coeff
      lightP->tlArray->prepare(lightP->residue.iZ);
      float width = S2Loop(Ek);
+
+     if(width<=0.) {
+       // problematic corner case, it probably means that shell and pairing
+       // corrections made the thermal excitation energy negative
+       // in this case just set L=0 and S2=0 or 1/2.
+       EvapL = 0;
+       EvapS2 = 0.;
+       if (lightP->odd) EvapS2 += 0.5;
+       return;
+     }
 
 
      //choose the residue spin and evaporated particles energy;
