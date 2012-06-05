@@ -222,7 +222,10 @@
 	
 7th May 2012   a) the functions isResidue(), isSymmetricFission, and 
 	       isAsymmetricFission() were not 
-	       working. Needed to reset the logical in the Reset function
-	       b)stopped multiple called to getCompoundNucleus which 
+	       working. Needed to reset the logicals in the Reset function
+	       b)stopped multiple calls to getCompoundNucleus which 
 	       were not needed. might save a tiny little bit of time, 
 	       but probably not important.
+
+5th June 2012  modification to Run.cpp to remove uninteresting histograms 
+	       and label the axies of existing histograms
