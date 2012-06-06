@@ -1,7 +1,7 @@
 #include "CNucleus.h"
 
 
-float const CNucleus::EkFraction = 0.01;
+double const CNucleus::EkFraction = 0.01;
 bool const Isig  = 1;    //in weisskopf, use parametrized Inverse Section
                          // otherwise calculated them from transmission coeff.
 int  CNucleus::iHF = 2; //1=Hauser Feshback,0= Weisskopf,2=switches from 0 to 1
