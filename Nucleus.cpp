@@ -2814,6 +2814,10 @@ float CNucleus::getSumTl(float ek,float temp)
 
   float xran = ran.Rndm();
   int i = 0;
+  if(sumTl<=0.) {
+    delete [] storeSub;
+    return 0.;
+  }
   for (;;)
     {
       float prob = storeSub[i].weight/sumTl;
@@ -2871,7 +2875,7 @@ if (EvapS1 > 0.0)
     //   find orientation of L vector with respect to l_plus_s vector
     //   (i.e. z axis parallel to l_plus_s)
     CAngle LL;
-    if (EvapLPlusS > 0.0)
+    if (EvapLPlusS > 0.0 && EvapL > 0.0)
       LL.theta = acos((pow(EvapLPlusS,2) + pow((float)EvapL,2) - pow(EvapS1,2))
 		      /(2.0*EvapLPlusS*(float)EvapL));
     else LL.theta = acos(1.-2.*ran.Rndm()); 
@@ -4572,10 +4576,9 @@ void CNucleus::getSpin(bool saddle)
      if(width<=0.) {
        // problematic corner case, it probably means that shell and pairing
        // corrections made the thermal excitation energy negative
-       // in this case just set L=0 and S2=0 or 1/2.
+       // in this case just set L=0 and S2=|fJ-EvapS1|
        EvapL = 0;
-       EvapS2 = 0.;
-       if (lightP->odd) EvapS2 += 0.5;
+       EvapS2 = fabs(fJ-EvapS1);
        return;
      }
 
