@@ -83,7 +83,7 @@ class CYrast
   float sadArrayZA[150]; //!< array stores saddle energies after correction
   CMass * mass; //!< class for mass defects
   static float const deltaJ; //!< used to extend sierk barrier to higher J
-  static float const kRotate=41.563; //!< constant for rotional energy
+  static float const kRotate; //!< constant for rotional energy
   int iZ; //!< proton number
   int iA; //!<mass number
   float fJ; //!< spin

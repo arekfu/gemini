@@ -7,6 +7,7 @@ double const CYrast::pi=acos(-1.);
 float const CYrast::deltaJ= 3.;
 bool CYrast::first = 1;
 bool CYrast::bForceSierk = 0;
+float const CYrast::kRotate=41.563;
 
 //RLDM constants
 float const CYrast::x1h[11][6]={
