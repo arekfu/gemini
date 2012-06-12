@@ -41,7 +41,8 @@ class CHistory {
          \param np pointer to compound nucleus
 	 */
 	CHistory(CNucleus *np) {
-        maxEvapZ = evap.maxZ;
+        evap = CEvap::instance();
+        maxEvapZ = evap->maxZ;
 		theMap[np]=0;
 		tagDaughters(np, 0);
 	}
@@ -71,6 +72,6 @@ class CHistory {
 
 	HistoryMap theMap;
 	int maxEvapZ; //!< maximum Z for evaporation
-	static CEvap evap; //!< class for evaporation of light particles
+    static CEvap *evap;
 };
 #endif // chistory_h

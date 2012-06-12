@@ -35,17 +35,19 @@ struct SDecay
 class CEvap
 {
  protected:
+  CEvap();
+  static CEvap *fInstance; //!< instance member to make this class a singleton
   CTlBarDist ** tlArray; //!< arrays of objects generating transmission coef.
   CSigBarDist ** sigBarDist; //!< arrays of objects generating inverse cross section
   int nTl; //!< number of transmission coef generating objects
 
  public:
+  static CEvap *instance();
   int nLight; //!< number of light-particle evaporation channels
   CLightP ** lightP; //!< array of evaporated particles
   int maxZ; //!< max Z of all fragments evaporated, IMF emission for larger Z's
   SDecay * decay; //!<information on secondary decay of evaporated particles
 
-  CEvap();
   ~CEvap();
   float * prob; //!< probability for decay
 };

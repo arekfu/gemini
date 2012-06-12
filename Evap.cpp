@@ -1,5 +1,7 @@
 #include "CEvap.h"
 
+CEvap* CEvap::fInstance = 0;
+
 float const r0 = 1.16;
 /**
  * Constructor
@@ -113,6 +115,15 @@ CEvap::CEvap()
 
   
 }
+
+CEvap* CEvap::instance()
+{
+    if (fInstance == 0) {
+        fInstance = new CEvap;
+    }
+    return fInstance;
+}
+
 //**************************************************
 /**
  * Destructor

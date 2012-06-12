@@ -20,6 +20,8 @@ using namespace std;
 class CLevelDensity
 {
  private:
+  CLevelDensity();
+  static CLevelDensity *fInstance; //!< instance member to make this class a singleton
   static float k0; //!< inverse level-density parameter at U=0
   static float kInfinity; //!< inverse level-density parameter at U=infinity
   static float aKappa; //!< mass dependence of kappa
@@ -35,7 +37,7 @@ class CLevelDensity
   static float const pi; //!< the mathematical constant \f$\pi\f$
 
  public:
-  CLevelDensity();
+  static CLevelDensity *instance(); //!< instance member to make this class a singleton
   float getLittleA(int iA,float fU0,float fPairing=0.,float fShell=0.,
                  float fJ=0.,short iFission=0);
   float getAden();

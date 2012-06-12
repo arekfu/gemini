@@ -121,9 +121,9 @@ class CNucleus : public CNuclide, public CWeight
   static int const nStore; //!< number of evap sub Channels allowed
 
   static short unsigned Zshell; //!< enforce shell effects in evaporation
-  static CYrast yrast; //!< gives fission barriers and rotational energies
-  static CScission scission; //!< gives scission energeis, etc
-  static CLevelDensity levelDensity; //!< gives level densities
+  static CYrast *yrast; //!< gives fission barriers and rotational energies
+  CScission scission; //!< gives scission energeis, etc
+  static CLevelDensity *levelDensity; //!< gives level densities
   bool  bStable; //!< indicated this nucleus is particle-stable
   static float const r0; //!< radius const (fm)
   static float const sep; //!< separation between fragments
@@ -134,7 +134,7 @@ class CNucleus : public CNuclide, public CWeight
   float momentum[3]; //!< momentum vector in MeV/c
 
 
-  static CEvap evap; //!< stores info on evaporated particles
+  static CEvap *evap; //!< stores info on evaporated particles
 
 
   CLightP * lightP; //!< points to the light-particle decay mode

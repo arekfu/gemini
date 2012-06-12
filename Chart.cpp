@@ -10,6 +10,8 @@
 
 #include "CChart.h"
 
+CChart* CChart::fInstance = 0;
+
 int const CChart::iZmax = 100;
 //****************************************************
   /**
@@ -58,6 +60,15 @@ CChart::CChart()
     }
 
 }
+
+CChart* CChart::instance()
+{
+    if (fInstance == 0) {
+        fInstance = new CChart;
+    }
+    return fInstance;
+}
+
 //***********************************************************
   /**
    *descructor

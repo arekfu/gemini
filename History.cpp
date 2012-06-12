@@ -1,7 +1,5 @@
 #include "CHistory.h"
 
-CEvap CHistory::evap;
-
 void CHistory::tagDaughters(CNucleus *n, int32_t parentHistory) {
 	CNucleus *daughterLight = n->getLightDaughter();
 	CNucleus *daughterHeavy = n->getHeavyDaughter();
