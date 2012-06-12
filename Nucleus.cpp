@@ -4571,10 +4571,9 @@ void CNucleus::getSpin(bool saddle)
      if(width<=0.) {
        // problematic corner case, it probably means that shell and pairing
        // corrections made the thermal excitation energy negative
-       // in this case just set L=0 and S2=0 or 1/2.
+       // in this case just set L=0 and S2=|fJ-EvapS1|
        EvapL = 0;
-       EvapS2 = 0.;
-       if (lightP->odd) EvapS2 += 0.5;
+       EvapS2 = fabs(fJ-EvapS1);
        return;
      }
 
