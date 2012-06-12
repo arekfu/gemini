@@ -1,4 +1,7 @@
 #include "CRandom.h"
+#ifdef GEMINIXX_USE_USER_RNG
+double geminixxuserrng();
+#endif
 
 float const CRandom::pi=acos(-1.);
 bool CRandom::one = 1;
@@ -10,7 +13,11 @@ float CRandom::x=0.;
  */
 double CRandom::Rndm()
 {
+#ifndef GEMINIXX_USE_USER_RNG
   return  (float)rand()/(float)RAND_MAX;
+#else
+  return geminixxuserrng();
+#endif
 }
 //***********************
 /**
