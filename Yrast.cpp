@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+CYrast* CYrast::fInstance = 0;  // singleton
+
 double CYrast::addBar = 0.;
 double const CYrast::pi=acos(-1.);
 float const CYrast::deltaJ= 3.;
@@ -425,6 +427,14 @@ CYrast::CYrast()
   ifFile.close();
   ifFile.clear();
 
+}
+
+CYrast* CYrast::instance()
+{
+    if (fInstance == 0) {
+        fInstance = new CYrast;
+    }
+    return fInstance;
 }
 
 //*********************************************************************

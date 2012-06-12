@@ -62,16 +62,6 @@ class CHistory {
   public:
 
   /**
-   * constructor
-   \param np pointer to compound nucleus
-   */
-  CHistory(CNucleus *np) {
-    maxEvapZ = evap.maxZ;
-    theMap[np]="";
-    tagDaughters(np, "");
-  }
-
-  /**
    * destructor
    */
   ~CHistory() {};
@@ -106,6 +96,17 @@ class CHistory {
       std::cerr << "Unknown CNucleus pointer in HistoryMap" << std::endl;
       return 0;
     }
+  }
+
+  /**
+   * constructor
+       \param np pointer to compound nucleus
+   */
+  CHistory(CNucleus *np) {
+    evap = CEvap::instance();
+    maxEvapZ = evap->maxZ;
+    theMap[np]="";
+    tagDaughters(np, "");
   }
 
   static const char Evaporation;
@@ -144,6 +145,6 @@ class CHistory {
   static const int maxInt32Len;
   HistoryMap theMap;
   int maxEvapZ; //!< maximum Z for evaporation
-  static CEvap evap;  //!< class for evaporation of light particles
+  static CEvap *evap;
 };
 #endif // chistory_h

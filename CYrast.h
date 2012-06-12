@@ -20,6 +20,8 @@ class CYrast
 {
  private:
 
+  CYrast();
+  static CYrast *fInstance; //!< instance member to make this class a singleton
   static double const pi; //!< 3.14159
   //needed by getYrastRLDM
   static float const x1h[11][6]; //!< number for RLDM
@@ -88,8 +90,8 @@ class CYrast
   int iA; //!<mass number
   float fJ; //!< spin
  public:
+  static CYrast *instance(); //!< instance member to make this class a singleton
   double Jmax;  //!< max spin where the fission barrier exists
-  CYrast();
   float getYrast(int,int,float);
   float getYrastModel(int,int,float);
   float getYrastRLDM(int,int,float);
