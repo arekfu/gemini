@@ -929,7 +929,7 @@ void CNucleus::saddleToScission()
       daughterLight = new CNucleus(EvapZ1,EvapA1);
       daughterLight->origin = 1;
       daughterLight->origin2 = 1;
-      daughterLight->saddleToSciss = true;
+      daughterLight->saddleToSciss = false;
       daughterLight->iWeight = 0;
       daughterLight->runningWeight = runningWeight;
       daughterLight->fact = fact;
