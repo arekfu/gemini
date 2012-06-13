@@ -59,7 +59,12 @@ CTlBarDist::~CTlBarDist()
   */ 
 float CTlBarDist::getTl(int iL, float fEk, float temp)
 {
-  if (one || temp <= 0. || width == 0.) return tlArray[1]->getTl(iL,fEk);
+  if (one || temp <= 0. || width == 0.) {
+    if (tlArray[1]->iZMin >= iZ) 
+      return 1.;
+    else
+      return tlArray[1]->getTl(iL,fEk);
+  }
   if (tlArray[0]->iZMin >= iZ) return tlArray[1]->getTl(iL,fEk);
   if (tlArray[2]->iZMin >= iZ) return tlArray[1]->getTl(iL,fEk);
 
