@@ -1,7 +1,7 @@
 #include "CLightP.h"
 
 
-int const CLightP::nStore=5000;
+int const CLightP::nStore=50000;
   //! constructor which creates a CTlBarDist object
   /**
     \param iZ0 proton number of particle
