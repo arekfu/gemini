@@ -10,7 +10,8 @@
 
 #include "CChart.h"
 
-int const CChart::iZmax = 100;
+int const CChart::iZmax = 136;
+
 //****************************************************
   /**
    * Constructor reads in files with neutron and 
@@ -80,6 +81,7 @@ int CChart::getAmin(int iZ)
   if (iZ > iZmax) 
     {
       cout << "CHart above its limits" << endl;
+      cout << "iZ=" << iZ << endl;
       abort();
     }
   return isotope[iZ].iAmin;
@@ -97,6 +99,7 @@ int CChart::getAmax(int iZ)
   if (iZ > iZmax) 
     {
       cout << "CChart above its limits" << endl;
+      cout << "iZ=" << iZ << endl;
       abort();
     }
   return isotope[iZ].iAmax;

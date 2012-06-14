@@ -53,6 +53,11 @@ void CNuclide::init(int iZ0, int iA0)
   else if (iZ ==1 && iA == 1) strChemName = "p";
   else if (iZ == 1 && iA == 2) strChemName = "d";
   else if (iZ == 1 && iA == 3) strChemName = "t";
+  else if (iZ>100) {
+   ostringstream outstring;
+   outstring << iA << "X-" << iZ;
+   strChemName = outstring.str();
+  }
   else
     {
    ostringstream outstring;

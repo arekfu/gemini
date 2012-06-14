@@ -79,8 +79,8 @@ class CYrast
   static bool bForceSierk; //!<separation id fm between fragments
   static double addBar; //!<extrapolated Sierk barrier increase by this amount
 
-  float sadArray[150]; //!< array stores the conditional saddle energies
-  float sadArrayZA[150]; //!< array stores saddle energies after correction
+  float sadArray[300]; //!< array stores the conditional saddle energies
+  float sadArrayZA[300]; //!< array stores saddle energies after correction
   CMass * mass; //!< class for mass defects
   static float const deltaJ; //!< used to extend sierk barrier to higher J
   static float const kRotate; //!< constant for rotional energy

@@ -787,7 +787,7 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
   //configuration for symmetric division. 
 
  
-  int const nStore = 1000;
+  int const nStore = 10000;
   SStore store[nStore];
   int iStore = 0;
   int iZ1,iZ2,iA1,iA2;
