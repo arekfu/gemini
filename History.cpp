@@ -2,6 +2,8 @@
 
 CEvap *CHistory::evap;
 
+CHistory::HistoryStringToDigitsTranslator CHistory::theTranslator;
+
 const int CHistory::maxInt32Len = numeric_limits<int32_t>::digits10;
 
 const char CHistory::Evaporation = 'e';
