@@ -1083,6 +1083,7 @@ void CNucleus::saddleToScission()
    */
 void CNucleus::force8Be()
 {
+  notStatistical = true;
   daughterLight = new CNucleus(2,4);
   daughterHeavy = new CNucleus(2,4);
   daughterLight->origin = origin;
@@ -1139,6 +1140,7 @@ void CNucleus::force8Be()
    */
 void CNucleus::force5Li()
 {
+  notStatistical = true;
   daughterLight = new CNucleus(1,1);
   daughterHeavy = new CNucleus(2,4);
   daughterLight->origin = origin;
@@ -1193,6 +1195,7 @@ void CNucleus::force5Li()
    */
 void CNucleus::force5He()
 {
+  notStatistical = true;
   daughterLight = new CNucleus(0,1);
   daughterHeavy = new CNucleus(2,4);
   daughterLight->origin = origin;
@@ -1247,6 +1250,7 @@ void CNucleus::force5He()
    */
 void CNucleus::force9B()
 {
+  notStatistical = true;
   daughterLight = new CNucleus(1,1);
   daughterHeavy = new CNucleus(4,8);
   daughterLight->origin = origin;
