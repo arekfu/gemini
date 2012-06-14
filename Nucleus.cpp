@@ -233,8 +233,20 @@ void CNucleus::binaryDecay()
   //"statistical" decays into alpha plus ligher partner
   if (fEx > 0. && (iZ == 3 || (iZ == 2&& iA == 5)))
     {
-      daughterLight = new CNucleus(iZ-2,iA-4);
-      daughterHeavy = new CNucleus(2,4);
+      int ejectileA, ejectileZ;
+      if(iZ == 2) { // He-5
+        ejectileA = 1;
+        ejectileZ = 0;
+      } else if(iA==4) { // Li-4
+        ejectileA = 1;
+        ejectileZ = 1;
+      } else { // for all the other Li isotopes, leave an alpha behind
+        ejectileA = iA - 4;
+        ejectileZ = iZ - 2;
+      }
+
+      daughterLight = new CNucleus(ejectileZ,ejectileA);
+      daughterHeavy = new CNucleus(iZ-ejectileZ,iA-ejectileA);
 
       double Ek = fExpMass + fEx - daughterLight->fExpMass - 
 	daughterHeavy->fExpMass;
@@ -302,8 +314,8 @@ void CNucleus::binaryDecay()
          //randomise angle
          float theta = acos(1.-2.*ran.Rndm());
          float phi = 2.*pi*ran.Rndm();
-	 float vrel = sqrt(2.*Ek*(float)iA/(((float)iA-4.)*4.))*0.9794;
-         float v1 = vrel*4./(float)iA;
+	 float vrel = sqrt(2.*Ek*(float)iA/(((float)iA-ejectileA)*((float)ejectileA)))*0.9794;
+         float v1 = vrel*(float)(iA-ejectileA)/(float)iA;
          daughterLight->velocity[0] = v1*sin(theta)*cos(phi);
          daughterLight->velocity[1] = v1*sin(theta)*sin(phi);
          daughterLight->velocity[2] = v1*cos(theta);
