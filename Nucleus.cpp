@@ -2921,9 +2921,12 @@ if (EvapS1 > 0.0)
        daughterHeavy->fJ << endl;
      CNucleus * parent;
      parent = getParent();
-     cout << parent->iZ << " " << parent->iA << " " << parent->fEx << " " << parent->fJ << endl;
-     parent = parent->getParent();
-     cout << parent->iZ << " " << parent->iA << " " << parent->fEx << " " << parent->fJ << endl;
+     if(parent) {
+       cout << parent->iZ << " " << parent->iA << " " << parent->fEx << " " << parent->fJ << endl;
+       parent = parent->getParent();
+       if(parent)
+         cout << parent->iZ << " " << parent->iA << " " << parent->fEx << " " << parent->fJ << endl;
+     }
 
     abort();
    }
