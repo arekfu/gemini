@@ -238,8 +238,20 @@ void CNucleus::binaryDecay()
   //"statistical" decays into alpha plus ligher partner
   if (fEx > 0. && (iZ == 3 || (iZ == 2&& iA == 5)))
     {
-      daughterLight = new CNucleus(iZ-2,iA-4);
-      daughterHeavy = new CNucleus(2,4);
+      int ejectileA, ejectileZ;
+      if(iZ == 2) { // He-5
+        ejectileA = 1;
+        ejectileZ = 0;
+      } else if(iA==4) { // Li-4
+        ejectileA = 1;
+        ejectileZ = 1;
+      } else { // for all the other Li isotopes, leave an alpha behind
+        ejectileA = iA - 4;
+        ejectileZ = iZ - 2;
+      }
+
+      daughterLight = new CNucleus(ejectileZ,ejectileA);
+      daughterHeavy = new CNucleus(iZ-ejectileZ,iA-ejectileA);
 
       double Ek = fExpMass + fEx - daughterLight->fExpMass - 
 	daughterHeavy->fExpMass;
@@ -307,8 +319,8 @@ void CNucleus::binaryDecay()
          //randomise angle
          float theta = acos(1.-2.*ran.Rndm());
          float phi = 2.*pi*ran.Rndm();
-	 float vrel = sqrt(2.*Ek*(float)iA/(((float)iA-4.)*4.))*0.9794;
-         float v1 = vrel*4./(float)iA;
+	 float vrel = sqrt(2.*Ek*(float)iA/(((float)iA-ejectileA)*((float)ejectileA)))*0.9794;
+         float v1 = vrel*(float)(iA-ejectileA)/(float)iA;
          daughterLight->velocity[0] = v1*sin(theta)*cos(phi);
          daughterLight->velocity[1] = v1*sin(theta)*sin(phi);
          daughterLight->velocity[2] = v1*cos(theta);
@@ -780,7 +792,7 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
   //configuration for symmetric division. 
 
  
-  int const nStore = 1000;
+  int const nStore = 10000;
   SStore store[nStore];
   int iStore = 0;
   int iZ1,iZ2,iA1,iA2;
@@ -1076,6 +1088,7 @@ void CNucleus::saddleToScission()
    */
 void CNucleus::force8Be()
 {
+  notStatistical = true;
   daughterLight = new CNucleus(2,4);
   daughterHeavy = new CNucleus(2,4);
   daughterLight->origin = origin;
@@ -1132,6 +1145,7 @@ void CNucleus::force8Be()
    */
 void CNucleus::force5Li()
 {
+  notStatistical = true;
   daughterLight = new CNucleus(1,1);
   daughterHeavy = new CNucleus(2,4);
   daughterLight->origin = origin;
@@ -1186,6 +1200,7 @@ void CNucleus::force5Li()
    */
 void CNucleus::force5He()
 {
+  notStatistical = true;
   daughterLight = new CNucleus(0,1);
   daughterHeavy = new CNucleus(2,4);
   daughterLight->origin = origin;
@@ -1240,6 +1255,7 @@ void CNucleus::force5He()
    */
 void CNucleus::force9B()
 {
+  notStatistical = true;
   daughterLight = new CNucleus(1,1);
   daughterHeavy = new CNucleus(4,8);
   daughterLight->origin = origin;
@@ -2926,9 +2942,12 @@ if (EvapS1 > 0.0)
        daughterHeavy->fJ << endl;
      CNucleus * parent;
      parent = getParent();
-     cout << parent->iZ << " " << parent->iA << " " << parent->fEx << " " << parent->fJ << endl;
-     parent = parent->getParent();
-     cout << parent->iZ << " " << parent->iA << " " << parent->fEx << " " << parent->fJ << endl;
+     if(parent) {
+       cout << parent->iZ << " " << parent->iA << " " << parent->fEx << " " << parent->fJ << endl;
+       parent = parent->getParent();
+       if(parent)
+         cout << parent->iZ << " " << parent->iA << " " << parent->fEx << " " << parent->fJ << endl;
+     }
 
     abort();
    }
@@ -4480,6 +4499,13 @@ void CNucleus::getSpin(bool saddle)
          {
            if(Ek>0.) { // all goes into kinetic energy -- assume maximum L and minimum S2
              EvapEk = fEx - lightP->separationEnergy - EYrastRes;
+             if(EvapEk<0.) {
+               cout << "EvapEk < 0 in corner case for evaporation, resetting it to 0." << endl
+                 << "iZ=" << iZ << "   iA=" << iA << "   fEx=" << fEx << "   fJ=" << fJ << endl
+                 << "lightP->iZ=" << lightP->iZ << "   lightP->iA=" << lightP->iA << "   separation energy=" << lightP->separationEnergy << endl
+                 << "EYrastRes=" << EYrastRes << "   EvapEk=" << EvapEk << endl;
+               EvapEk = 0.;
+             }
              EvapEx2 = EYrastRes;
              EvapS2 = S2MinRes;
              lPlusSMax = fJ + S2MinRes;    //maximum value of (l+s) vector
@@ -4489,6 +4515,13 @@ void CNucleus::getSpin(bool saddle)
            } else { // all goes into excitation energy -- assume L=0 and S2=fJ-lightP->fJ
              EvapEk = 0.;
              EvapEx2 = fEx - lightP->separationEnergy;
+             if(EvapEx2<0.) {
+               cout << "EvapEx2 < 0 in corner case for evaporation, resetting it to 0." << endl
+                 << "iZ=" << iZ << "   iA=" << iA << "   fEx=" << fEx << "   fJ=" << fJ << endl
+                 << "lightP->iZ=" << lightP->iZ << "   lightP->iA=" << lightP->iA << "   separation energy=" << lightP->separationEnergy << endl
+                 << "EYrastRes=" << EYrastRes << "   EvapEx2=" << EvapEx2 << endl;
+               EvapEx2 = 0.;
+             }
              EvapL = 0.;
              EvapS2 = fabs(fJ - lightP->fJ);
            }
@@ -4532,6 +4565,13 @@ void CNucleus::getSpin(bool saddle)
       {
         if(Ek>0.) { // all goes into kinetic energy -- assume maximum L and minimum S2
           EvapEk = fEx - lightP->separationEnergy - EYrastRes;
+          if(EvapEk<0.) {
+            cout << "EvapEk < 0 in corner case for evaporation, resetting it to 0." << endl
+              << "iZ=" << iZ << "   iA=" << iA << "   fEx=" << fEx << "   fJ=" << fJ << endl
+              << "lightP->iZ=" << lightP->iZ << "   lightP->iA=" << lightP->iA << "   separation energy=" << lightP->separationEnergy << endl
+              << "EYrastRes=" << EYrastRes << "   EvapEk=" << EvapEk << endl;
+            EvapEk = 0.;
+          }
           EvapEx2 = EYrastRes;
           EvapS2 = S2MinRes;
           lPlusSMax = fJ + S2MinRes;    //maximum value of (l+s) vector
@@ -4541,6 +4581,13 @@ void CNucleus::getSpin(bool saddle)
         } else { // all goes into excitation energy -- assume L=0 and S2=fJ-lightP->fJ
           EvapEk = 0.;
           EvapEx2 = fEx - lightP->separationEnergy;
+          if(EvapEx2<0.) {
+            cout << "EvapEx2 < 0 in corner case for evaporation, resetting it to 0." << endl
+              << "iZ=" << iZ << "   iA=" << iA << "   fEx=" << fEx << "   fJ=" << fJ << endl
+              << "lightP->iZ=" << lightP->iZ << "   lightP->iA=" << lightP->iA << "   separation energy=" << lightP->separationEnergy << endl
+              << "EYrastRes=" << EYrastRes << "   EvapEx2=" << EvapEx2 << endl;
+            EvapEx2 = 0.;
+          }
           EvapL = 0.;
           EvapS2 = fabs(fJ - lightP->fJ);
         }

@@ -158,8 +158,11 @@ float CScission::getScissionEnergy(int iZ1, int iA1)
   float momInertiaTot = momInertia1 + momInertia2 + mu*pow(R,2);
   float EE = Z1*Z2*e2/R + kRotate/2./momInertiaTot*pow(fJ,2);
 
-  float massLD1 = mass->getLiquidDropMass(iZ1,iA1);
-  float massLD2 = mass->getLiquidDropMass(iZ2,iA2);
+  float massLD1 = mass->getFiniteRangeMass(iZ1,iA1);
+  float massLD2 = mass->getFiniteRangeMass(iZ2,iA2);
+
+/*  float massLD1 = mass->getLiquidDropMass(iZ1,iA1);
+  float massLD2 = mass->getLiquidDropMass(iZ2,iA2);*/
 
   //float mass1 = mass->getCalMass(iZ1,iA1);
   //float mass2 = mass->getCalMass(iZ2,iA2);
