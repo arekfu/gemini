@@ -4490,6 +4490,13 @@ void CNucleus::getSpin(bool saddle)
          {
            if(Ek>0.) { // all goes into kinetic energy -- assume maximum L and minimum S2
              EvapEk = fEx - lightP->separationEnergy - EYrastRes;
+             if(EvapEk<0.) {
+               cout << "EvapEk < 0 in corner case for evaporation, resetting it to 0." << endl
+                 << "iZ=" << iZ << "   iA=" << iA << "   fEx=" << fEx << "   fJ=" << fJ << endl
+                 << "lightP->iZ=" << lightP->iZ << "   lightP->iA=" << lightP->iA << "   separation energy=" << lightP->separationEnergy << endl
+                 << "EYrastRes=" << EYrastRes << "   EvapEk=" << EvapEk << endl;
+               EvapEk = 0.;
+             }
              EvapEx2 = EYrastRes;
              EvapS2 = S2MinRes;
              lPlusSMax = fJ + S2MinRes;    //maximum value of (l+s) vector
@@ -4499,6 +4506,13 @@ void CNucleus::getSpin(bool saddle)
            } else { // all goes into excitation energy -- assume L=0 and S2=fJ-lightP->fJ
              EvapEk = 0.;
              EvapEx2 = fEx - lightP->separationEnergy;
+             if(EvapEx2<0.) {
+               cout << "EvapEx2 < 0 in corner case for evaporation, resetting it to 0." << endl
+                 << "iZ=" << iZ << "   iA=" << iA << "   fEx=" << fEx << "   fJ=" << fJ << endl
+                 << "lightP->iZ=" << lightP->iZ << "   lightP->iA=" << lightP->iA << "   separation energy=" << lightP->separationEnergy << endl
+                 << "EYrastRes=" << EYrastRes << "   EvapEx2=" << EvapEx2 << endl;
+               EvapEx2 = 0.;
+             }
              EvapL = 0.;
              EvapS2 = fabs(fJ - lightP->fJ);
            }
@@ -4542,6 +4556,13 @@ void CNucleus::getSpin(bool saddle)
       {
         if(Ek>0.) { // all goes into kinetic energy -- assume maximum L and minimum S2
           EvapEk = fEx - lightP->separationEnergy - EYrastRes;
+          if(EvapEk<0.) {
+            cout << "EvapEk < 0 in corner case for evaporation, resetting it to 0." << endl
+              << "iZ=" << iZ << "   iA=" << iA << "   fEx=" << fEx << "   fJ=" << fJ << endl
+              << "lightP->iZ=" << lightP->iZ << "   lightP->iA=" << lightP->iA << "   separation energy=" << lightP->separationEnergy << endl
+              << "EYrastRes=" << EYrastRes << "   EvapEk=" << EvapEk << endl;
+            EvapEk = 0.;
+          }
           EvapEx2 = EYrastRes;
           EvapS2 = S2MinRes;
           lPlusSMax = fJ + S2MinRes;    //maximum value of (l+s) vector
@@ -4551,6 +4572,13 @@ void CNucleus::getSpin(bool saddle)
         } else { // all goes into excitation energy -- assume L=0 and S2=fJ-lightP->fJ
           EvapEk = 0.;
           EvapEx2 = fEx - lightP->separationEnergy;
+          if(EvapEx2<0.) {
+            cout << "EvapEx2 < 0 in corner case for evaporation, resetting it to 0." << endl
+              << "iZ=" << iZ << "   iA=" << iA << "   fEx=" << fEx << "   fJ=" << fJ << endl
+              << "lightP->iZ=" << lightP->iZ << "   lightP->iA=" << lightP->iA << "   separation energy=" << lightP->separationEnergy << endl
+              << "EYrastRes=" << EYrastRes << "   EvapEx2=" << EvapEx2 << endl;
+            EvapEx2 = 0.;
+          }
           EvapL = 0.;
           EvapS2 = fabs(fJ - lightP->fJ);
         }
