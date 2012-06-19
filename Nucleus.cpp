@@ -463,7 +463,7 @@ void CNucleus::binaryDecay()
      for (;;)
        {
          float prob = evap->prob[i]/widthEvaporation;
-         if (prob > xran) break;
+         if (prob >= xran) break;
          if ( i == evap->nLight-1) break;
          i++;
        }
@@ -631,7 +631,7 @@ void CNucleus::binaryDecay()
         int iie = 0;
         for (;;)
           {
-	    if (xran < sumE[iie]/sumE[ie-1]) break;
+	    if (xran <= sumE[iie]/sumE[ie-1]) break;
             iie++;
           }
          de = (float)iie*0.5 + 0.25;
@@ -907,7 +907,7 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
     for (;;)
       {
         double prob = store[i].gamma/store[iStore-1].gamma;
-        if (prob > xran) break;
+        if (prob >= xran) break;
         if (i == iStore-1) break;
         i++; 
       }
@@ -2837,7 +2837,7 @@ float CNucleus::getSumTl(float ek,float temp)
   for (;;)
     {
       float prob = storeSub[i].weight/sumTl;
-      if (prob > xran) break;
+      if (prob >= xran) break;
       if ( i == iSub-1) break;
       i++;
     }
@@ -3147,7 +3147,7 @@ float CNucleus::gammaWidthMultipole(int iMode)
   for (;;)
     {
       float prob = storeEvap[i].gamma/width;
-      if (xran < prob) break;
+      if (xran <= prob) break;
       i++;
       if (i == jj) break;
     }
@@ -3261,7 +3261,7 @@ float CNucleus::gammaWidthE1GDR()
   for (;;)
     {
       float prob = storeEvap[i].gamma/width;
-      if (xran < prob) break;
+      if (xran <= prob) break;
       i++;
       if (i == jj) break;
     }
@@ -3532,7 +3532,7 @@ float CNucleus::evaporationWidthSS()
   for (;;)
     {
       float prob = evap->prob[i]/width;
-      if (prob > xran) break;
+      if (prob >= xran) break;
       if ( i == evap->nLight-1) break;
       i++;
     }
@@ -4482,7 +4482,7 @@ void CNucleus::getSpin(bool saddle)
      for(;;)
        {
          float prob = lightP->storeEvap[i].gamma/lightP->width;
-         if (prob > xran) break;
+         if (prob >= xran) break;
          if ( i == lightP->iStore-1) break;
          i++;
        }
@@ -4547,7 +4547,7 @@ void CNucleus::getSpin(bool saddle)
   for(;;)
     {
       float prob = lightP->storeEvap[i].gamma/lightP->width;
-      if (prob > xran) break;
+      if (prob >= xran) break;
       if ( i == lightP->iStore-1) break;
       i++;
     }
@@ -4638,7 +4638,7 @@ void CNucleus::getSpin(bool saddle)
      for(;;)
        {
          float prob = lightP->storeEvap[i].gamma/width;
-         if (prob > xran) break;
+         if (prob >= xran) break;
          if ( i == lightP->iStore-1) break;
          i++;
        }
@@ -4690,7 +4690,7 @@ void CNucleus::getSpin(bool saddle)
       int i = 0;
       for (;;)
 	{
-          if (prob[i]/prob[ii-1] > x) break;
+          if (prob[i]/prob[ii-1] >= x) break;
           i++;
 	}
       
