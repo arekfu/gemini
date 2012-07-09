@@ -6,7 +6,7 @@ int main()
 {
   int numTot = 80000; //spectra
   float const d0=4.;  //diffuseness of CN spin distribution
-  string title0("fusion"); //name of output root file without extension
+  string title0("fusionThick"); //name of output root file without extension
 
 
   float Elab_max = 9.17*12.;  // bombarding energy at front or target

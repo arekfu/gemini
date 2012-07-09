@@ -228,4 +228,8 @@
 	       but probably not important.
 
 5th June 2012  modification to Run.cpp to remove uninteresting histograms 
-	       and label the axies of existing histograms
+	       and label the axies of existing histograms.
+	       Incorporated Davide Mancusi modifications
+	       associated with choosing the spin of the residual nucleus
+	       in CNuclues:getSpin
+	      
