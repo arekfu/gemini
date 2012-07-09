@@ -7,6 +7,7 @@ double const CYrast::pi=acos(-1.);
 float const CYrast::deltaJ= 3.;
 bool CYrast::first = 1;
 bool CYrast::bForceSierk = 0;
+float const CYrast::kRotate=41.563;
 
 //RLDM constants
 float const CYrast::x1h[11][6]={
@@ -1221,7 +1222,7 @@ float CYrast::getSaddlePointEnergy(int iZ1, int iA1)
  */
 float CYrast::getYrastModel(int iZ, int iA, float fJ)
 {
-  if (iZ < 19) return getYrastRLDM(iZ,iA,fJ);
+  if (iZ < 19 || iZ > 102) return getYrastRLDM(iZ,iA,fJ);
   getJmaxSierk(iZ,iA);
   if ( fJ < Jmax-deltaJ) return getYrastSierk(fJ);
   float MInertia = getMomentOfInertiaSierk(Jmax-deltaJ);
@@ -1279,8 +1280,10 @@ float CYrast::getYrast(int iZ, int iA, float fJ)
  */
 float CYrast::getSymmetricSaddleEnergy(int iZ, int iA, float fJ)
 {
+  if (iZ > 102)
+   return getYrast(iZ,iA,fJ) + getBarrierFissionRLDM(iZ,iA,fJ);
+  else
    return getYrast(iZ,iA,fJ) + getBarrierFissionSierk(fJ);
-   //return getYrast(iZ,iA,fJ) + getBarrierFissionRLDM(iZ,iA,fJ);
 }
 
 //**************************************************************

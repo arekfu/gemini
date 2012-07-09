@@ -158,8 +158,11 @@ float CScission::getScissionEnergy(int iZ1, int iA1)
   float momInertiaTot = momInertia1 + momInertia2 + mu*pow(R,2);
   float EE = Z1*Z2*e2/R + kRotate/2./momInertiaTot*pow(fJ,2);
 
-  float massLD1 = mass->getLiquidDropMass(iZ1,iA1);
-  float massLD2 = mass->getLiquidDropMass(iZ2,iA2);
+  float massLD1 = mass->getFiniteRangeMass(iZ1,iA1);
+  float massLD2 = mass->getFiniteRangeMass(iZ2,iA2);
+
+/*  float massLD1 = mass->getLiquidDropMass(iZ1,iA1);
+  float massLD2 = mass->getLiquidDropMass(iZ2,iA2);*/
 
   //float mass1 = mass->getCalMass(iZ1,iA1);
   //float mass2 = mass->getCalMass(iZ2,iA2);
@@ -253,6 +256,8 @@ if (Z2A >32.7) d2sdl2 = -0.1310*temp - 0.05147*Z2A +0.000766*pow(Z2A,2)
  else if (Z2A > 31.) d2sdl2 = .2873*temp + 0.03687*Z2A 
        -0.00974*temp*Z2A -1.1143;
  else d2sdl2 = 0.0111*Z2A - .334;
+ if(d2sdl2<0.)
+   d2sdl2 = 0.;
 float correction = d2sdl2*pow(fJ,2)/2.;
 
 
@@ -331,8 +336,12 @@ sigma2 += correction;
 
       float delta = y - d2VdA2;
       float deltaS = -delta/dy;
-      s += deltaS;
       if (fabs(delta) < .0001) break;
+      s += deltaS;
+      if(s<0.)
+        s=1.E-3;
+      else if(s>50.)
+        s=50.;
       tries++;
       if (tries == 10 || isnan(s)) 
 	{
@@ -403,6 +412,8 @@ if (Z2A >32.7) d2sdl2 = -0.1310*temp - 0.05147*Z2A +0.000766*pow(Z2A,2)
  else if (Z2A > 31.) d2sdl2 = .2873*temp + 0.03687*Z2A 
        -0.00974*temp*Z2A -1.1143;
  else d2sdl2 = 0.0111*Z2A - .334;
+ if(d2sdl2<0.)
+   d2sdl2 = 0.;
 float correction = d2sdl2*pow(fJ,2)/2.;
 
 
@@ -481,8 +492,12 @@ sigma2 += correction;
 
       float delta = y - d2VdA2;
       float deltaS = -delta/dy;
-      s += deltaS;
       if (fabs(delta) < .0001) break;
+      s += deltaS;
+      if(s<0.)
+        s=1.E-3;
+      else if(s>50.)
+        s=50.;
       tries++;
       if (tries == 10 || isnan(s)) 
 	{

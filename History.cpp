@@ -2,92 +2,101 @@
 
 CEvap CHistory::evap;
 
-void CHistory::tagDaughters(CNucleus *n, int32_t parentHistory) {
-	CNucleus *daughterLight = n->getLightDaughter();
-	CNucleus *daughterHeavy = n->getHeavyDaughter();
+CHistory::HistoryStringToDigitsTranslator CHistory::theTranslator;
 
-	if(!daughterLight && !daughterHeavy) {
-		return;
-	}
+const int CHistory::maxInt32Len = numeric_limits<int32_t>::digits10;
 
-	int lightHistory, heavyHistory;
+const char CHistory::Evaporation = 'e';
+const char CHistory::EvaporationResidue = 'E';
+const char CHistory::Multifragmentation = 'm';
+const char CHistory::AsymmetricFissionLight = 'a';
+const char CHistory::AsymmetricFissionHeavy = 'A';
+const char CHistory::SymmetricFissionLight = 'f';
+const char CHistory::SymmetricFissionHeavy = 'F';
+const char CHistory::SaddleToScission = 's';
+const char CHistory::NonStatistical = 'n';
 
-	// Saddle-to-scission transition or gamma decay
-	if(!daughterLight) {
-/*		if(!n->isSaddleToScission() && daughterHeavy->isSaddleToScission()) {
-			// S2S
-			heavyHistory = addToHistory(SaddleToScission, parentHistory);
-			theMap[daughterHeavy] = heavyHistory;
-			tagDaughters(daughterHeavy, heavyHistory);
-		} else {*/
-			// Gamma decay
-			theMap[daughterHeavy] = parentHistory;
-			tagDaughters(daughterHeavy, parentHistory);
-//		}
-		return;
-	}
+void CHistory::tagDaughters(CNucleus *n, std::string const &parentHistory) {
+  CNucleus *daughterLight = n->getLightDaughter();
+  CNucleus *daughterHeavy = n->getHeavyDaughter();
 
+  if(!daughterLight && !daughterHeavy) {
+    return;
+  }
 
-	if(n->isSaddleToScission()) {
+  // Saddle-to-scission transition or gamma decay
+  if(!daughterLight) {
+    // Gamma decay
+    theMap[daughterHeavy] = parentHistory;
+    tagDaughters(daughterHeavy, parentHistory);
+    return;
+  }
 
-		if(daughterLight->iZ <= maxEvapZ) {
-			lightHistory = addToHistory(Evaporation, addToHistory(SaddleToScission, parentHistory));
-			heavyHistory = addToHistory(SaddleToScission, parentHistory);
-		} else {
-			lightHistory = addToHistory(SymmetricFissionLight, parentHistory);
-			heavyHistory = addToHistory(SymmetricFissionHeavy, parentHistory);
-		}
-		theMap[daughterLight] = lightHistory;
-		theMap[daughterHeavy] = heavyHistory;
-	} else {
-		if(n->isNotStatistical()) {
-			lightHistory = addToHistory(NonStatistical, parentHistory);
-			heavyHistory = addToHistory(NonStatistical, parentHistory);
-		} else if(daughterLight->iZ <= maxEvapZ) {
-			lightHistory = addToHistory(Evaporation, parentHistory);
-			heavyHistory = addToHistory(EvaporationResidue, parentHistory);
-		} else {
-			lightHistory = addToHistory(AsymmetricFissionLight, parentHistory);
-			heavyHistory = addToHistory(AsymmetricFissionHeavy, parentHistory);
-		}
-		theMap[daughterLight] = lightHistory;
-		theMap[daughterHeavy] = heavyHistory;
-	}
-	tagDaughters(daughterLight, lightHistory);
-	tagDaughters(daughterHeavy, heavyHistory);
+  std::string lightHistory, heavyHistory;
+
+  if(n->isSaddleToScission()) {
+
+    if(daughterLight->iZ <= maxEvapZ) {
+      lightHistory = addToHistory(Evaporation, addToHistory(SaddleToScission, parentHistory));
+      heavyHistory = addToHistory(SaddleToScission, parentHistory);
+    } else {
+      lightHistory = addToHistory(SymmetricFissionLight, parentHistory);
+      heavyHistory = addToHistory(SymmetricFissionHeavy, parentHistory);
+    }
+    theMap[daughterLight] = lightHistory;
+    theMap[daughterHeavy] = heavyHistory;
+  } else {
+    if(n->isNotStatistical()) {
+      lightHistory = addToHistory(NonStatistical, parentHistory);
+      heavyHistory = addToHistory(NonStatistical, parentHistory);
+    } else if(daughterLight->iZ <= maxEvapZ) {
+      lightHistory = addToHistory(Evaporation, parentHistory);
+      heavyHistory = addToHistory(EvaporationResidue, parentHistory);
+    } else {
+      lightHistory = addToHistory(AsymmetricFissionLight, parentHistory);
+      heavyHistory = addToHistory(AsymmetricFissionHeavy, parentHistory);
+    }
+    theMap[daughterLight] = lightHistory;
+    theMap[daughterHeavy] = heavyHistory;
+  }
+  tagDaughters(daughterLight, lightHistory);
+  tagDaughters(daughterHeavy, heavyHistory);
 }
 
 //************************************************************
 /**
  * add a step to the history variable
  */
-int32_t CHistory::addToHistory(HistoryStepType steptype, int32_t prevhist)
+std::string CHistory::addToHistory(char steptype, std::string const &prevhist)
 {
+  std::string history;
 
-	int32_t history;
+  size_t histLenMinus1 = prevhist.length();
+  char last;
+  if(histLenMinus1>0) {
+    histLenMinus1--;
+    last = prevhist.at(histLenMinus1);
+  } else {
+    last = '\0';
+  }
 
-	int32_t maxhist=1;
-	for( int i=0; i<std::numeric_limits<int32_t>::digits10; i++)
-		maxhist *= 10;
+  if( last == EvaporationResidue && steptype == Evaporation )
+    history = prevhist.substr(0,histLenMinus1) + Evaporation;
+  else if( last == EvaporationResidue && steptype == EvaporationResidue )
+    history = prevhist;
+  else if( last == SaddleToScission && steptype == SaddleToScission )
+    history = prevhist;
+  else
+    history = prevhist + steptype;
 
-	HistoryStepType last = (HistoryStepType) (prevhist % 10);
+  return history;
+}
 
-	if( last == EvaporationResidue && steptype == Evaporation )
-		history = prevhist - EvaporationResidue + Evaporation;
-/*	else if( last == SaddleToScission && steptype == Evaporation )
-		history = prevhist - SaddleToScission + Evaporation;*/
-	else if( last == EvaporationResidue && steptype == EvaporationResidue )
-		history = prevhist;
-	else if( last == SaddleToScission && steptype == SaddleToScission )
-		history = prevhist;
-	else if( prevhist < maxhist )
-		history = prevhist*10 + steptype;
-	else
-	{
-		history = (prevhist%maxhist)*10 + steptype;
-		//      cerr << "Capacity of history variable exceeded!" << endl;
-	}
-
-	return history;
+char CHistory::HistoryStringToDigitsTranslator::operator()(char const c) {
+  std::map<char,char>::const_iterator iter = theStepMap.find(c);
+  if(iter!=theStepMap.end())
+    return iter->second;
+  else
+    return '\0';
 }
 

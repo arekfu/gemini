@@ -46,7 +46,10 @@ float CRandom::expDecayTime(float width)
 {
   // returns a time from an exponential decay distribution
   //consistent with the total decay width
-return - 0.65824*log(Rndm()+1.0e-37)/width;
+  if(width>0.)
+    return - 0.65824*log(Rndm()+1.0e-37)/width;
+  else
+    return 1.E30;
 }
 //****************************************
 /**

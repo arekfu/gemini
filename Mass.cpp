@@ -222,6 +222,8 @@ float CMass::getFiniteRangeMass(float fZ, float fA)
  */
 float CMass::getPairing(int iZ, int iA)
 {
+  if(iZ==0 || iZ==iA)
+    return 0.;
   float fZ = iZ;
   float fA = iA;
   float fN = fA - fZ;
