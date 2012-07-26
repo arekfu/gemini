@@ -802,6 +802,7 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
 
       int iZ1Start= (int)((float)iA1/(float)iA*(float)iZ);
       iZ1 = max(3,iZ1Start-8);
+      iZ1 = max(iZ1_IMF_Max+1,iZ1); //do not overlap with IMF emission
       float Zmax = 0.;
       float gammaA = 0.;
       for (;;)
@@ -1728,7 +1729,7 @@ float CNucleus::asyFissionWidth()
   yrast.prepareAsyBarrier(iZ,iA,fJ);
   //float Wigner0 = yrast.WignerEnergy(iZ,iA);
   scission.init(iZ,iA,fJ,1);
-
+  iZ1_IMF_Max = 400;
   for (int iZ1=evap.maxZ+1;iZ1<=iZ/2;iZ1++)
     {
       int iZ2 = iZ - iZ1;
@@ -1745,6 +1746,7 @@ float CNucleus::asyFissionWidth()
 	  if (iZ/2 - iZ1 > 5 && iA > 120) 
 	    {
               needSymmetricFission = 1;
+              iZ1_IMF_MAX = iZ1 - 1;
               break;
 	    }
 	}
@@ -2036,7 +2038,7 @@ float CNucleus::asyFissionWidthZA()
   //yrast.printAsyBarrier();
   //float Wigner0 = yrast.WignerEnergy(iZ,iA);
   scission.init(iZ,iA,fJ,1);
-
+  iZ1_IMF_max = 400;
   for (int iZ1=evap.maxZ+1;iZ1<=iZ/2;iZ1++)
     {
       int iZ2 = iZ - iZ1;
@@ -2056,6 +2058,7 @@ float CNucleus::asyFissionWidthZA()
 	  && iZ/2 - iZ1 > 5)
 	{
 	  needSymmetricFission = 1.;
+          iZ1_IMF_Max = iZ1 - 1;
 	  break;
 	}
       else saddlePointOld = saddlePoint;
@@ -4222,7 +4225,7 @@ float CNucleus::S2Loop(float Ekvalue)
       float gamma = S2Width(Ekvalue);
       gammaMax = max(gammaMax,gamma);
       width += gamma;
-      if (gamma < 0.01*gammaMax) break;
+      if (gamma <= 0.01*gammaMax) break;
       S2 += sign;
 
     } 
@@ -4237,7 +4240,7 @@ float CNucleus::S2Loop(float Ekvalue)
       float gamma = S2Width(Ekvalue);
       gammaMax = max(gammaMax,gamma);
       width += gamma;
-      if (gamma < 0.01*gammaMax) break;
+      if (gamma <= 0.01*gammaMax) break;
       S2 += sign;
 
     } 
@@ -4355,7 +4358,7 @@ float CNucleus::EkLoop()
       float gamma = EkWidth(ek);
       gammaMax = max(gammaMax,gamma);
       width += gamma;
-      if (gamma < EkFraction*gammaMax) break;
+      if (gamma <= EkFraction*gammaMax) break;
       ek += sign*de;
 
     } 
@@ -4370,7 +4373,7 @@ float CNucleus::EkLoop()
       float gamma = EkWidth(ek);
       gammaMax = max(gammaMax,gamma);
       width += gamma;
-      if (gamma < EkFraction*gammaMax) break;
+      if (gamma <= EkFraction*gammaMax) break;
       ek += sign*de;
 
     } 
@@ -4750,4 +4753,65 @@ void CNucleus::setEvapMode(int iHF0/*=2*/)
 int CNucleus::getZmaxEvap()
 {
   return evap.maxZ;
+}
+//****************************************************
+  /**
+   * returns the saddle-crossing time in zs for symmetric fission.
+   * In addition, the scission time is stored in timeScission.
+   * If no symmetric fission occurs, then -1 is returned.
+   * If more than one symmetric fission, then the time of the first 
+   * is returned. the fusction decay() must be run before using this function
+   \param timeScission scission time in zs (outpot) 
+   */
+float CNucleus::getFissionTimeSymmetric(float & timeScission)
+{
+  float timeFission = -1.;
+  timeScission = -1.;
+  if (!isSymmetricFission()) return timeFission;
+  CNucleus * prod = daughterHeavy;
+  int i = 0;
+  for (;;)
+    {
+      if (prod == NULL) return 0.; // no fission found
+      if (prod->origin == 1 && timeFission == -1.) 
+           timeFission = prod->timeSinceStart;
+      if (prod->origin > 1 && timeScission == -1.) 
+	{
+          timeScission = prod->timeSinceStart;
+          break;
+	}
+      prod = prod->daughterHeavy; 
+      i++;
+      if (i == 100) break;  // just in case provide an exit to the "for" loop
+    }
+  return timeFission;
+}
+//**************************************************************
+  /**
+   * returns the time in zs when an asymmetric fission occured 
+   * in the decay. Must be called only after decay() is called.
+   * If not asymmetric fission, then returns -1., if more than one 
+   * asymmetric fission, the is returns the time of the first 
+   */
+float CNucleus::getFissionTimeAsymmetric()
+{
+
+  float timeFission = -1.;
+  if (!isAsymmetricFission()) return timeFission;
+  CNucleus * prod = daughterHeavy;
+
+  int i = 0;
+  for (;;)
+    {
+      if (prod == NULL) return 0.; // no fission found
+      if (prod->origin > 1 && prod->origin2 == 0 &&timeFission == -1.) 
+	{
+           timeFission = prod->timeSinceStart;
+          break;
+	}
+      prod = prod->daughterHeavy; 
+      i++;
+      if (i == 100) break;  // just in case provide an exit to the "for" loop
+    }
+  return timeFission;
 }

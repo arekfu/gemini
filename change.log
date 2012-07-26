@@ -233,3 +233,13 @@
 	       associated with choosing the spin of the residual nucleus
 	       in CNuclues:getSpin
 	      
+9th July 2012  documentation of Histrory calls added, and some other 
+	       correction to avoid divide by zeros, etc, by Davide Mancusi
+11th July 2012 Made sure there was no overlap in nuclei production 
+	       bewteen asymmetric fission and symmertic fission. Previously
+	       for light nuclei we have both mechanisms producing the same
+	       isotopes. To do this I stored the maximum Z for asymmetric 
+	       fission (iZ1_IMF_Max). 
+26th July 2012 added functions getFissionTimeSymmetric and 
+	       getFssionTimeAsymmetric to give the saddle and scission times 
+	       assocaited with symmetric and asymmetric fission. 

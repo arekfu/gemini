@@ -93,8 +93,8 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   float Mfis = 0;
   float M2fis = 0.;
   float M0fis = 0.;
-  int numberA = 0;
-  int averageA = 0;
+  double numberA = 0.;
+  double averageA = 0.;
 
   TH1F histEgamma("Egamma","",100,0,50);
   histEgamma.GetXaxis()->SetTitle("E_{#gamma} [MeV]");
@@ -284,8 +284,8 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
 
 	 if(productER->iZ == iZcn)
 	   {
-	     averageA += productER->iA;
-             numberA += 1;
+	     averageA += (double)productER->iA*(double)weight;
+             numberA += (double)weight;
 	   }
 
          int iZres = productER->iZ;
@@ -583,7 +583,8 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   //float sigma = sqrt(sigma2);
   cout << "sigma2M= " << sigma2 << endl;
 
-  if (numberA > 0) cout << "average x for xn products is " << (float)iAcn-(float)averageA/(float)numberA << endl;
+  if (numberA > 0) cout << "average x for xn products is " << (float)iAcn-
+   averageA/numberA << endl;
 
 
 
