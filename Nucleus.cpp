@@ -364,7 +364,11 @@ void CNucleus::binaryDecay()
   // by the evaporation folmalism
   if (iZ/2 > evap.maxZ)
     {
-     if (noIMF)   needSymmetricFission = true;
+     if (noIMF)
+       {
+        needSymmetricFission = true;
+	iZ1_IMF_Max = 0;
+       }
      else widthAsyFission = asyFissionWidthZA();
     }
   float widthSymFission = 0.;
@@ -1746,7 +1750,7 @@ float CNucleus::asyFissionWidth()
 	  if (iZ/2 - iZ1 > 5 && iA > 120) 
 	    {
               needSymmetricFission = 1;
-              iZ1_IMF_MAX = iZ1 - 1;
+              iZ1_IMF_Max = iZ1 - 1;
               break;
 	    }
 	}
@@ -2038,7 +2042,7 @@ float CNucleus::asyFissionWidthZA()
   //yrast.printAsyBarrier();
   //float Wigner0 = yrast.WignerEnergy(iZ,iA);
   scission.init(iZ,iA,fJ,1);
-  iZ1_IMF_max = 400;
+  iZ1_IMF_Max = 400;
   for (int iZ1=evap.maxZ+1;iZ1<=iZ/2;iZ1++)
     {
       int iZ2 = iZ - iZ1;
@@ -4520,7 +4524,7 @@ void CNucleus::getSpin(bool saddle)
                  << "EYrastRes=" << EYrastRes << "   EvapEx2=" << EvapEx2 << endl;
                EvapEx2 = 0.;
              }
-             EvapL = 0.;
+             EvapL = 0;
              EvapS2 = fabs(fJ - lightP->fJ);
            }
            return;
@@ -4586,7 +4590,7 @@ void CNucleus::getSpin(bool saddle)
               << "EYrastRes=" << EYrastRes << "   EvapEx2=" << EvapEx2 << endl;
             EvapEx2 = 0.;
           }
-          EvapL = 0.;
+          EvapL = 0;
           EvapS2 = fabs(fJ - lightP->fJ);
         }
         return;
@@ -4814,4 +4818,29 @@ float CNucleus::getFissionTimeAsymmetric()
       if (i == 100) break;  // just in case provide an exit to the "for" loop
     }
   return timeFission;
+}
+//*************************************************************
+//*********************************************************
+  /**
+   * returns the evaporation plu gamma decay width in MeV
+   * Can easily be changed to give the toal decay with by 
+   * also adding the symmetric and asymmetric fission
+   */
+float CNucleus::getDecayWidth()
+{
+  float widthEvaporation = evaporationWidth();
+  
+  float widthGamma = gammaWidth();
+
+
+  float sum = widthEvaporation + widthGamma;
+  return sum; 
+}
+//******************************************************
+  /**
+   * returns the natural log of the level density in MeV-1 
+   */
+float CNucleus::getLogLevelDensity()
+{
+  return logLevelDensity;
 }

@@ -498,17 +498,7 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   velFF.Scale(plb/(float)numTot*sum);
   keFF.Scale(plb/(float)numTot*sum);
 
-  histER.Write();
-  histERxn.Write();
-  histFis.Write();
-  histFus.Write();
-  histZ.Write();
-  histZ_fis.Write();
-  histZ_nofis.Write();
-  histA.Write();
-  histAL.Write();
-  histN.Write();
-  histZN.Write();
+
 
   //for multiplicity spectrra in coincidence with fission
 
@@ -517,14 +507,7 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   kePreSc.Scale(1./Nfiss);
   kePost.Scale(1./Nfiss);
 
-  velFF.Write();
-  keFF.Write();
-  kePreSad.Write();
-  kePreSad.Write();
-  kePreSc.Write();
-  kePost.Write();
 
-  histEgamma.Write();
 
 
   //for multiplicity spectra in coincidence with residues
@@ -535,12 +518,7 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   keLi7.Scale(1./NresDet);
   keBe7.Scale(1./NresDet);
 
-  keAlpha.Write();
-  keProton.Write();
-  keNeutron.Write();
-  keLi6.Write();
-  keLi7.Write();
-  keBe7.Write();
+
 
   f->Write();
   cout << "NresDet= " << NresDet << " Nneut= " << Nneutron << " NProt= " <<
