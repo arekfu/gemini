@@ -1,4 +1,7 @@
 #include "CLevelDensity.h"
+
+CLevelDensity* CLevelDensity::fInstance = 0;
+
 bool const normal = 1;
 
 float const CLevelDensity::pi=acos(-1.);
@@ -47,6 +50,15 @@ CLevelDensity::CLevelDensity()
   ifFile.close();
   ifFile.clear();
 }
+
+CLevelDensity* CLevelDensity::instance() // mod-TU
+{
+    if (fInstance == 0) {
+        fInstance = new CLevelDensity;
+    }
+    return fInstance;
+}
+
 //*********************************************
 /**
  * Returns the level-density parameter in units of MeV-1

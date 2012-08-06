@@ -1,6 +1,6 @@
 #include "CHistory.h"
 
-CEvap CHistory::evap;
+CEvap *CHistory::evap;
 
 CHistory::HistoryStringToDigitsTranslator CHistory::theTranslator;
 

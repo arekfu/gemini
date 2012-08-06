@@ -28,13 +28,15 @@ struct SIsotope
 class CChart
 {
  private:
+  CChart();
+  static CChart *fInstance; //!< instance member to make this class a singleton
   SIsotope * isotope; //!< lists max and min A for each Z
   static int const iZmax; //!< max Z allowed in GEMINI
   int * iZindex; //!< list the array number of the lightest isotope of each Z  
   
 
  public:
- CChart();
+ static CChart* instance(); //!< instance member to make this a singleton
  ~CChart();
  int getAmax(int iZ);
  int getAmin(int iZ);

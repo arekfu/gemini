@@ -18,9 +18,8 @@ float const WignerAdd = 7.; //adding factor for the Wigner Energy
 bool          CNucleus::noIMF = 0;
 bool          CNucleus::BohrWheeler = 1;
 CRandom       CNucleus::ran;
-CYrast        CNucleus::yrast; 
-CScission     CNucleus::scission;
-CLevelDensity CNucleus::levelDensity;
+CYrast        *CNucleus::yrast; 
+CLevelDensity *CNucleus::levelDensity;
 CAngleDist    CNucleus::angleDist;
 float         CNucleus::de = 1.0;
 
@@ -39,7 +38,7 @@ float const CNucleus::sep=2.;
 float const CNucleus::pi=acos(-1.);
 short unsigned CNucleus::Zshell = 2;
 short unsigned const CNucleus:: lMaxQuantum = 50; 
-CEvap CNucleus::evap;
+CEvap *CNucleus::evap;
 float const CNucleus::gammaInhibition[3]={0.,.025,9.};
 float const CNucleus::wue[3]={0.,6.8e-8,4.9e-14};//gives weisskopf units in MeV
 int const CNucleus::nGamma = 4000;
@@ -74,6 +73,9 @@ CNucleus::CNucleus(int iZ0, int iA0) : CNuclide(iZ0,iA0)
   daughterHeavy = NULL;
   parent = NULL;
   abortEvent = 0;
+  evap = CEvap::instance();
+  yrast = CYrast::instance();
+  levelDensity = CLevelDensity::instance();
 }
 //*******************************************************
 /**
@@ -118,6 +120,9 @@ CNucleus::CNucleus(int iZ0, int iA0, float fEx0, float fJ0)
   daughterHeavy = NULL;
   parent = NULL;
   abortEvent = 0;
+  evap = CEvap::instance();
+  yrast = CYrast::instance();
+  levelDensity = CLevelDensity::instance();
   setCompoundNucleus(fEx0,fJ0);
 }
 //**************************************************
@@ -160,10 +165,10 @@ void CNucleus::binaryDecay()
 
   if (notStatistical)
     {
-     daughterLight = new CNucleus(evap.decay[notStatisticalMode].Z1,
-                               evap.decay[notStatisticalMode].A1);
-     daughterHeavy = new CNucleus(iZ-evap.decay[notStatisticalMode].Z1,
-                                iA-evap.decay[notStatisticalMode].A1);
+     daughterLight = new CNucleus(evap->decay[notStatisticalMode].Z1,
+                               evap->decay[notStatisticalMode].A1);
+     daughterHeavy = new CNucleus(iZ-evap->decay[notStatisticalMode].Z1,
+                                iA-evap->decay[notStatisticalMode].A1);
      daughterLight->origin = origin;
      daughterHeavy->origin = origin;
 
@@ -175,14 +180,14 @@ void CNucleus::binaryDecay()
 
 
      float decayTime =  
-       ran.expDecayTime(evap.decay[notStatisticalMode].gamma);
+       ran.expDecayTime(evap->decay[notStatisticalMode].gamma);
      daughterLight->timeSinceStart = timeSinceStart + decayTime;
      daughterHeavy->timeSinceStart = timeSinceStart + decayTime;
 
 
 
-     daughterLight->excite(0.,evap.decay[notStatisticalMode].S1);
-     daughterHeavy->excite(0.,evap.decay[notStatisticalMode].S2);
+     daughterLight->excite(0.,evap->decay[notStatisticalMode].S1);
+     daughterHeavy->excite(0.,evap->decay[notStatisticalMode].S2);
      daughterLight->bStable = 1;
      daughterLight->iWeight = 0;
      daughterHeavy->iWeight = 0;
@@ -193,20 +198,20 @@ void CNucleus::binaryDecay()
 
       
      //make sure 8Be fragments decay
-     if (iZ-evap.decay[notStatisticalMode].Z1 == 4 && 
-         iA-evap.decay[notStatisticalMode].A1 == 8 ) 
+     if (iZ-evap->decay[notStatisticalMode].Z1 == 4 && 
+         iA-evap->decay[notStatisticalMode].A1 == 8 ) 
        {
          daughterHeavy->notStatistical = 1;
          daughterHeavy->notStatisticalMode = 20;
          daughterHeavy->bStable = 0;        
        }
      else daughterHeavy->bStable = 1;
-     EvapLPlusS = evap.decay[notStatisticalMode].lPlusS1;
-     EvapL = evap.decay[notStatisticalMode].L;
-     EvapS1 = evap.decay[notStatisticalMode].S1;
-     EvapS2 = evap.decay[notStatisticalMode].S2;
-     EvapEk = evap.decay[notStatisticalMode].Ek;
-     EvapA1 = evap.decay[notStatisticalMode].A1;
+     EvapLPlusS = evap->decay[notStatisticalMode].lPlusS1;
+     EvapL = evap->decay[notStatisticalMode].L;
+     EvapS1 = evap->decay[notStatisticalMode].S1;
+     EvapS2 = evap->decay[notStatisticalMode].S2;
+     EvapEk = evap->decay[notStatisticalMode].Ek;
+     EvapA1 = evap->decay[notStatisticalMode].A1;
      EvapA2 = iA - EvapA1;   
      
 
@@ -362,7 +367,7 @@ void CNucleus::binaryDecay()
   needSymmetricFission = false;
   // don;t call asymmetric fission if all asymmetries are handled 
   // by the evaporation folmalism
-  if (iZ/2 > evap.maxZ)
+  if (iZ/2 > evap->maxZ)
     {
      if (noIMF)
        {
@@ -461,13 +466,13 @@ void CNucleus::binaryDecay()
      int i = 0;
      for (;;)
        {
-         float prob = evap.prob[i]/widthEvaporation;
+         float prob = evap->prob[i]/widthEvaporation;
          if (prob >= xran) break;
-         if ( i == evap.nLight-1) break;
+         if ( i == evap->nLight-1) break;
          i++;
        }
 
-      lightP = evap.lightP[i];
+      lightP = evap->lightP[i];
 
      EvapZ1 = lightP->iZ;
      EvapA1 = lightP->iA;
@@ -521,7 +526,7 @@ void CNucleus::binaryDecay()
      daughterHeavy->excite(EvapEx2,EvapS2);
 
 
-     if (evap.decay[EvapMode].Ek > 0)
+     if (evap->decay[EvapMode].Ek > 0)
        {
          daughterLight->notStatistical = 1;
          daughterLight->notStatisticalMode = EvapMode;
@@ -579,10 +584,10 @@ void CNucleus::binaryDecay()
      scission.init(iZ,iA,fJ,iChan);
      scission.getFissionKineticEnergy(fissionZ,fissionA);
      float Ek = scission.ekTot;
-     levelDensity.getLogLevelDensitySpherical(iA,fissionU,(float)0.,(float)0.,
+     levelDensity->getLogLevelDensitySpherical(iA,fissionU,(float)0.,(float)0.,
 				       fJ,fMInertia,2);
      //add in fluctuations to Coulomb barrier
-     float sigma = Ek*sqrt(levelDensity.getTemp())*.1;
+     float sigma = Ek*sqrt(levelDensity->getTemp())*.1;
      //float sigma = 0.;
      // fluctuations are in Coulomb energy are gaussian, but make sure the
      //Coulomb energy is always positive
@@ -606,14 +611,14 @@ void CNucleus::binaryDecay()
      int const nE=200;
      float sumE[nE];
      int ie = 0;
-     float probStart = levelDensity.
+     float probStart = levelDensity->
        getLogLevelDensitySpherical(iA,fissionU,(float)0.,(float)0.,(float)0.,
            fMInertia);
      for (;;)
        {
 	 float de = (float)ie*0.5 + 0.25;
 	 if (de >= fissionU) break;
-         float prob = exp(levelDensity.
+         float prob = exp(levelDensity->
 	 getLogLevelDensitySpherical(iA,fissionU-de,0.,0.,0.,fMInertia)
          - probStart);
          sumE[ie] = prob;
@@ -668,7 +673,7 @@ void CNucleus::binaryDecay()
       com->bSymmetricFission = true;
 
       // start saddle to scission transition
-      float Esaddle = yrast.getSymmetricSaddleEnergy(iZ,iA,fJ);
+      float Esaddle = yrast->getSymmetricSaddleEnergy(iZ,iA,fJ);
       Esaddle -= fPairing + fShell;
       scission.init(iZ,iA,fJ,2);
       float Escission = scission.getScissionEnergy() - fExpMass;
@@ -815,8 +820,8 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
           if (iZ2 <= (float)iZ/17.) break;
           if (iA1 == iA2 && iZ1 > iZ2) break;  //no double counting
           //see if fragments are listed in mass table
-          if (mass->chart.getIndex(iZ1,iA1) < 0 ||   
-              mass->chart.getIndex(iZ2,iA2) < 0)     
+          if (mass->chart->getIndex(iZ1,iA1) < 0 ||   
+              mass->chart->getIndex(iZ2,iA2) < 0)     
 	    {
 	      iZ1++;
               continue;
@@ -834,7 +839,7 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
 	    }
 
           float logLevelDensitySciss = 
-	    levelDensity.getLogLevelDensityScission(iA,U,10.);
+	    levelDensity->getLogLevelDensityScission(iA,U,10.);
  
 
           if (logLevelDensitySciss == 0) 
@@ -975,7 +980,7 @@ void CNucleus::saddleToScission()
       daughterLight->parent = this;
       daughterHeavy->parent = this;
 
-      if (evap.decay[EvapMode].Ek > 0)
+      if (evap->decay[EvapMode].Ek > 0)
         {
           daughterLight->notStatistical = 1;
           daughterLight->notStatisticalMode = EvapMode;
@@ -1504,7 +1509,7 @@ void CNucleus::excite(float fEx0, float fJ0)
 
   //note1
   //old code with standard SM treatment of yrast line
-   Erot=yrast.getYrast(iZ,iA,fJ);
+   Erot=yrast->getYrast(iZ,iA,fJ);
   //new code
   //spheroid.init(iZ,iA);
   //deformation = spheroid.getDeformationProlate(fJ);
@@ -1526,7 +1531,7 @@ void CNucleus::excite(float fEx0, float fJ0)
   HF = 0;
   if ( (Erot > fU0/4. && fJ > 10) || iHF == 1) HF = 1;
 
-  logLevelDensity = levelDensity.getLogLevelDensitySpherical(
+  logLevelDensity = levelDensity->getLogLevelDensitySpherical(
 		   	     iA,fU0,fPairing,fShell,fJ,fMInertia);
 
   if (fU0 < 0. || fU0 > 2000.)
@@ -1535,7 +1540,7 @@ void CNucleus::excite(float fEx0, float fJ0)
 	   << " iA= " << iA << " excite" << endl;
     }
 
-  temp = levelDensity.getTemp();
+  temp = levelDensity->getTemp();
 
   if (logLevelDensity == 0.)
     {
@@ -1582,7 +1587,7 @@ void CNucleus::excite(float fEx0)
 
 
   logLevelDensity = 
-      levelDensity.getLogLevelDensitySpherical(iA,fU0,fPairing,fShell);
+      levelDensity->getLogLevelDensitySpherical(iA,fU0,fPairing,fShell);
 
   if (fU0 < 0. || fU0 > 2000.)
     {
@@ -1590,7 +1595,7 @@ void CNucleus::excite(float fEx0)
 	   << " iA= " << iA << " excite " << endl;
     }
 
-  temp = levelDensity.getTemp();
+  temp = levelDensity->getTemp();
 
   if (logLevelDensity == 0.)
     {
@@ -1648,7 +1653,7 @@ void CNucleus::exciteScission(float fEx0,float fJ0,bool sym/*=1*/)
       return;
     }
 
-  logLevelDensity = levelDensity.getLogLevelDensityScission(iA,fU0);
+  logLevelDensity = levelDensity->getLogLevelDensityScission(iA,fU0);
 
   if (fU0 < 0 || fU0 > 2000)
     {
@@ -1657,7 +1662,7 @@ void CNucleus::exciteScission(float fEx0,float fJ0,bool sym/*=1*/)
         iA << " fJ= " << fJ << " exciteScission " << endl;
     }
 
-  temp = levelDensity.getTemp();
+  temp = levelDensity->getTemp();
 
   if (logLevelDensity == 0.)
     {
@@ -1678,13 +1683,13 @@ float CNucleus::getWidthZA(float saddlePoint,short iAfAn)
 
   if (saddlePoint > fEx) return 0.;
   float U = fEx - saddlePoint;
-  float saddleLD = levelDensity.
+  float saddleLD = levelDensity->
            getLogLevelDensitySpherical(iA,U,(float)0.,(float)0.,
 				       fJ,fMInertia,iAfAn);
   if (saddleLD == 0.) return 0.;
   if (saddleLD - logLevelDensity < -65.) return 0.;
   float gamma = exp(saddleLD-logLevelDensity)
-                    *levelDensity.getTemp()/2./pi;
+                    *levelDensity->getTemp()/2./pi;
   return gamma;
 }
 */
@@ -1698,7 +1703,7 @@ float CNucleus::getWidthZA(float saddlePoint,short iAfAn)
   float gammaMax = 0.;
   for(;;)
     { 
-      float saddleLD = levelDensity.
+      float saddleLD = levelDensity->
            getLogLevelDensitySpherical(iA,U,(float)0.,(float)0.,
 				       fJ,fMInertia,iAfAn);
      if (saddleLD == 0.) break;
@@ -1730,15 +1735,15 @@ float CNucleus::asyFissionWidth()
   int iStore = 0;
   float gammaTot = 0;
   float saddlePointOld = -10000.;
-  yrast.prepareAsyBarrier(iZ,iA,fJ);
-  //float Wigner0 = yrast.WignerEnergy(iZ,iA);
+  yrast->prepareAsyBarrier(iZ,iA,fJ);
+  //float Wigner0 = yrast->WignerEnergy(iZ,iA);
   scission.init(iZ,iA,fJ,1);
   iZ1_IMF_Max = 400;
   for (int iZ1=evap.maxZ+1;iZ1<=iZ/2;iZ1++)
     {
       int iZ2 = iZ - iZ1;
       float A1 = (float)iZ1/(float)iZ*float(iA);
-      float saddlePoint = yrast.getSaddlePointEnergy(A1);
+      float saddlePoint = yrast->getSaddlePointEnergy(A1);
       saddlePoint = (saddlePoint-Erot)*scaleImf + Erot;
       //add on a Wigner energy
       //saddlePoint += WignerScaled*Wigner0 + WignerAdd;
@@ -1759,11 +1764,11 @@ float CNucleus::asyFissionWidth()
       float gammaZ0 = getWidthZA(saddlePoint,iAfAn);
       if (iZ1 == iZ - iZ1) gammaZ0 /= 2.;
       if (gammaZ0 <= 0.) continue;
-      int iaMin1 = mass->chart.getAmin(iZ1);  
-      int iaMin2 = iA - mass->chart.getAmax(iZ-iZ1);   
+      int iaMin1 = mass->chart->getAmin(iZ1);  
+      int iaMin2 = iA - mass->chart->getAmax(iZ-iZ1);   
       int iaMin = max(iaMin1,iaMin2);
-      int iaMax1 = mass->chart.getAmax(iZ1);   
-      int iaMax2 = iA - mass->chart.getAmin(iZ-iZ1);  
+      int iaMax1 = mass->chart->getAmax(iZ1);   
+      int iaMax2 = iA - mass->chart->getAmin(iZ-iZ1);  
       int iaMax = min(iaMax1,iaMax2);
       if (iZ1 == iZ - iZ1) iaMax = min(iA/2,iaMax);
       float gammaZ = 0;
@@ -1779,13 +1784,13 @@ float CNucleus::asyFissionWidth()
           - scission.Erotate1 - scission.Erotate2;
           if( fEx + Qvalue <= 0.) continue;  
 
-          float saddlePoint = yrast.getSaddlePointEnergy(iZ1,iA1);
+          float saddlePoint = yrast->getSaddlePointEnergy(iZ1,iA1);
 	  saddlePoint = (saddlePoint-Erot)*scaleImf + Erot; 
 	  //add on a congruence energy
 
 
-          //float Wigner1 = yrast.WignerEnergy(iZ1,iA1);
-          //float Wigner2 = yrast.WignerEnergy(iZ2,iA2);
+          //float Wigner1 = yrast->WignerEnergy(iZ1,iA1);
+          //float Wigner2 = yrast->WignerEnergy(iZ2,iA2);
    
           //saddlePoint += WignerScaled*(Wigner1+Wigner2-Wigner0) + WignerAdd;
           saddlePoint +=  WignerAdd;
@@ -1841,15 +1846,15 @@ float CNucleus::asyFissionWidth()
     }
   fissionZ = store[j].iZ;
   fissionA = store[j].iA;
-  float saddlePoint = yrast.getSaddlePointEnergy(fissionZ,fissionA);
+  float saddlePoint = yrast->getSaddlePointEnergy(fissionZ,fissionA);
   saddlePoint = (saddlePoint-Erot)*scaleImf + Erot; 
 
   /*
   //add on a congruence energy
   int iA2 = iA - fissionA;
   int iZ2 = iZ - fissionZ;
-  float Wigner1 = yrast.WignerEnergy(fissionZ,fissionA);
-  float Wigner2 = yrast.WignerEnergy(iZ2,iA2); 
+  float Wigner1 = yrast->WignerEnergy(fissionZ,fissionA);
+  float Wigner2 = yrast->WignerEnergy(iZ2,iA2); 
   saddlePoint += WignerScaled*(Wigner1+Wigner2-Wigner0) + WignerAdd;
   */
   saddlePoint +=  WignerAdd;
@@ -1875,7 +1880,7 @@ float CNucleus::asyFissionWidthBW()
   int iFission = -1;
   float gammaTot = 0;
   float saddlePointOld = -10000.;
-  yrast.prepareAsyBarrier(iZ,iA,fJ);
+  yrast->prepareAsyBarrier(iZ,iA,fJ);
   float A1 = (float)iA/2.;
 
 
@@ -1885,23 +1890,23 @@ float CNucleus::asyFissionWidthBW()
   // at J=0, they are garenteed to be identical
   // I fill just shift down the asymmetric barrirs by delta now
 
-  float delta = yrast.getSaddlePointEnergy(A1) - symSaddlePoint;
+  float delta = yrast->getSaddlePointEnergy(A1) - symSaddlePoint;
 
-  for (int iZ1=evap.maxZ+1;iZ1<=iZ/2;iZ1++)
+  for (int iZ1=evap->maxZ+1;iZ1<=iZ/2;iZ1++)
     {
 
       float A1 = (float)iZ1/(float)iZ*float(iA);
-      float saddlePoint = yrast.getSaddlePointEnergy(A1) - delta;
+      float saddlePoint = yrast->getSaddlePointEnergy(A1) - delta;
       if (iZ > Zshell) saddlePoint -= fPairing + fShell; 
 
       float A2 = (float)(iZ1-1)/(float)(iZ)*float(iA);
       float A3 = (float)(iZ1+1)/(float)(iZ)*float(iA);
       float A4 = (float)(iZ1-2)/(float)(iZ)*float(iA);
       float A5 = (float)(iZ1+2)/(float)(iZ)*float(iA);
-      float saddlePoint2 = yrast.getSaddlePointEnergy(A2) - delta;
-      float saddlePoint3 = yrast.getSaddlePointEnergy(A3) - delta;
-      float saddlePoint4 = yrast.getSaddlePointEnergy(A4) - delta;
-      float saddlePoint5 = yrast.getSaddlePointEnergy(A5) - delta;
+      float saddlePoint2 = yrast->getSaddlePointEnergy(A2) - delta;
+      float saddlePoint3 = yrast->getSaddlePointEnergy(A3) - delta;
+      float saddlePoint4 = yrast->getSaddlePointEnergy(A4) - delta;
+      float saddlePoint5 = yrast->getSaddlePointEnergy(A5) - delta;
 
       saddlePoint = (saddlePoint+saddlePoint2+saddlePoint3
                     +saddlePoint4+saddlePoint5)/5.;
@@ -1923,11 +1928,11 @@ float CNucleus::asyFissionWidthBW()
       float gammaZ0 = getWidthZA(saddlePoint,iAfAn);
       if (iZ1 == iZ - iZ1) gammaZ0 /= 2.;
       if (gammaZ0 <= 0.) continue;
-      int iaMin1 = mass->chart.getAmin(iZ1);  
-      int iaMin2 = iA - mass->chart.getAmax(iZ-iZ1);  
+      int iaMin1 = mass->chart->getAmin(iZ1);  
+      int iaMin2 = iA - mass->chart->getAmax(iZ-iZ1);  
       int iaMin = max(iaMin1,iaMin2);
-      int iaMax1 = mass->chart.getAmax(iZ1);  
-      int iaMax2 = iA - mass->chart.getAmin(iZ-iZ1);  
+      int iaMax1 = mass->chart->getAmax(iZ1);  
+      int iaMax2 = iA - mass->chart->getAmin(iZ-iZ1);  
       int iaMax = min(iaMax1,iaMax2);
       if (iZ1 == iZ - iZ1) iaMax = min(iA/2,iaMax);
       float gammaZ = 0;
@@ -1935,7 +1940,7 @@ float CNucleus::asyFissionWidthBW()
       for (int iA1 = iaMin;iA1<=iaMax;iA1++)
 	{
 
-          float saddlePoint = yrast.getSaddlePointEnergy(iZ1,iA1);
+          float saddlePoint = yrast->getSaddlePointEnergy(iZ1,iA1);
           if (iZ > Zshell) saddlePoint -= fPairing + fShell; 
 
           float gamma = getWidthZA(saddlePoint,iAfAn);
@@ -2015,7 +2020,7 @@ float CNucleus::asyFissionWidthBW()
     }
   fissionZ = store[j].iZ;
   fissionA = store[j].iA;
-  float saddlePoint = yrast.getSaddlePointEnergy(fissionZ,fissionA);
+  float saddlePoint = yrast->getSaddlePointEnergy(fissionZ,fissionA);
   if (iZ > Zshell) saddlePoint -= fPairing + fShell;
   fissionU = fEx - saddlePoint;
 
@@ -2038,16 +2043,16 @@ float CNucleus::asyFissionWidthZA()
   int iStore = 0;
   float gammaTot = 0;
   float saddlePointOld = -10000.;
-  yrast.prepareAsyBarrier(iZ,iA,fJ);
-  //yrast.printAsyBarrier();
-  //float Wigner0 = yrast.WignerEnergy(iZ,iA);
+  yrast->prepareAsyBarrier(iZ,iA,fJ);
+  //yrast->printAsyBarrier();
+  //float Wigner0 = yrast->WignerEnergy(iZ,iA);
   scission.init(iZ,iA,fJ,1);
   iZ1_IMF_Max = 400;
   for (int iZ1=evap.maxZ+1;iZ1<=iZ/2;iZ1++)
     {
       int iZ2 = iZ - iZ1;
       float A1 = (float)iZ1/(float)iZ*float(iA);
-      float saddlePoint = yrast.getSaddlePointEnergy(A1);
+      float saddlePoint = yrast->getSaddlePointEnergy(A1);
       saddlePoint = (saddlePoint-Erot)*scaleImf + Erot; 
       //add on a congruence energy
 
@@ -2068,11 +2073,11 @@ float CNucleus::asyFissionWidthZA()
       else saddlePointOld = saddlePoint;
       
 
-      int iaMin1 = mass->chart.getAmin(iZ1);  
-      int iaMin2 = iA - mass->chart.getAmax(iZ-iZ1);  
+      int iaMin1 = mass->chart->getAmin(iZ1);  
+      int iaMin2 = iA - mass->chart->getAmax(iZ-iZ1);  
       int iaMin = max(iaMin1,iaMin2);
-      int iaMax1 = mass->chart.getAmax(iZ1);  
-      int iaMax2 = iA - mass->chart.getAmin(iZ-iZ1);   
+      int iaMax1 = mass->chart->getAmax(iZ1);  
+      int iaMax2 = iA - mass->chart->getAmin(iZ-iZ1);   
       int iaMax = min(iaMax1,iaMax2);
       if (iZ1 == iZ - iZ1) iaMax = min(iA/2,iaMax);
 
@@ -2088,12 +2093,12 @@ float CNucleus::asyFissionWidthZA()
           - scission.Erotate1 - scission.Erotate2;
           if( fEx + Qvalue <= 0.) continue;  
 
-          float saddlePoint = yrast.getSaddlePointEnergy(iZ1,iA1);
+          float saddlePoint = yrast->getSaddlePointEnergy(iZ1,iA1);
           saddlePoint = (saddlePoint-Erot)*scaleImf + Erot; 
           //add on a congruence energy
 	  /*
-          float Wigner1 = yrast.WignerEnergy(iZ1,iA1);
-          float Wigner2 = yrast.WignerEnergy(iZ2,iA2);
+          float Wigner1 = yrast->WignerEnergy(iZ1,iA1);
+          float Wigner2 = yrast->WignerEnergy(iZ2,iA2);
           saddlePoint += WignerScaled*(Wigner1+Wigner2-Wigner0)+WignerAdd;
 	  */
           saddlePoint += WignerAdd;
@@ -2165,14 +2170,14 @@ float CNucleus::asyFissionWidthZA()
     }
   fissionZ = store[j].iZ;
   fissionA = store[j].iA;
-  float saddlePoint = yrast.getSaddlePointEnergy(fissionZ,fissionA);
+  float saddlePoint = yrast->getSaddlePointEnergy(fissionZ,fissionA);
   saddlePoint = (saddlePoint-Erot)*scaleImf + Erot; 
   //add on a congruence energy
   /*
   int iA2 = iA - fissionA;
   int iZ2 = iZ - fissionZ;
-  float Wigner1 = yrast.WignerEnergy(fissionZ,fissionA);
-  float Wigner2 = yrast.WignerEnergy(iZ2,iA2);
+  float Wigner1 = yrast->WignerEnergy(fissionZ,fissionA);
+  float Wigner2 = yrast->WignerEnergy(iZ2,iA2);
   saddlePoint += WignerScaled*(Wigner1+Wigner2-Wigner0) + WignerAdd;
   */
 
@@ -2197,8 +2202,8 @@ float CNucleus::LestoneFissionWidth()
 
   short iAfAn = 1;
 
-  float momInertiaPerp = yrast.getMomentOfInertiaSierk(fJ);
-  float momInertiaPara = yrast.momInertiaMin;
+  float momInertiaPerp = yrast->getMomentOfInertiaSierk(fJ);
+  float momInertiaPara = yrast->momInertiaMin;
   float momInertiaEff = 1.0/(1.0/momInertiaPara-1.0/momInertiaPerp);
 
   float U = fEx - symSaddlePoint; 
@@ -2215,11 +2220,11 @@ float CNucleus::BohrWheelerWidth()
   */
 {
 
-  symSaddlePoint = yrast.getSymmetricSaddleEnergy(iZ,iA,fJ) + barAdd;
+  symSaddlePoint = yrast->getSymmetricSaddleEnergy(iZ,iA,fJ) + barAdd;
   if (iZ > Zshell) symSaddlePoint -= fPairing + fShell; 
 
   /*float fJJ = fJ;
-  if (fJ > yrast.Jmax) fJJ = yrast.Jmax;*/
+  if (fJ > yrast->Jmax) fJJ = yrast->Jmax;*/
   short iAfAn = 1;
   float gamma = getWidthZA(symSaddlePoint,iAfAn)*fissionScaleFactor;
   return gamma;
@@ -2268,10 +2273,10 @@ void CNucleus::asyFissionDivide()
   float MInertiaSaddle = MInertia12 + MInertiaOrbit;
 
 
-  float aden1 = levelDensity.getLittleA(fissionA,U1);
-  //float entropy1 = levelDensity.getEntropy();
-  float aden2 = levelDensity.getLittleA(iA-fissionA,U2);
-  //float entropy2 = levelDensity.getEntropy();
+  float aden1 = levelDensity->getLittleA(fissionA,U1);
+  //float entropy1 = levelDensity->getEntropy();
+  float aden2 = levelDensity->getLittleA(iA-fissionA,U2);
+  //float entropy2 = levelDensity->getEntropy();
   float aden = aden1 + aden2;
   //float entropy0 = entropy1 + entropy2;
 
@@ -2563,7 +2568,7 @@ if (S1J0.phi > 2.*pi) S1J0.phi -= 2.*pi;
   // first find the kinetic energy of separation
   //Ek = 1.44*(float)fissionZ*(float)(iZ-fissionZ)/(r1+r2+sep)
   //generlization of Viola see Hinde Nucl Phys A472, 318 (1987).
- //float Ek = yrast.viola((float)fissionZ,A1,(float)(iZ-fissionZ),A2);
+ //float Ek = yrast->viola((float)fissionZ,A1,(float)(iZ-fissionZ),A2);
  //float Ek = 0.755*(float)fissionZ*(float)(iZ-fissionZ)/
  // (pow(A1,(float)(1./3.))+pow(A2,(float)(1./3.))) 
  //  + 7.3; 
@@ -2680,17 +2685,17 @@ float CNucleus::evaporationWidth()
 
   float width = 0.;
   EcostMin = 1000.;
-  for (int i=0;i<evap.nLight;i++) 
+  for (int i=0;i<evap->nLight;i++) 
     {
-      lightP = evap.lightP[i];
+      lightP = evap->lightP[i];
 
 
-      if (HF) evap.prob[i] = hauserFeshbach(i);
-      else  evap.prob[i] = weiskopf((bool)0);
+      if (HF) evap->prob[i] = hauserFeshbach(i);
+      else  evap->prob[i] = weiskopf((bool)0);
 
-      evap.prob[i] *= lightP->suppress;//user-given suppression factor
-      width += evap.prob[i];
-      if (i > 0) evap.prob[i] += evap.prob[i-1];
+      evap->prob[i] *= lightP->suppress;//user-given suppression factor
+      width += evap->prob[i];
+      if (i > 0) evap->prob[i] += evap->prob[i-1];
     }
 
   if (width <= 0.) 
@@ -2719,8 +2724,8 @@ float CNucleus::hauserFeshbach(int iChannel)
   if (lightP->iA >= lightP->residue.iA) return 0.;
   if (lightP->residue.iZ >= lightP->residue.iA) return 0.;
   //products must lie on the chart of nuclides used by gemini
-  if (lightP->residue.iA < mass->chart.getAmin(lightP->residue.iZ)) return 0.;
-  if (lightP->residue.iA > mass->chart.getAmax(lightP->residue.iZ)) return 0.;
+  if (lightP->residue.iA < mass->chart->getAmin(lightP->residue.iZ)) return 0.;
+  if (lightP->residue.iA > mass->chart->getAmax(lightP->residue.iZ)) return 0.;
 
   //note1, new treament of yrast line 
   //spheroid.init(lightP->residue.iZ,lightP->residue.iA);
@@ -3095,7 +3100,7 @@ float CNucleus::gammaWidthMultipole(int iMode)
   int jj = 0;
   for (;;) //loop over S0 nucleus spin
     {
-      float Erotation = yrast.getYrast(iZ,iA,S0);
+      float Erotation = yrast->getYrast(iZ,iA,S0);
       float U2Max = fEx - Erotation;
       if (U2Max < 0.01) break;
 
@@ -3107,7 +3112,7 @@ float CNucleus::gammaWidthMultipole(int iMode)
           float U2 = U2Max - e;
           if (U2 < 0.01) break; 
           float logLevelDensityDaughter = 
-	    levelDensity.getLogLevelDensitySpherical
+	    levelDensity->getLogLevelDensitySpherical
 	    (iA,U2,fPairing,fShell,S0,fMInertia);
           if (logLevelDensityDaughter == 0) break;
 
@@ -3206,7 +3211,7 @@ float CNucleus::gammaWidthE1GDR()
   int jj = 0;
   for (;;) //loop over S0 nucleus spin
     {
-      float Erotation = yrast.getYrast(iZ,iA,S0);
+      float Erotation = yrast->getYrast(iZ,iA,S0);
       float U2Max = fEx - Erotation;
       if (U2Max < 0.01) break;
 
@@ -3218,7 +3223,7 @@ float CNucleus::gammaWidthE1GDR()
           float U2 = U2Max - e;
           if (U2 < 0.01) break; 
           float logLevelDensityDaughter = 
-	    levelDensity.getLogLevelDensitySpherical
+	    levelDensity->getLogLevelDensitySpherical
 	    (iA,U2,fPairing,fShell,S0,fMInertia);
           if (logLevelDensityDaughter == 0) break;
 
@@ -3377,8 +3382,8 @@ float CNucleus::weiskopf( bool saddle)
   if (lightP->iA >= lightP->residue.iA) return 0.;
   if (lightP->residue.iZ >= lightP->residue.iA) return 0.;
   //products must lie on the chart of nuclides used by gemini
-  if (lightP->residue.iA < mass->chart.getAmin(lightP->residue.iZ)) return 0.;
-  if (lightP->residue.iA > mass->chart.getAmax(lightP->residue.iZ)) return 0.;
+  if (lightP->residue.iA < mass->chart->getAmin(lightP->residue.iZ)) return 0.;
+  if (lightP->residue.iA > mass->chart->getAmax(lightP->residue.iZ)) return 0.;
   rResidue = r0*pow((float)lightP->residue.iA,(float)(1./3.));
   lightP->fMInertia = 0.4*(float)lightP->residue.iA*pow(rResidue,2);
   lightP->fMInertiaOrbit = (float)(lightP->residue.iA*lightP->iA)/
@@ -3415,7 +3420,7 @@ float CNucleus::weiskopf( bool saddle)
        Edef = scission.getScissionEnergy();
        Edef -= lightP->residue.fExpMass;
     }
-  else Edef = yrast.getYrast(iZ,iA,fJ);
+  else Edef = yrast->getYrast(iZ,iA,fJ);
 
 
 
@@ -3448,12 +3453,12 @@ float CNucleus::weiskopf( bool saddle)
 
       float logLevelDensity2 = 0.;
       if (saddle) logLevelDensity2 =
-	levelDensity.getLogLevelDensityScission(iA,U);
-      else logLevelDensity2 = levelDensity.getLogLevelDensitySpherical
+	levelDensity->getLogLevelDensityScission(iA,U);
+      else logLevelDensity2 = levelDensity->getLogLevelDensitySpherical
 	(lightP->residue.iA,U,lightP->fPair,lightP->fShell,-fJ,lightP->fMInertia);
 
       if (logLevelDensity2 == 0.) break;
-      float temp = levelDensity.getTemp();
+      float temp = levelDensity->getTemp();
       float sigmaInverse;
       if (Isig) sigmaInverse = lightP->sigBarDist->getInverseXsec(fEk,temp);
       else sigmaInverse = 
@@ -3518,12 +3523,12 @@ float CNucleus::evaporationWidthSS()
   EcostMin = 1000.;
   bool isaddle = 1;
 
-  for (int i=0;i<evap.nLight;i++) 
+  for (int i=0;i<evap->nLight;i++) 
     {
-      lightP = evap.lightP[i];
-      evap.prob[i] = weiskopf(isaddle);
-      width += evap.prob[i];
-      if (i > 0) evap.prob[i] += evap.prob[i-1];
+      lightP = evap->lightP[i];
+      evap->prob[i] = weiskopf(isaddle);
+      width += evap->prob[i];
+      if (i > 0) evap->prob[i] += evap->prob[i-1];
     }
   if (width <= 0.) return 0.;
 
@@ -3533,12 +3538,12 @@ float CNucleus::evaporationWidthSS()
   int i = 0;
   for (;;)
     {
-      float prob = evap.prob[i]/width;
+      float prob = evap->prob[i]/width;
       if (prob >= xran) break;
-      if ( i == evap.nLight-1) break;
+      if ( i == evap->nLight-1) break;
       i++;
     }
-  lightP = evap.lightP[i];
+  lightP = evap->lightP[i];
 
   EvapZ1 = lightP->iZ;
   EvapA1 = lightP->iA;
@@ -3908,7 +3913,7 @@ void CNucleus::split(CAngle symmetryCM)
   float A1 = (float)fissionA;
   float A2 = (float)(iA-fissionA);
   float Ared = A1*A2/(A1+A2); 
-  //float Ek = yrast.viola((float)fissionZ,A1,
+  //float Ek = yrast->viola((float)fissionZ,A1,
   //			 (float)(iZ-fissionZ),A2);
 
   float Ek = scission.ekTot;
@@ -4148,9 +4153,9 @@ void CNucleus::printParameters()
 float CNucleus::LestoneCorrection( float Usaddle, float momInertiaEff,
                                                    short iAfAn)
 {
- float saddleLD = levelDensity.getLogLevelDensitySpherical
+ float saddleLD = levelDensity->getLogLevelDensitySpherical
     (iA,Usaddle,(float)0.,(float)0.,fJ,fMInertia,iAfAn);
- float saddleTemp = levelDensity.getTemp();
+ float saddleTemp = levelDensity->getTemp();
 
   float K = fJ - roundf(fJ);
 
@@ -4168,11 +4173,11 @@ float CNucleus::LestoneCorrection( float Usaddle, float momInertiaEff,
           float ErotK = kRotate/2.*pow(K,2)/momInertiaEff;
           float U = Usaddle - ErotK; 
           if (U <= 0.) break;
-          float LD = levelDensity.
+          float LD = levelDensity->
              getLogLevelDensitySpherical(iA,U,(float)0.,(float)0.,
 				       fJ,fMInertia,iAfAn);
 
-          float yield = exp(LD-saddleLD)*2.*levelDensity.getTemp()/saddleTemp;
+          float yield = exp(LD-saddleLD)*2.*levelDensity->getTemp()/saddleTemp;
 
           if (yield < 1.e-3) break;
           tot += yield;
@@ -4275,7 +4280,7 @@ float CNucleus::S2Width(float Ekvalue)
       if  (lMin < 0) lMin = 0;  
 
   
-      EYrast2 = yrast.getYrast(lightP->residue.iZ,lightP->residue.iA,S2);
+      EYrast2 = yrast->getYrast(lightP->residue.iZ,lightP->residue.iA,S2);
 
       UMin = fEx - lightP->separationEnergy - EYrast2;
       if (UMin < 0) return 0;
@@ -4292,11 +4297,11 @@ float CNucleus::S2Width(float Ekvalue)
 float CNucleus::EkWidth(float ek)
 {
      float U2 = UMin-ek;
-     float daughterLD = levelDensity.
+     float daughterLD = levelDensity->
       getLogLevelDensitySpherical(lightP->residue.iA,U2,lightP->fPair,lightP->fShell
            ,S2,lightP->fMInertia);
      if (daughterLD  == 0 ) return 0.;
-     float temp = levelDensity.getTemp();
+     float temp = levelDensity->getTemp();
      float sumTl = getSumTl(ek,temp);
      if (sumTl == 0) return 0.;
 
@@ -4494,7 +4499,7 @@ void CNucleus::getSpin(bool saddle)
        {
          Ek = lightP->storeEvap[i].energy + (1.-2.*ran.Rndm())*de/2.;
          const float S2MinRes = (lightP->residue.iA%2==0 ? 0.0 : 0.5);
-         const float EYrastRes = yrast.getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
+         const float EYrastRes = yrast->getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
          Ex = fEx - lightP->separationEnergy - Ek;
          if (Ek >= 0. && Ex >= EYrastRes) break;
          if (iTry ==4) 
@@ -4560,7 +4565,7 @@ void CNucleus::getSpin(bool saddle)
     {
       Ek = lightP->storeEvap[i].energy + (1.-2.*ran.Rndm())*de/2.;
       const float S2MinRes = (lightP->residue.iA%2==0 ? 0.0 : 0.5);
-      const float EYrastRes = yrast.getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
+      const float EYrastRes = yrast->getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
       Ex = fEx - lightP->separationEnergy - Ek;
       if (Ek >= 0. && Ex >= EYrastRes) break;
       if (iTry ==4) 
@@ -4678,7 +4683,7 @@ void CNucleus::getSpin(bool saddle)
       int ii = 0;
       for (float jj=jmin;jj<jmax+1.;jj+=1.)
 	{
-         prob[ii] =  levelDensity.getLogLevelDensitySpherical
+         prob[ii] =  levelDensity->getLogLevelDensitySpherical
 	   (lightP->residue.iA,U,fPairing,fShell,jj,fMInertia2)/(2.*jj+1);
          if (ii > 0) prob[ii] += prob[ii-1];
 	 ii++;
@@ -4712,9 +4717,9 @@ void CNucleus::getSpin(bool saddle)
       float fS2 = fJ*fMInertia2/(fMInertia2+fMInertiaOrbit);
 
       float U = Ex -  Edef;
-      levelDensity.getLogLevelDensitySpherical
+      levelDensity->getLogLevelDensitySpherical
 	(lightP->residue.iA,U,fPair2,fShell2,0.,fMInertia2);
-      float temp = levelDensity.getTemp();
+      float temp = levelDensity->getTemp();
       float sigma =  0.1546*sqrt(temp*fMInertiaOrbit*fMInertia2/(
                            fMInertiaOrbit+fMInertia2));
 
@@ -4756,7 +4761,7 @@ void CNucleus::setEvapMode(int iHF0/*=2*/)
    */
 int CNucleus::getZmaxEvap()
 {
-  return evap.maxZ;
+  return evap->maxZ;
 }
 //****************************************************
   /**

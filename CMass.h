@@ -30,7 +30,7 @@ protected:
 public:
     // mod-TU CMass();
     ~CMass();
-    CChart chart; //!< contains the considered region of the chart of nuclides
+    CChart *chart; //!< contains the considered region of the chart of nuclides
     static CMass* instance(); //!< instance member to make this a singleton
 
     float getExpMass(int iZ,int iA);

@@ -9,11 +9,12 @@ CMass* CMass::fInstance = 0;  // mod-TU
  */
 CMass::CMass()
 {
-  fExpMass = new float [chart.iMassDim];
-  fCalMass = new float [chart.iMassDim];
-  fFRM = new float [chart.iMassDim];
-  //fBeta2 = new float [chart.iMassDim];
-  fShell = new float [chart.iMassDim];
+  chart = CChart::instance();
+  fExpMass = new float [chart->iMassDim];
+  fCalMass = new float [chart->iMassDim];
+  fFRM = new float [chart->iMassDim];
+  //fBeta2 = new float [chart->iMassDim];
+  fShell = new float [chart->iMassDim];
   ReadThomasFermiFile();
   ReadFRDMFile();
   fExpMass[0] = 8.071;
@@ -57,7 +58,7 @@ float CMass::getExpMass(int iZ, int iA)
 {
  
   //find location of nuclide in array where the mass is stored
-  int i = chart.getIndex(iZ,iA);
+  int i = chart->getIndex(iZ,iA);
   return fExpMass[i];
 
 }
@@ -72,7 +73,7 @@ float CMass::getCalMass(int iZ, int iA)
 {
  
   //find location of nuclide in array where the mass is stored
-  int i = chart.getIndex(iZ,iA);
+  int i = chart->getIndex(iZ,iA);
   return fCalMass[i];
 
 }
@@ -87,7 +88,7 @@ float CMass::getShellCorrection(int iZ, int iA)
 {
  
   //find location of nuclide in array where the mass is stored
-  int i = chart.getIndex(iZ,iA);
+  int i = chart->getIndex(iZ,iA);
   return fShell[i];
 
 }
@@ -101,7 +102,7 @@ float CMass::getLiquidDropMass(int iZ, int iA)
 {
  
   //find location of nuclide in array where the mass is stored
-  int i = chart.getIndex(iZ,iA);
+  int i = chart->getIndex(iZ,iA);
   if ( i == -1) 
     { 
       return -1000;
@@ -334,7 +335,7 @@ void CMass::ReadFRDMFile()
 	  if (ifFile.get() == 10) break;
           if (ifFile.eof()) break;
 	}
-      int index = chart.getIndex(izz,iaa);
+      int index = chart->getIndex(izz,iaa);
       if (index >= 0)
 	{
           float fPair = getPairing(izz,iaa);
@@ -423,7 +424,7 @@ void CMass::ReadThomasFermiFile()
           if (ifFile.eof()) break;
 	}
 
-      int index = chart.getIndex(izz,iaa);
+      int index = chart->getIndex(izz,iaa);
       if (index >= 0)
 	{
           fExpMass[index] = f2;
