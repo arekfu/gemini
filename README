@@ -7,6 +7,8 @@ this is a c++ program can be found in testDecay.cpp.
 Another example for the statistical decay of a compound nucleus formed
 in a heavy-ion fusion reaction can be found in testFusion.cpp
 
+For just calculating the decay width, see testWidth.f or testTheWidth.cpp
+
 The file gemini.cpp is for fortran users. An example of how to use 
 this in a fortran program can be found in testGemini.f
 
@@ -16,6 +18,10 @@ or
 make testGemini
 or 
 Make testFusion
+or 
+make testTheWidth
+or
+make testWidth
 
 Note the directories tbl and tl contain input data which are
 read in each time one uses these classes. Use can use the variable GINPUT 

@@ -1739,7 +1739,7 @@ float CNucleus::asyFissionWidth()
   //float Wigner0 = yrast->WignerEnergy(iZ,iA);
   scission.init(iZ,iA,fJ,1);
   iZ1_IMF_Max = 400;
-  for (int iZ1=evap.maxZ+1;iZ1<=iZ/2;iZ1++)
+  for (int iZ1=evap->maxZ+1;iZ1<=iZ/2;iZ1++)
     {
       int iZ2 = iZ - iZ1;
       float A1 = (float)iZ1/(float)iZ*float(iA);
@@ -2048,7 +2048,7 @@ float CNucleus::asyFissionWidthZA()
   //float Wigner0 = yrast->WignerEnergy(iZ,iA);
   scission.init(iZ,iA,fJ,1);
   iZ1_IMF_Max = 400;
-  for (int iZ1=evap.maxZ+1;iZ1<=iZ/2;iZ1++)
+  for (int iZ1=evap->maxZ+1;iZ1<=iZ/2;iZ1++)
     {
       int iZ2 = iZ - iZ1;
       float A1 = (float)iZ1/(float)iZ*float(iA);
