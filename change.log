@@ -1,4 +1,4 @@
-13th May 2008 - first release 
+>13th May 2008 - first release 
 4th June 2008 - bug fix
 25th June 2008 - changes to aid portability, include possibility of Be evap
 	         for Hauser-Feshbach
@@ -222,7 +222,26 @@
 	
 7th May 2012   a) the functions isResidue(), isSymmetricFission, and 
 	       isAsymmetricFission() were not 
-	       working. Needed to reset the logical in the Reset function
-	       b)stopped multiple called to getCompoundNucleus which 
+	       working. Needed to reset the logicals in the Reset function
+	       b)stopped multiple calls to getCompoundNucleus which 
 	       were not needed. might save a tiny little bit of time, 
 	       but probably not important.
+
+5th June 2012  modification to Run.cpp to remove uninteresting histograms 
+	       and label the axies of existing histograms.
+	       Incorporated Davide Mancusi modifications
+	       associated with choosing the spin of the residual nucleus
+	       in CNuclues:getSpin
+	      
+9th July 2012  documentation of Histrory calls added, and some other 
+	       correction to avoid divide by zeros, etc, by Davide Mancusi
+11th July 2012 Made sure there was no overlap in nuclei production 
+	       between asymmetric fission and symmertic fission. Previously
+	       for light nuclei we have both mechanisms producing the same
+	       isotopes. To do this I stored the maximum Z for asymmetric 
+	       fission (iZ1_IMF_Max). 
+26th July 2012 added functions getFissionTimeSymmetric and 
+	       getFissionTimeAsymmetric to give the saddle and scission times 
+	       assocaited with symmetric and asymmetric fission. 
+6th August 2012 The classes CEvap, CLevelDensity, CChart are now made to 
+	       be singletons.

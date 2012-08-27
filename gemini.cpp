@@ -27,9 +27,25 @@ extern "C"
    */
   void geminiinit_()
   {
+    CNucleus::setEvapMode(1);  //force Hauser-Feshbach
     //CLevelDensity::setAfAn(1.01);
   }
-
+  //*********************************************************************
+  /**
+   * returns the decay width of a compound nucleus in MeV
+  \param iZ is the proton number of the compound nucleus
+  \param iA is the mass number of the compound nucleus
+  \param fEx is the excitation energy of the compound nucleus
+  \param fJ is the spin of the compound nucleus
+   */
+  void decaywidth_(int* iZ, int* iA, float *fEx, float*fJ, float* width,
+     float* logleveldensity)
+  {
+    CNucleus CN(*iZ,*iA,*fEx,*fJ);
+    *width = CN.getDecayWidth();
+    *logleveldensity = CN.getLogLevelDensity();
+  }
+  //********************************************************************
   /**
    * Calculates the decay of the nucleus
 \param iZ is the proton number of the compound nucleus

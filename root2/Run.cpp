@@ -23,26 +23,34 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   bool residue;
   bool residueDet;
 
-
+  // calculate the CN spin distribution
   float prob[lmax+1];
   float sum = 0.;
   for (int l=0;l<=lmax;l++)
     {
       prob[l] =  (float)(2*l+1);
-      if (d0 > 0.) prob[l] /= (1.+exp(((float)l-l0)/d0));
+
+      //select either a fermi distribution of the erfc distribution
+      //if (d0 > 0.) prob[l] /= (1.+exp(((float)l-l0)/d0));
+      if (d0 > 0.) prob[l] *= erfc(((float)l-l0)/d0/4.*sqrt(3.14159))/2.;
       else if ( l > l0) prob[l] = 0.;
       sum += prob[l];
     }
+  //normalise to unity
   for (int l=0;l<=lmax;l++)
     {
       prob[l] /= sum;
       if (l > 0) prob[l] += prob[l-1];
     }
 
-
+  //root file for output
   TFile *f = new TFile(title.c_str(),"RECREATE");
+
+  //crerate compound nucleus
   CNucleus CN(iZcn,iAcn);
 
+
+  //set GEMINI++ parameters
   //CNucleus::setSolution(1);
   //CNucleus::setFissionScaleFactor(7.38);
   //CNucleus::setAddToFisBarrier(7.);
@@ -67,13 +75,12 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   float asyMultPre[20] = {0.};
   float asyMultPost[20] = {0.};
   float asyMultTot[20] = {0.};
+
   float Nres = 0.;
   float NresDet = 0.;
   float sumAres = 0.;
   float sumAresDet = 0.;
   float Nfiss = 0.;
-  float NfissLost = 0.;
-  float LfissLost = 0.;
   float NpreSad = 0.;
   float NpreScis = 0.;
   float Npost = 0.;
@@ -86,42 +93,143 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   float Mfis = 0;
   float M2fis = 0.;
   float M0fis = 0.;
-  int numberA = 0;
-  int averageA = 0;
+  double numberA = 0.;
+  double averageA = 0.;
 
   TH1F histEgamma("Egamma","",100,0,50);
+  histEgamma.GetXaxis()->SetTitle("E_{#gamma} [MeV]");
+  histEgamma.GetXaxis()->SetTitle("#sigma(E_{#gamma}) [mb]");
+  histEgamma.SetTitle("distribution of total gamma energy for all events");
+
   TH1F histER("histER","",90,0,90);
+  histER.GetXaxis()->SetTitle("J_{CN} [hbar]");
+  histER.GetXaxis()->SetTitle("#sigma(J) [mb]");
+  histER.SetTitle("spin distribution of events that form residues");
+
   TH1F histERxn("histERxn","",90,0,90);
+  histERxn.GetXaxis()->SetTitle("J_{CN} [hbar]");
+  histERxn.GetXaxis()->SetTitle("#sigma(J) [mb]");
+  histERxn.SetTitle("spin distribution of residue that decay by neutrons only");
   TH1F histFis("histFis","",90,0,90);
+  histFis.GetXaxis()->SetTitle("J_{CN} [hbar]");
+  histFis.GetXaxis()->SetTitle("#sigma(J) [mb]");
+  histFis.SetTitle("spin distribution of events that fission");
+
   TH1F histFus("histFus","",90,0,90);
+  histFus.GetXaxis()->SetTitle("J [hbar]");
+  histFus.GetXaxis()->SetTitle("#sigma(J) [mb]");
+  histFus.SetTitle("spin distribution of all fusion events");
+
   TH1F histA("histA","",230,0,230);
-  TH2F histAA("histAA","",200,0,200,200,0,200);
-  TH1F histAFis("histAFis","",230,0,230);
-  TH1F histAFisPrimary("histAFisPrimary","",230,0,230);
-  TH1F histAFisPrimaryVel("histAFisPrimaryVel","",230,0,230);
+  histA.GetXaxis()->SetTitle("A");
+  histA.GetYaxis()->SetTitle("#sigma(A) [mb]");
+  histA.SetTitle(" inclusive mass distribution");
+
+
   TH1F histZ("histZ","",92,0,92);
+  histZ.GetXaxis()->SetTitle("Z");
+  histZ.GetYaxis()->SetTitle("#sigma(Z) [mb]");
+  histZ.SetTitle(" inclusive charge distribution");
+
+
   TH1F histZ_fis("histZ_fis","",92,0,92);
+  histZ_fis.GetXaxis()->SetTitle("Z");
+  histZ_fis.GetYaxis()->SetTitle("#sigma(Z) [mb]");
+  histZ_fis.SetTitle("charge distribution for fission events");
+
   TH1F histZ_nofis("histZ_nofis","",92,0,92);
+  histZ_nofis.GetXaxis()->SetTitle("Z");
+  histZ_nofis.GetYaxis()->SetTitle("#sigma(Z) [mb]");
+  histZ_nofis.SetTitle("charge distribution for non-fission events");
+
   TH1F histN("histN","",132,0,132);
-  TH1F angle("angle","",180,0,180);
-  TH2F histZN("histZN","",151,0,151,151,0,151);
-  TH1F keFF("keFF","",150,0,150);
-  TH1F kePreSad("kePreSad","",100,0,30);
-  TH1F kePreSS("keSS","",100,0,30);
-  TH1F kePreSc("kePreSc","",100,0,30);
-  TH1F kePost("kePost","",100,0,30);
-  TH1F keEvap("keEvap","",100,0,30);
-  TH1F velFF("velFF","",100,0,4.);
-  TH1F keAlpha("keAlpha","",50,0,50);
-  TH1F keProton("keProton","",50,0,50);
+  histN.GetXaxis()->SetTitle("N");
+  histN.GetYaxis()->SetTitle("#sigma(N) [mb]");
+  histN.SetTitle(" inclusive neutron-number distribution");
+
+  //the following are differential multiplicity 
   TH1F keNeutron("keNeutron","",50,0,50);
+  keNeutron.GetXaxis()->SetTitle("E_{k} [MeV]");
+  keNeutron.GetYaxis()->SetTitle("dm/dE [MeV^{-1}]");
+  keNeutron.SetTitle("neutron energy spectra in coincidence with residues");
+
+  TH1F keAlpha("keAlpha","",50,0,50);
+  keAlpha.GetXaxis()->SetTitle("E_{k} [MeV]");
+  keAlpha.GetYaxis()->SetTitle("dm/dE [MeV^{-1}]");
+  keAlpha.SetTitle("#alpha particle energy spectra in coincidence with residues");
+
+
+  TH1F keProton("keProton","",50,0,50);
+  keProton.GetXaxis()->SetTitle("E_{k} [MeV]");
+  keProton.GetYaxis()->SetTitle("dm/dE [MeV^{-1}]");
+  keProton.SetTitle("proton energy spectra in coincidence with residues");
+
+
   TH1F keLi6("keLi6","",60,0,60);
+  keLi6.GetXaxis()->SetTitle("E_{k} [MeV]");
+  keLi6.GetYaxis()->SetTitle("dm/dE [MeV^{_1}]");
+  keLi6.SetTitle("^{6}Li energy spectra in coincidence with residues");
+
+
   TH1F keLi7("keLi7","",60,0,60);
+  keLi7.GetXaxis()->SetTitle("E_{k} [MeV]");
+  keLi7.GetYaxis()->SetTitle("dm/dE [MeV^{-1}]");
+  keLi7.SetTitle("^{7}Li energy spectra in coincidence with residues");
+
+
   TH1F keBe7("keBe7","",60,0,60);
-  TH1F histFis2("histFis2","",100,0,7000);
+  keBe7.GetXaxis()->SetTitle("E_{k} [MeV]");
+  keBe7.GetYaxis()->SetTitle("dm/dE [MeV^{-1}]");
+  keBe7.SetTitle("^{7}Be energy spectra in coincidence with residues");
+
+
   TH2F histAL("histAL","",250,0,250,100,0,100);
-  TH2F histxnEx("histxnEx","",50,0,50,50,0,20);
-  TH2F histxnExA("histxnExA","",16,200,216,50,0,20);
+  histAL.GetXaxis()->SetTitle("A");
+  histAL.GetYaxis()->SetTitle("J_{CN} [hbar]");
+  histAL.SetTitle("inclusive mass and CN spin distribution");
+
+
+  TH2F histZN("histZN","",151,0,151,151,0,151);
+  histZN.GetXaxis()->SetTitle("N");
+  histZN.GetYaxis()->SetTitle("Z");
+  histZN.SetTitle("inclusive joint N_Z distributions of all fragments");
+
+
+
+  TH1F keFF("keFF","",150,0,150);
+  keFF.GetXaxis()->SetTitle("E_{k} [MeV]");
+  keFF.GetYaxis()->SetTitle("d#sigma/dE [mb/MeV]");
+  keFF.SetTitle("Fission Fragment kinetic-energy spectrum");
+
+
+  TH1F velFF("velFF","",100,0,4.);
+  velFF.GetXaxis()->SetTitle("v [cm/ns]");
+  velFF.GetYaxis()->SetTitle("d#sigma/dv [mb/cm/ns]");
+  velFF.SetTitle("Fission Fragment velocity spectrum");
+
+
+
+  TH1F kePreSad("kePreSad","",100,0,30);
+  kePreSad.GetXaxis()->SetTitle("E_{k} [MeV]");
+  kePreSad.GetYaxis()->SetTitle("dm/dE [MeV^{-1}]");
+  kePreSad.SetTitle("pre-saddle neutron multiplicity spectrum");
+
+  TH1F kePreSS("keSS","",100,0,30);
+  kePreSS.GetXaxis()->SetTitle("E_{k} [MeV]");
+  kePreSS.GetYaxis()->SetTitle("dm/dE [MeV^{-1}]");
+  kePreSS.SetTitle("saddle-to-scission neutron multiplicity spectrum");
+
+
+  TH1F kePreSc("kePreSc","",100,0,30);
+  kePreSc.GetXaxis()->SetTitle("E_{k} [MeV]");
+  kePreSc.GetYaxis()->SetTitle("dm/dE [MeV^{-1}]");
+  kePreSc.SetTitle("pre-scission neutron multiplicity spectrum");
+
+  TH1F kePost("kePost","",100,0,30);
+  kePost.GetXaxis()->SetTitle("E_{k} [MeV]");
+  kePost.GetYaxis()->SetTitle("dm/dE [MeV^{-1}]");
+  kePost.SetTitle("post scission neutron spectrum");
+
 
   bool f14=1;
   bool f12=1;
@@ -176,14 +284,12 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
 
 	 if(productER->iZ == iZcn)
 	   {
-	     averageA += productER->iA;
-             numberA += 1;
+	     averageA += (double)productER->iA*(double)weight;
+             numberA += (double)weight;
 	   }
 
          int iZres = productER->iZ;
-         float resEx = productER->fEx;
-         float resJ = productER->fJ;
-         int iAres = productER->iA;
+         //int iAres = productER->iA;
          int multTot = 0;
          int iZ, iA;
 
@@ -205,8 +311,6 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
 	     if (iZres == iZcn)
 	         {
                     histERxn.Fill(l,weight);
-		    histxnEx.Fill(resJ,resEx,weight);
-		    histxnExA.Fill(iAres,resEx,weight);
 	          }
 
              Nres += weight;
@@ -217,13 +321,16 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
                sumAresDet += weight*(float)productER->iA;
 	       }
 	   }
-	 else 
+	 else
 	   {
 	     residue = 0;
              residueDet = 0;
+	   }
+
+	 if (CN.isSymmetricFission())
+	   {
 	     Nfiss += weight;
              histFis.Fill(l,weight);
-             histFis2.Fill(l*l,weight);
 	   }
 
 
@@ -301,40 +408,23 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
                       kePost.Fill(product->getKE(),weight);
 		      }
 		   }
-		 else keEvap.Fill(product->getKE(),weight);
 	       }
-	     else if (iZ == 1 && iA == 1 && residueDet) //iARes >= Ares)
+	     else if (iZ == 1 && iA == 1 && residueDet) 
 	       {
 		keProton.Fill(product->getKE(),weight);
                 Nproton += weight;
 	       }
 	     else if (iZ == 2 && iA == 4)
 	       {
-		 if(residueDet) //iARes >=Ares )
+		 if(residueDet) 
 		   {
-
-		     /*
-                    //rjc
-                     if (product->getKE() < 15.)
-		       {
-                       cout << " i = " << i << endl;
-		       cout << product->getParent()->iZ << " " <<
-			 product->getParent()->iA << " " <<
-			 product->getParent()->fEx << " " <<
-			 product->getParent()->fJ << " " <<
-			 product->getKE() << " " <<
-			 product->getParent()->daughterHeavy->fJ  << " " <<
-                         product->getParent()->daughterHeavy->fEx << endl;
-		       }
-		     */
-		     //cout << "alpha " << product->getKE() << endl; //rjc
 	             keAlpha.Fill(product->getKE(),weight);
                      Nalpha += weight;
 		   }
 		 }
 	     else if (iZ == 3 && iA == 6)
 	       {
-		 if(residueDet) //iARes >=Ares )
+		 if(residueDet) 
 		   {
 
 	             keLi6.Fill(product->getKE(),weight);
@@ -343,7 +433,7 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
 		 }
 	     else if (iZ == 3 && iA == 7)
 	       {
-		 if(residueDet) //iARes >=Ares )
+		 if(residueDet) 
 		   {
 
 	             keLi7.Fill(product->getKE(),weight);
@@ -352,17 +442,14 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
 		 }
 	     else if (iZ == 4 && iA == 7)
 	       {
-		 if(residueDet) //iARes >=Ares )
+		 if(residueDet) 
 		   {
 
 	             keBe7.Fill(product->getKE(),weight);
                      NBe7 += weight;
 		   }
 		 }
-             if (iZ > 1 && iZ < 5)
-	       {
-                 angle.Fill(product->getThetaDegrees(),weight);
-	       }
+
              if (iZ > 5 && CN.isSymmetricFission()) 
 	       {
                  keFF.Fill(product->getKE(),weight);
@@ -370,32 +457,10 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
                  Mfis += (float)product->iA;
                  M2fis += pow((float)product->iA,2);
                  M0fis += 1.;
-                 histAFis.Fill(product->iA,weight);
 	       }
 	     product=CN.getProducts();
 	    }
-         if (CN.isSymmetricFission())
-	   {
-             if ((float)iAmax > 0.77*(float)CN.iA)
-	       {
-                NfissLost += weight;
-                LfissLost += weight*CN.fJ;
-	       }                
-             float A2 = emax/(emax+enext)*(float)CN.iA;
-             float A1 = (float)CN.iA - A2;
 
-             histAFisPrimary.Fill(A1,weight);
-             histAFisPrimary.Fill(A2,weight);
-             
-             A2 = vmax/(vmax+vnext)*(float)CN.iA;
-             A1 = (float)CN.iA - A2;
-
-             histAFisPrimaryVel.Fill(A1,weight);
-             histAFisPrimaryVel.Fill(A2,weight);
-             //cout << iAmax << " " << iAnext << " " << A2 << " " << A1 << endl;
-	     histAA.Fill((float)iAnext,A2,weight);
-	     histAA.Fill((float)iAmax,A1,weight);
-	   }
 
          float Amax = (float)iAmax/(float)(iAmax+iAnext)*162.;
          float Anext = (float)iAnext/(float)(iAmax+iAnext)*162.;
@@ -429,49 +494,32 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   histZ_fis.Scale(plb/(float)numTot*sum);
   histZ_nofis.Scale(plb/(float)numTot*sum);
   histN.Scale(plb/(float)numTot*sum);
-  histAFis.Scale(plb/(float)numTot*sum);
-  histAFisPrimary.Scale(plb/(float)numTot*sum);
-  histAFisPrimaryVel.Scale(plb/(float)numTot*sum);
   histZN.Scale(plb/(float)numTot*sum);
+  velFF.Scale(plb/(float)numTot*sum);
+  keFF.Scale(plb/(float)numTot*sum);
 
-  histER.Write();
-  histERxn.Write();
-  histxnEx.Write();
-  histxnExA.Write();
-  histFis.Write();
-  histFis2.Write();
-  histFus.Write();
-  angle.Write();
-  histZ.Write();
-  histZ_fis.Write();
-  histZ_nofis.Write();
-  histA.Write();
-  histAA.Write();
-  histAFisPrimary.Write();
-  histAFisPrimaryVel.Write();
-  histAL.Write();
-  histN.Write();
-  histZN.Write();
-  keFF.Write();
-  kePreSad.Write();
-  kePreSad.Write();
-  kePreSc.Write();
-  kePost.Write();
-  keEvap.Write();
-  histEgamma.Write();
+
+
+  //for multiplicity spectrra in coincidence with fission
+
+  kePreSad.Scale(1./Nfiss);
+  kePreSad.Scale(1./Nfiss);
+  kePreSc.Scale(1./Nfiss);
+  kePost.Scale(1./Nfiss);
+
+
+
+
+  //for multiplicity spectra in coincidence with residues
   keAlpha.Scale(1./NresDet);
   keProton.Scale(1./NresDet);
   keNeutron.Scale(1./NresDet);
   keLi6.Scale(1./NresDet);
   keLi7.Scale(1./NresDet);
   keBe7.Scale(1./NresDet);
-  keAlpha.Write();
-  keProton.Write();
-  keNeutron.Write();
-  keLi6.Write();
-  keLi7.Write();
-  keBe7.Write();
-  velFF.Write();
+
+
+
   f->Write();
   cout << "NresDet= " << NresDet << " Nneut= " << Nneutron << " NProt= " <<
     Nproton << " Nalpha= " << Nalpha << " NLi6= " << NLi6 << " NLi7= " << NLi7
@@ -488,8 +536,6 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
 
   float xER = Nres/(float)numTot*sum*plb;
   float xFiss2 = Nfiss/(float)numTot*sum*plb;
-  if (NfissLost > 0) LfissLost /= NfissLost;
-  float xFissLost = NfissLost/(float)numTot*sum*plb;
   cout << "sigmaER = " << xER << " mb " << endl;
 
   float xFus = 0.;
@@ -504,8 +550,7 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   float xFis = xFus - xER;
 
   cout << "fusion xsec= " << xFus << " mb" << endl;
-  cout << "fission xsec= " << xFis << " mb " << xFiss2 <<  " " 
-       << xFissLost << " " << LfissLost<<   endl;
+  cout << "fission xsec= " << xFis << " mb " << xFiss2 <<  " mb " <<   endl;
   cout << "preSaddle neut mult = " << NpreSad/Nfiss << endl;
   cout << "preScis neut mult = " << NpreScis/Nfiss << endl;
   cout << "post neut mult = " << Npost/Nfiss << endl;
@@ -516,7 +561,8 @@ CRun::CRun(int iZcn, int iAcn, float fEx, float l0, float d0, int lmax, float pl
   //float sigma = sqrt(sigma2);
   cout << "sigma2M= " << sigma2 << endl;
 
-  if (numberA > 0) cout << "average x for xn products is " << (float)iAcn-(float)averageA/(float)numberA << endl;
+  if (numberA > 0) cout << "average x for xn products is " << (float)iAcn-
+   averageA/numberA << endl;
 
 
 

@@ -14,6 +14,8 @@ CChart* CChart::fInstance = 0;
 
 int const CChart::iZmax = 136;
 
+CChart* CChart::fInstance = 0;
+
 //****************************************************
   /**
    * Constructor reads in files with neutron and 

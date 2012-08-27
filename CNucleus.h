@@ -94,6 +94,7 @@ class CNucleus : public CNuclide, public CWeight
   int fissionA; //!< mass number of fission fragment
   int fissioningZ; //!< proton number of fission parent
   int fissioningA; //!< mass number of fission parent
+  int iZ1_IMF_Max; //!< maximum Z for IMF emission
 
   float fissionU; //!< thermal excitation energy of both fission fragments
   float EdefScission; //!< deformation energy of the scission configuration
@@ -193,11 +194,6 @@ class CNucleus : public CNuclide, public CWeight
   static float const wue[3]; //!<coeff for Weisskopf units (gamma decay)
   static int const nGamma; //!< number of gamma decay modes considered
   void binaryDecay();
-  void excite(float,float);
-  void excite(float,double);
-  void excite(double,float);
-  void excite(double,double);
-  void excite(float);
   void exciteScission(float,float,bool sym=1);
   float asyFissionWidth();
   float asyFissionWidthZA();
@@ -303,6 +299,13 @@ class CNucleus : public CNuclide, public CWeight
   int getNumberOfProducts();
   int getZmaxEvap();
 
+
+  void excite(float,float);
+  void excite(float,double);
+  void excite(double,float);
+  void excite(double,double);
+  void excite(float);
+
   float getTheta();
   float getThetaDegrees();
   CAngle getAngle();
@@ -345,6 +348,10 @@ class CNucleus : public CNuclide, public CWeight
   int getMultPostHeavy();
   int getMultPreSaddle();
   int getMultSaddleToScission();
+  float getFissionTimeSymmetric(float & timeScission);
+  float getFissionTimeAsymmetric();
+  float getDecayWidth();
+  float getLogLevelDensity();
   int origin; //!< specifies the origin of the fragment, prefission, post , etc
   int origin2; //!< specifies the origin of the fragment, prefission, post , etc
   void printParameters();

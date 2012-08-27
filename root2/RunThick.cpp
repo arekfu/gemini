@@ -109,8 +109,8 @@ CRunThick::CRunThick(int iZcn, int iAcn, float fEx_min,float fEx_max,float l0_mi
   float Mfis = 0;
   float M2fis = 0.;
   float M0fis = 0.;
-  int numberA = 0;
-  int averageA = 0;
+  double numberA = 0;
+  double averageA = 0;
 
   TH1F histEgamma("Egamma","",100,0,50);
   TH1F histER("histER","",90,0,90);
@@ -216,8 +216,8 @@ CRunThick::CRunThick(int iZcn, int iAcn, float fEx_min,float fEx_max,float l0_mi
 
 	 if(productER->iZ == iZcn)
 	   {
-	     averageA += productER->iA;
-             numberA += 1;
+	     averageA += (double)productER->iA*(double)weight;
+             numberA += (double)weight;
 	   }
 
          int iZres = productER->iZ;
@@ -473,44 +473,13 @@ CRunThick::CRunThick(int iZcn, int iAcn, float fEx_min,float fEx_max,float l0_mi
   histAFisPrimaryVel.Scale(plb/(float)numTot*sum);
   histZN.Scale(plb/(float)numTot*sum);
 
-  histER.Write();
-  histERxn.Write();
-  histxnEx.Write();
-  histxnExA.Write();
-  histFis.Write();
-  histFis2.Write();
-  histFus.Write();
-  angle.Write();
-  histZ.Write();
-  histZ_fis.Write();
-  histZ_nofis.Write();
-  histA.Write();
-  histAA.Write();
-  histAFisPrimary.Write();
-  histAFisPrimaryVel.Write();
-  histAL.Write();
-  histN.Write();
-  histZN.Write();
-  keFF.Write();
-  kePreSad.Write();
-  kePreSad.Write();
-  kePreSc.Write();
-  kePost.Write();
-  keEvap.Write();
-  histEgamma.Write();
   keAlpha.Scale(1./NresDet);
   keProton.Scale(1./NresDet);
   keNeutron.Scale(1./NresDet);
   keLi6.Scale(1./NresDet);
   keLi7.Scale(1./NresDet);
   keBe7.Scale(1./NresDet);
-  keAlpha.Write();
-  keProton.Write();
-  keNeutron.Write();
-  keLi6.Write();
-  keLi7.Write();
-  keBe7.Write();
-  velFF.Write();
+
   f->Write();
   cout << "NresDet= " << NresDet << " Nneut= " << Nneutron << " NProt= " <<
     Nproton << " Nalpha= " << Nalpha << " NLi6= " << NLi6 << " NLi7= " << NLi7
@@ -555,5 +524,6 @@ CRunThick::CRunThick(int iZcn, int iAcn, float fEx_min,float fEx_max,float l0_mi
   //float sigma = sqrt(sigma2);
   cout << "sigma2M= " << sigma2 << endl;
 
-  if (numberA > 0) cout << "average x for xn products is " << (float)iAcn-(float)averageA/(float)numberA << endl;
+  if (numberA > 0) cout << "average x for xn products is " << (float)iAcn-
+   averageA/numberA << endl;
 }
