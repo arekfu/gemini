@@ -8,8 +8,6 @@ returns level density, entropy, temperature
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-\bf{CLevel\-Density} ()
-\item 
 float \bf{get\-Little\-A} (int i\-A, float f\-U0, float f\-Pairing=0., float f\-Shell=0., float f\-J=0., short i\-Fission=0)
 \item 
 float \bf{get\-Aden} ()
@@ -27,6 +25,9 @@ float \bf{get\-Log\-Level\-Density\-Scission} (int i\-A, float U, float aden\-In
 \subsection*{Static Public Member Functions}
 \begin{CompactItemize}
 \item 
+static \bf{CLevel\-Density} $\ast$ \bf{instance} ()\label{classCLevelDensity_fe25e210704d8333f87261835305e5a3}
+
+\begin{CompactList}\small\item\em instance member to make this class a singleton \item\end{CompactList}\item 
 static void \bf{set\-Little\-A} (float k00, float a\-Kappa0=0., float c\-Kappa0=0., float \bf{k\-Infinity}=12.)
 \item 
 static void \bf{set\-Af\-An} (float af\_\-an0)
@@ -47,6 +48,11 @@ static float \bf{get\-Aimf\-An} ()
 \item 
 static void \bf{print\-Parameters} ()
 \end{CompactItemize}
+\subsection*{Private Member Functions}
+\begin{CompactItemize}
+\item 
+\bf{CLevel\-Density} ()
+\end{CompactItemize}
 \subsection*{Private Attributes}
 \begin{CompactItemize}
 \item 
@@ -65,6 +71,9 @@ float \bf{f\-U}\label{classCLevelDensity_7d128ac299d6d28df0aeca5ee920756a}
 \subsection*{Static Private Attributes}
 \begin{CompactItemize}
 \item 
+static \bf{CLevel\-Density} $\ast$ \bf{f\-Instance} = 0\label{classCLevelDensity_cd22bebf963abe34264ebd60b30f35e8}
+
+\begin{CompactList}\small\item\em instance member to make this class a singleton \item\end{CompactList}\item 
 static float \bf{k0} = 7.3\label{classCLevelDensity_2d81b36293e089d0ea9e207eb92f9839}
 
 \begin{CompactList}\small\item\em inverse level-density parameter at U=0 \item\end{CompactList}\item 
@@ -106,7 +115,7 @@ This class deals with level densities and related paramters. the level-density p
 \subsection{Constructor \& Destructor Documentation}
 \index{CLevelDensity@{CLevel\-Density}!CLevelDensity@{CLevelDensity}}
 \index{CLevelDensity@{CLevelDensity}!CLevelDensity@{CLevel\-Density}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}CLevel\-Density::CLevel\-Density ()}\label{classCLevelDensity_e6428caecb1135b705ac39adf873b135}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}CLevel\-Density::CLevel\-Density ()\hspace{0.3cm}{\tt  [private]}}\label{classCLevelDensity_e6428caecb1135b705ac39adf873b135}
 
 
 Constructor 

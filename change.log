@@ -245,3 +245,12 @@
 	       assocaited with symmetric and asymmetric fission. 
 6th August 2012 The classes CEvap, CLevelDensity, CChart are now made to 
 	       be singletons.
+4th Sept 2012 The level density returned from getLogLevelDensitySpherical
+	      was missing some constants. This was found by Cheng Lei.
+	      These probably got lost in the conversion from fortran.
+	      This is generally not a big deal as the decay 
+	      widths are only sensitive to the relativel level density. 
+	      But to be consistant I included these constants.
+	      Also stopped the code crashing if k0 == kInfinity
+4th October  for the "statistical" decay of Z=2,3, if the decay did not occur,
+	     no velocity was assigned to the final fragments, fixed this

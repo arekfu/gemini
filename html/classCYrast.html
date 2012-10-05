@@ -25,8 +25,6 @@
 <a href="classCYrast-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#c921da56f10301d8a1fc46c57c0fc73f">CYrast</a> ()</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#3d52c1b86cb26e776b5df02118316ad9">getYrast</a> (int, int, float)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#619515cfa0f43558880e335dd8bebb64">getYrastModel</a> (int, int, float)</td></tr>
@@ -58,6 +56,10 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#2e6ad60aaba3564566f0433326a33d2c">WignerEnergy</a> (int <a class="el" href="classCYrast.html#748e9f8b7ea2129711755345dbbe8b1f">iZ</a>, int <a class="el" href="classCYrast.html#37e83874a21b3dea25708215649815fb">iA</a>)</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="f8bd90dce7a0e85b472f1e0620ad7de4"></a><!-- doxytag: member="CYrast::instance" ref="f8bd90dce7a0e85b472f1e0620ad7de4" args="()" -->
+static <a class="el" href="classCYrast.html">CYrast</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#f8bd90dce7a0e85b472f1e0620ad7de4">instance</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">instance member to make this class a singleton <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#faa29df45ab999a03a954c5c3fcceafc">forceSierk</a> (bool=1)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#e7c7e015ce294a114d94523bb3888a34">printParameters</a> ()</td></tr>
@@ -80,6 +82,8 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">maximum saddle-point moment of inertia <br></td></tr>
 <tr><td colspan="2"><br><h2>Private Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#c921da56f10301d8a1fc46c57c0fc73f">CYrast</a> ()</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#d58e02c0cbefdd045f3fc7624cf8c75f">lpoly</a> (double, int, double *)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#91dccad458ce86b53d4c8581138b59fd">cubic</a> (float, float, float, float, float, float)</td></tr>
@@ -121,12 +125,12 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#97e5bc8a53cebc53bd41f50004139a9a">Narray</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">number of elements in array of asymmetric barriers <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="356cfd2857afad2a8b46e418b1f268c4"></a><!-- doxytag: member="CYrast::sadArray" ref="356cfd2857afad2a8b46e418b1f268c4" args="[150]" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#356cfd2857afad2a8b46e418b1f268c4">sadArray</a> [150]</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b9a730e3c26607de2675f58b9c587d6b"></a><!-- doxytag: member="CYrast::sadArray" ref="b9a730e3c26607de2675f58b9c587d6b" args="[300]" -->
+float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#b9a730e3c26607de2675f58b9c587d6b">sadArray</a> [300]</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">array stores the conditional saddle energies <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="87e99c16c50d12fe74590ea71e18061f"></a><!-- doxytag: member="CYrast::sadArrayZA" ref="87e99c16c50d12fe74590ea71e18061f" args="[150]" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#87e99c16c50d12fe74590ea71e18061f">sadArrayZA</a> [150]</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="52b607a9aaf5ce26feee1ad8fcd4a24f"></a><!-- doxytag: member="CYrast::sadArrayZA" ref="52b607a9aaf5ce26feee1ad8fcd4a24f" args="[300]" -->
+float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#52b607a9aaf5ce26feee1ad8fcd4a24f">sadArrayZA</a> [300]</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">array stores saddle energies after correction <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="7228575eb0933e72dcdf6386a51f1802"></a><!-- doxytag: member="CYrast::mass" ref="7228575eb0933e72dcdf6386a51f1802" args="" -->
@@ -146,6 +150,10 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">spin <br></td></tr>
 <tr><td colspan="2"><br><h2>Static Private Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="e06b12d4f459e11a7b7fe2c310d8fe7c"></a><!-- doxytag: member="CYrast::fInstance" ref="e06b12d4f459e11a7b7fe2c310d8fe7c" args="" -->
+static <a class="el" href="classCYrast.html">CYrast</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#e06b12d4f459e11a7b7fe2c310d8fe7c">fInstance</a> = 0</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">instance member to make this class a singleton <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="d4868c17ce6a605e9501bd0761a776c0"></a><!-- doxytag: member="CYrast::pi" ref="d4868c17ce6a605e9501bd0761a776c0" args="" -->
 static double const&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCYrast.html#d4868c17ce6a605e9501bd0761a776c0">pi</a> = acos(-1.)</td></tr>
 
@@ -316,7 +324,7 @@ Class to return barriers and rotational energies. It is constructed from bits of
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [private]</code></td>
         </tr>
       </table>
 </div>
@@ -1599,7 +1607,7 @@ calculates the Wigner energy in the mass formula used by Sierk <dl compact><dt><
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="CYrast_8h-source.html">CYrast.h</a><li>Yrast.cpp</ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Apr 6 08:27:07 2012 by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Aug 6 14:13:09 2012 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

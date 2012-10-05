@@ -275,6 +275,7 @@ void CNucleus::binaryDecay()
           daughterHeavy->runningWeight = runningWeight;
           daughterHeavy->fact = fact;
           daughterHeavy->bStable = 1;
+          for (int i=0;i<3;i++) daughterHeavy->velocity[i] = velocity[i];
 	  sumGammaEnergy += fEx;
           allProducts[iProducts] = daughterHeavy;
           iProducts++;

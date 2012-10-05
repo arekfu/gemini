@@ -37,23 +37,25 @@
 <a name="l00035"></a><a class="code" href="classCEvap.html">00035</a> <span class="keyword">class </span><a class="code" href="classCEvap.html">CEvap</a>
 <a name="l00036"></a>00036 {
 <a name="l00037"></a>00037  <span class="keyword">protected</span>:
-<a name="l00038"></a><a class="code" href="classCEvap.html#cbc790b16a612d40ee0c5ef07bd6d979">00038</a>   <a class="code" href="classCTlBarDist.html">CTlBarDist</a> ** <a class="code" href="classCEvap.html#cbc790b16a612d40ee0c5ef07bd6d979">tlArray</a>; 
-<a name="l00039"></a><a class="code" href="classCEvap.html#24f6bca6aa46e8827332806cd1f3a9e6">00039</a>   <a class="code" href="classCSigBarDist.html">CSigBarDist</a> ** <a class="code" href="classCEvap.html#24f6bca6aa46e8827332806cd1f3a9e6">sigBarDist</a>; 
-<a name="l00040"></a><a class="code" href="classCEvap.html#eaa49009f3e2afb26b390690babc7d0f">00040</a>   <span class="keywordtype">int</span> <a class="code" href="classCEvap.html#eaa49009f3e2afb26b390690babc7d0f">nTl</a>; 
-<a name="l00041"></a>00041 
-<a name="l00042"></a>00042  <span class="keyword">public</span>:
-<a name="l00043"></a><a class="code" href="classCEvap.html#d9d4d37aa62cf72432bcf71e8f35b7c7">00043</a>   <span class="keywordtype">int</span> <a class="code" href="classCEvap.html#d9d4d37aa62cf72432bcf71e8f35b7c7">nLight</a>; 
-<a name="l00044"></a><a class="code" href="classCEvap.html#ef12731853c39ee996ed8f33aa3208ad">00044</a>   <a class="code" href="classCLightP.html">CLightP</a> ** <a class="code" href="classCEvap.html#ef12731853c39ee996ed8f33aa3208ad">lightP</a>; 
-<a name="l00045"></a><a class="code" href="classCEvap.html#0a69feb1d6e867e57a11a8dd952fe855">00045</a>   <span class="keywordtype">int</span> <a class="code" href="classCEvap.html#0a69feb1d6e867e57a11a8dd952fe855">maxZ</a>; 
-<a name="l00046"></a><a class="code" href="classCEvap.html#7dc33089f4a45d0fb33f53b82af1d430">00046</a>   <a class="code" href="structSDecay.html">SDecay</a> * <a class="code" href="classCEvap.html#7dc33089f4a45d0fb33f53b82af1d430">decay</a>; 
-<a name="l00047"></a>00047 
-<a name="l00048"></a>00048   <a class="code" href="classCEvap.html#5e9710c313ea5ce45cdc50d09ac8e947">CEvap</a>();
-<a name="l00049"></a>00049   <a class="code" href="classCEvap.html#759413aca22735496f2bb36c61c5fce4">~CEvap</a>();
-<a name="l00050"></a><a class="code" href="classCEvap.html#8d5f62d335f958c5ea80546e3c8fce77">00050</a>   <span class="keywordtype">float</span> * <a class="code" href="classCEvap.html#8d5f62d335f958c5ea80546e3c8fce77">prob</a>; 
-<a name="l00051"></a>00051 };
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053 <span class="preprocessor">#endif</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Apr 6 08:27:07 2012 by&nbsp;
+<a name="l00038"></a>00038   <a class="code" href="classCEvap.html#5e9710c313ea5ce45cdc50d09ac8e947">CEvap</a>();
+<a name="l00039"></a><a class="code" href="classCEvap.html#00f7ca875136d0ba0d26b6648aa4ade7">00039</a>   <span class="keyword">static</span> <a class="code" href="classCEvap.html">CEvap</a> *<a class="code" href="classCEvap.html#00f7ca875136d0ba0d26b6648aa4ade7">fInstance</a>; 
+<a name="l00040"></a><a class="code" href="classCEvap.html#cbc790b16a612d40ee0c5ef07bd6d979">00040</a>   <a class="code" href="classCTlBarDist.html">CTlBarDist</a> ** <a class="code" href="classCEvap.html#cbc790b16a612d40ee0c5ef07bd6d979">tlArray</a>; 
+<a name="l00041"></a><a class="code" href="classCEvap.html#24f6bca6aa46e8827332806cd1f3a9e6">00041</a>   <a class="code" href="classCSigBarDist.html">CSigBarDist</a> ** <a class="code" href="classCEvap.html#24f6bca6aa46e8827332806cd1f3a9e6">sigBarDist</a>; 
+<a name="l00042"></a><a class="code" href="classCEvap.html#eaa49009f3e2afb26b390690babc7d0f">00042</a>   <span class="keywordtype">int</span> <a class="code" href="classCEvap.html#eaa49009f3e2afb26b390690babc7d0f">nTl</a>; 
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044  <span class="keyword">public</span>:
+<a name="l00045"></a>00045   <span class="keyword">static</span> <a class="code" href="classCEvap.html">CEvap</a> *instance();
+<a name="l00046"></a><a class="code" href="classCEvap.html#d9d4d37aa62cf72432bcf71e8f35b7c7">00046</a>   <span class="keywordtype">int</span> <a class="code" href="classCEvap.html#d9d4d37aa62cf72432bcf71e8f35b7c7">nLight</a>; 
+<a name="l00047"></a><a class="code" href="classCEvap.html#ef12731853c39ee996ed8f33aa3208ad">00047</a>   <a class="code" href="classCLightP.html">CLightP</a> ** <a class="code" href="classCEvap.html#ef12731853c39ee996ed8f33aa3208ad">lightP</a>; 
+<a name="l00048"></a><a class="code" href="classCEvap.html#0a69feb1d6e867e57a11a8dd952fe855">00048</a>   <span class="keywordtype">int</span> <a class="code" href="classCEvap.html#0a69feb1d6e867e57a11a8dd952fe855">maxZ</a>; 
+<a name="l00049"></a><a class="code" href="classCEvap.html#7dc33089f4a45d0fb33f53b82af1d430">00049</a>   <a class="code" href="structSDecay.html">SDecay</a> * <a class="code" href="classCEvap.html#7dc33089f4a45d0fb33f53b82af1d430">decay</a>; 
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051   <a class="code" href="classCEvap.html#759413aca22735496f2bb36c61c5fce4">~CEvap</a>();
+<a name="l00052"></a><a class="code" href="classCEvap.html#8d5f62d335f958c5ea80546e3c8fce77">00052</a>   <span class="keywordtype">float</span> * <a class="code" href="classCEvap.html#8d5f62d335f958c5ea80546e3c8fce77">prob</a>; 
+<a name="l00053"></a>00053 };
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055 <span class="preprocessor">#endif</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Mon Aug 6 14:13:09 2012 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

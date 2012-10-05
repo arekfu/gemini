@@ -8,8 +8,6 @@ fission barriers, rotational energies, etc
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-\bf{CYrast} ()
-\item 
 float \bf{get\-Yrast} (int, int, float)
 \item 
 float \bf{get\-Yrast\-Model} (int, int, float)
@@ -43,6 +41,9 @@ float \bf{Wigner\-Energy} (int \bf{i\-Z}, int \bf{i\-A})
 \subsection*{Static Public Member Functions}
 \begin{CompactItemize}
 \item 
+static \bf{CYrast} $\ast$ \bf{instance} ()\label{classCYrast_f8bd90dce7a0e85b472f1e0620ad7de4}
+
+\begin{CompactList}\small\item\em instance member to make this class a singleton \item\end{CompactList}\item 
 static void \bf{force\-Sierk} (bool=1)
 \item 
 static void \bf{print\-Parameters} ()
@@ -64,6 +65,8 @@ float \bf{mom\-Inertia\-Max}\label{classCYrast_49fdeeb99a27ac65b453f922b70d995e}
 \begin{CompactList}\small\item\em maximum saddle-point moment of inertia \item\end{CompactList}\end{CompactItemize}
 \subsection*{Private Member Functions}
 \begin{CompactItemize}
+\item 
+\bf{CYrast} ()
 \item 
 void \bf{lpoly} (double, int, double $\ast$)
 \item 
@@ -99,10 +102,10 @@ float \bf{c} [6][8][2][11][2]\label{classCYrast_09f29bfb774077e0d7996ccb8d7f0884
 int \bf{Narray}\label{classCYrast_97e5bc8a53cebc53bd41f50004139a9a}
 
 \begin{CompactList}\small\item\em number of elements in array of asymmetric barriers \item\end{CompactList}\item 
-float \bf{sad\-Array} [150]\label{classCYrast_356cfd2857afad2a8b46e418b1f268c4}
+float \bf{sad\-Array} [300]\label{classCYrast_b9a730e3c26607de2675f58b9c587d6b}
 
 \begin{CompactList}\small\item\em array stores the conditional saddle energies \item\end{CompactList}\item 
-float \bf{sad\-Array\-ZA} [150]\label{classCYrast_87e99c16c50d12fe74590ea71e18061f}
+float \bf{sad\-Array\-ZA} [300]\label{classCYrast_52b607a9aaf5ce26feee1ad8fcd4a24f}
 
 \begin{CompactList}\small\item\em array stores saddle energies after correction \item\end{CompactList}\item 
 \bf{CMass} $\ast$ \bf{mass}\label{classCYrast_7228575eb0933e72dcdf6386a51f1802}
@@ -120,6 +123,9 @@ float \bf{f\-J}\label{classCYrast_d2f214b7d12672a5f92561de9d0fdf57}
 \subsection*{Static Private Attributes}
 \begin{CompactItemize}
 \item 
+static \bf{CYrast} $\ast$ \bf{f\-Instance} = 0\label{classCYrast_e06b12d4f459e11a7b7fe2c310d8fe7c}
+
+\begin{CompactList}\small\item\em instance member to make this class a singleton \item\end{CompactList}\item 
 static double const \bf{pi} = acos(-1.)\label{classCYrast_d4868c17ce6a605e9501bd0761a776c0}
 
 \begin{CompactList}\small\item\em 3.14159 \item\end{CompactList}\item 
@@ -243,7 +249,7 @@ Class to return barriers and rotational energies. It is constructed from bits of
 \subsection{Constructor \& Destructor Documentation}
 \index{CYrast@{CYrast}!CYrast@{CYrast}}
 \index{CYrast@{CYrast}!CYrast@{CYrast}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}CYrast::CYrast ()}\label{classCYrast_c921da56f10301d8a1fc46c57c0fc73f}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}CYrast::CYrast ()\hspace{0.3cm}{\tt  [private]}}\label{classCYrast_c921da56f10301d8a1fc46c57c0fc73f}
 
 
 Constructor 
