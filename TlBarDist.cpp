@@ -26,7 +26,12 @@ CTlBarDist::CTlBarDist(string sName0)
     }
   ifstream ifFile(fullName.c_str());
 
-  if (ifFile.fail() || sName0 == "neutron" )
+
+  //do not include fluctuations for protons and neutrons
+  //The IWBC barriers do not extrapolate very well for 
+  // high spins when the barrier is increases and we often get
+  //some artifacts, so its best not to include these.
+  if (ifFile.fail() || sName0 == "neutron" || sName0 == "proton" )
     {
       one = 1;
       return;
