@@ -261,6 +261,7 @@ class CNucleus : public CNuclide, public CWeight
   static double const EkFraction; // !< calculates the Ek spectra down to this
                                  // fraction of the maximum
   //functions
+  CNucleus();
   CNucleus(int iZ,int iA);
   CNucleus(int iZ,int iA, float fEx, float fJ);
   ~CNucleus();
