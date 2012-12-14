@@ -102,13 +102,20 @@ float CLevelDensity::getLittleA(int iA, float fU0, float fPairing/*=0.*/,
   float fA = (float)iA;
   float kappa = 0.;
   float daden_dU;
-  if (normal && fU/fA < 3.)
+  if (normal && fU/fA < 3. || aKappa == 0.)
      {
-       if (aKappa > 0.) kappa = aKappa*exp(cKappa*fA);
-       float expTerm = exp(-kappa*fU/fA/(kInfinity-k0));
-       aden = fA/(kInfinity - (kInfinity-k0)*expTerm);
-       daden_dU = -pow(aden/fA,2)*kappa*expTerm;
-
+       if (k0 == kInfinity)
+	 {
+           aden = fA/k0;
+	   daden_dU = 0.;
+	 }
+       else
+	 {
+          if (aKappa > 0.) kappa = aKappa*exp(cKappa*fA);
+          float expTerm = exp(-kappa*fU/fA/(kInfinity-k0));
+          aden = fA/(kInfinity - (kInfinity-k0)*expTerm);
+          daden_dU = -pow(aden/fA,2)*kappa*expTerm;
+	 }
        switch(iFission)
 	 {
 	 case 1:
@@ -170,7 +177,7 @@ float CLevelDensity::getLogLevelDensitySpherical
   if (fJ < 0.) fJ = 0.;
   float sigma =  fMinertia*temp/40.848;
   float preExp = (2.*fJ+1.)/(1.+pow(fU,(float)(1.25))*pow(sigma,(float)1.5))
-    /pow(aden,(float)0.25);
+    /pow(aden,(float)0.25)/24./sqrt(2.);
   return entropy + log(preExp);
 }
 //******************************************
@@ -241,6 +248,7 @@ void CLevelDensity::setLittleA(float k00, float aKappa0/*=0.*/,
   aKappa = aKappa0;
   cKappa = cKappa0;
   kInfinity = kInfinity0;
+  if (aKappa == 0.) kInfinity = k0;
 }
 //****************************************************
  /**

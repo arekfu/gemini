@@ -74,6 +74,18 @@ void \bf{energy\-Conservation} ()
 \item 
 int \bf{get\-Number\-Of\-Products} ()
 \item 
+int \bf{get\-Zmax\-Evap} ()
+\item 
+void \bf{excite} (float, float)
+\item 
+void \bf{excite} (float, double)
+\item 
+void \bf{excite} (double, float)
+\item 
+void \bf{excite} (double, double)
+\item 
+void \bf{excite} (float)
+\item 
 float \bf{get\-Theta} ()
 \item 
 float \bf{get\-Theta\-Degrees} ()
@@ -115,6 +127,14 @@ int \bf{get\-Mult\-Post\-Heavy} ()
 int \bf{get\-Mult\-Pre\-Saddle} ()
 \item 
 int \bf{get\-Mult\-Saddle\-To\-Scission} ()
+\item 
+float \bf{get\-Fission\-Time\-Symmetric} (float \&\bf{time\-Scission})
+\item 
+float \bf{get\-Fission\-Time\-Asymmetric} ()
+\item 
+float \bf{get\-Decay\-Width} ()
+\item 
+float \bf{get\-Log\-Level\-Density} ()
 \item 
 void \bf{print\-Parameters} ()
 \end{CompactItemize}
@@ -167,6 +187,9 @@ bool \bf{abort\-Event}\label{classCNucleus_e7093b3a71b1ef30c899afe2bff3a75a}
 \begin{CompactList}\small\item\em abort the event \item\end{CompactList}\item 
 int \bf{origin}\label{classCNucleus_f4e2c66d862fe72f2152a3fea8f14590}
 
+\begin{CompactList}\small\item\em specifies the origin of the fragment, prefission, post , etc \item\end{CompactList}\item 
+int \bf{origin2}\label{classCNucleus_aa0d1c7aba08b8669c5b3a15ca393e95}
+
 \begin{CompactList}\small\item\em specifies the origin of the fragment, prefission, post , etc \item\end{CompactList}\end{CompactItemize}
 \subsection*{Static Public Attributes}
 \begin{CompactItemize}
@@ -176,7 +199,10 @@ static \bf{CRandom} \bf{ran}\label{classCNucleus_878957182a445fb6769a817f312204c
 \begin{CompactList}\small\item\em pointer to random number generator \item\end{CompactList}\item 
 static float const \bf{pi} = acos(-1.)\label{classCNucleus_8b2e3247e90428054c7018ce3a9795dd}
 
-\begin{CompactList}\small\item\em 3.14159 \item\end{CompactList}\end{CompactItemize}
+\begin{CompactList}\small\item\em 3.14159 \item\end{CompactList}\item 
+static double const \textbf{Ek\-Fraction} = 0.01\label{classCNucleus_3a2a8a6e1f86db6b1d5ecb180a296713}
+
+\end{CompactItemize}
 \subsection*{Protected Member Functions}
 \begin{CompactItemize}
 \item 
@@ -207,16 +233,6 @@ void \bf{angle\-Isotropic} ()
 void \bf{angle\-Gamma} ()
 \item 
 void \bf{binary\-Decay} ()
-\item 
-void \bf{excite} (float, float)
-\item 
-void \bf{excite} (float, double)
-\item 
-void \bf{excite} (double, float)
-\item 
-void \bf{excite} (double, double)
-\item 
-void \bf{excite} (float)
 \item 
 void \bf{excite\-Scission} (float, float, bool sym=1)
 \item 
@@ -300,6 +316,9 @@ int \bf{fissioning\-Z}\label{classCNucleus_cd82c11c9bfa2da866ea4c3c4aaba6b4}
 int \bf{fissioning\-A}\label{classCNucleus_d41680104321b05aa44ca206d0041e8e}
 
 \begin{CompactList}\small\item\em mass number of fission parent \item\end{CompactList}\item 
+int \bf{i\-Z1\_\-IMF\_\-Max}\label{classCNucleus_ac06d46691f3d89495ab0588246f807f}
+
+\begin{CompactList}\small\item\em maximum Z for IMF emission \item\end{CompactList}\item 
 float \bf{fission\-U}\label{classCNucleus_59978fb0577ff47f85e0ff70d5bff738}
 
 \begin{CompactList}\small\item\em thermal excitation energy of both fission fragments \item\end{CompactList}\item 
@@ -324,6 +343,9 @@ float \bf{time\-Scission}\label{classCNucleus_c1c5cc107cc70bf7799e092aa59181a9}
 int \bf{HF}\label{classCNucleus_01a6ee7880fed411d75adc4af7fa88df}
 
 \begin{CompactList}\small\item\em evaporation mode chosen for a given decay \item\end{CompactList}\item 
+\bf{CScission} \bf{scission}\label{classCNucleus_695aaf5a4264266303601a24b3f19963}
+
+\begin{CompactList}\small\item\em gives scission energeis, etc \item\end{CompactList}\item 
 bool \bf{b\-Stable}\label{classCNucleus_04b42c19af6888180ffb77ca7cbdf141}
 
 \begin{CompactList}\small\item\em indicated this nucleus is particle-stable \item\end{CompactList}\item 
@@ -501,13 +523,10 @@ static int const \bf{n\-Store} = 5000\label{classCNucleus_118e67bc01ead8adddaacf
 static short unsigned \bf{Zshell} = 2\label{classCNucleus_8bad711d5d83154f008060fce7bb5cb4}
 
 \begin{CompactList}\small\item\em enforce shell effects in evaporation \item\end{CompactList}\item 
-static \bf{CYrast} \bf{yrast}\label{classCNucleus_8209fa4f2ea236cdd1d7a876e3aba4ee}
+static \bf{CYrast} $\ast$ \bf{yrast}\label{classCNucleus_56fe03f6c281ec44145212ee40f419e6}
 
 \begin{CompactList}\small\item\em gives fission barriers and rotational energies \item\end{CompactList}\item 
-static \bf{CScission} \bf{scission}\label{classCNucleus_695aaf5a4264266303601a24b3f19963}
-
-\begin{CompactList}\small\item\em gives scission energeis, etc \item\end{CompactList}\item 
-static \bf{CLevel\-Density} \bf{level\-Density}\label{classCNucleus_4cfbd650b378a11c0f35d46c592c5cf4}
+static \bf{CLevel\-Density} $\ast$ \bf{level\-Density}\label{classCNucleus_be8c98a1bbd49777402e0ca1b1bce748}
 
 \begin{CompactList}\small\item\em gives level densities \item\end{CompactList}\item 
 static float const \bf{r0} = 1.16\label{classCNucleus_dde840341ee9fc96b7f0ed9f1ace2d45}
@@ -519,7 +538,7 @@ static float const \bf{sep} = 2.\label{classCNucleus_59b57c0fca3af933564d4be6b33
 static float \bf{threshold} = .001\label{classCNucleus_aeb319ff1406939cb22c0a58c1ccc6e7}
 
 \begin{CompactList}\small\item\em used to turn off unlikey evaporations \item\end{CompactList}\item 
-static \bf{CEvap} \bf{evap}\label{classCNucleus_f4538365ba525bbdbc76b666d94130fe}
+static \bf{CEvap} $\ast$ \bf{evap}\label{classCNucleus_9898e1af21af0a50f75d86098667c60e}
 
 \begin{CompactList}\small\item\em stores info on evaporated particles \item\end{CompactList}\item 
 static int const \bf{n\-Sub} = 800\label{classCNucleus_b711b8bac4c99b6c029f3f16d4bcbc58}
@@ -697,7 +716,7 @@ Calculates the decay width for evaporation at the scission point using the Weisk
 
 The width is given in units of Me\-V \index{CNucleus@{CNucleus}!excite@{excite}}
 \index{excite@{excite}!CNucleus@{CNucleus}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (float {\em f\-Ex0})\hspace{0.3cm}{\tt  [protected]}}\label{classCNucleus_1ca78241153854a5f7f65d56a794ddf9}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (float {\em f\-Ex0})}\label{classCNucleus_1ca78241153854a5f7f65d56a794ddf9}
 
 
 sets the excitation energy and of the compound nucleus for a Weisskopf calculation (Spin not considered). \begin{Desc}
@@ -707,7 +726,7 @@ sets the excitation energy and of the compound nucleus for a Weisskopf calculati
 \end{Desc}
 \index{CNucleus@{CNucleus}!excite@{excite}}
 \index{excite@{excite}!CNucleus@{CNucleus}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (double {\em d\-Ex0}, double {\em d\-J0})\hspace{0.3cm}{\tt  [protected]}}\label{classCNucleus_9d255e2fe1a40d6462d3073d824b87c7}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (double {\em d\-Ex0}, double {\em d\-J0})}\label{classCNucleus_9d255e2fe1a40d6462d3073d824b87c7}
 
 
 sets the excitation energy and spin of the compound nucleus. \begin{Desc}
@@ -717,7 +736,7 @@ sets the excitation energy and spin of the compound nucleus. \begin{Desc}
 \end{Desc}
 \index{CNucleus@{CNucleus}!excite@{excite}}
 \index{excite@{excite}!CNucleus@{CNucleus}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (double {\em d\-Ex0}, float {\em f\-J0})\hspace{0.3cm}{\tt  [protected]}}\label{classCNucleus_242389d478bc3e8bd7ee2fb4dd42fc74}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (double {\em d\-Ex0}, float {\em f\-J0})}\label{classCNucleus_242389d478bc3e8bd7ee2fb4dd42fc74}
 
 
 sets the excitation energy and spin of the compound nucleus. \begin{Desc}
@@ -727,7 +746,7 @@ sets the excitation energy and spin of the compound nucleus. \begin{Desc}
 \end{Desc}
 \index{CNucleus@{CNucleus}!excite@{excite}}
 \index{excite@{excite}!CNucleus@{CNucleus}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (float {\em f\-Ex0}, double {\em d\-J0})\hspace{0.3cm}{\tt  [protected]}}\label{classCNucleus_c018f44ae40a1cf10ddf10b68b479baf}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (float {\em f\-Ex0}, double {\em d\-J0})}\label{classCNucleus_c018f44ae40a1cf10ddf10b68b479baf}
 
 
 sets the excitation energy and spin of the compound nucleus. \begin{Desc}
@@ -737,7 +756,7 @@ sets the excitation energy and spin of the compound nucleus. \begin{Desc}
 \end{Desc}
 \index{CNucleus@{CNucleus}!excite@{excite}}
 \index{excite@{excite}!CNucleus@{CNucleus}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (float {\em f\-Ex0}, float {\em f\-J0})\hspace{0.3cm}{\tt  [protected]}}\label{classCNucleus_0e2fb762749d5e980d178161c2d71d07}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void CNucleus::excite (float {\em f\-Ex0}, float {\em f\-J0})}\label{classCNucleus_0e2fb762749d5e980d178161c2d71d07}
 
 
 sets the excitation energy and spin of the compound nucleus. \begin{Desc}
@@ -817,7 +836,12 @@ returns the paramter controlling the width of the barrier dist \index{CNucleus@{
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}\bf{CNucleus} $\ast$ CNucleus::get\-Compound\-Nucleus ()}\label{classCNucleus_fa70515bff631e4c941d7940f95cf279}
 
 
-returns a pointer to the Compound nucleus \index{CNucleus@{CNucleus}!getDeltaE@{getDeltaE}}
+returns a pointer to the Compound nucleus \index{CNucleus@{CNucleus}!getDecayWidth@{getDecayWidth}}
+\index{getDecayWidth@{getDecayWidth}!CNucleus@{CNucleus}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CNucleus::get\-Decay\-Width ()}\label{classCNucleus_dbf057dc9905a182fe5cabfbea212474}
+
+
+returns the evaporation plu gamma decay width in Me\-V Can easily be changed to give the toal decay with by also adding the symmetric and asymmetric fission \index{CNucleus@{CNucleus}!getDeltaE@{getDeltaE}}
 \index{getDeltaE@{getDeltaE}!CNucleus@{CNucleus}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CNucleus::get\-Delta\-E ()\hspace{0.3cm}{\tt  [static]}}\label{classCNucleus_99961708b5bb4d53a2f0728409c8eafc}
 
@@ -827,7 +851,22 @@ returns the energy bin width used for integrating the Hauser-Feshbach formulism 
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CNucleus::get\-Fission\-Scale\-Factor ()\hspace{0.3cm}{\tt  [static]}}\label{classCNucleus_eda3b1e3b0c817200887d84239b77a6f}
 
 
-returns the fission scale factor \index{CNucleus@{CNucleus}!getHeavyDaughter@{getHeavyDaughter}}
+returns the fission scale factor \index{CNucleus@{CNucleus}!getFissionTimeAsymmetric@{getFissionTimeAsymmetric}}
+\index{getFissionTimeAsymmetric@{getFissionTimeAsymmetric}!CNucleus@{CNucleus}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CNucleus::get\-Fission\-Time\-Asymmetric ()}\label{classCNucleus_a974083c182ac8ae8b5a3461d63f2c90}
+
+
+returns the time in zs when an asymmetric fission occured in the decay. Must be called only after \doxyref{decay()}{p.}{classCNucleus_e414504f1a90beb2fd2e3ade9917b7f7} is called. If not asymmetric fission, then returns -1., if more than one asymmetric fission, the is returns the time of the first \index{CNucleus@{CNucleus}!getFissionTimeSymmetric@{getFissionTimeSymmetric}}
+\index{getFissionTimeSymmetric@{getFissionTimeSymmetric}!CNucleus@{CNucleus}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CNucleus::get\-Fission\-Time\-Symmetric (float \& {\em time\-Scission})}\label{classCNucleus_18558a4e3dfd734dd7fa1b7cf2519594}
+
+
+returns the saddle-crossing time in zs for symmetric fission. In addition, the scission time is stored in time\-Scission. If no symmetric fission occurs, then -1 is returned. If more than one symmetric fission, then the time of the first is returned. the fusction \doxyref{decay()}{p.}{classCNucleus_e414504f1a90beb2fd2e3ade9917b7f7} must be run before using this function \begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em time\-Scission}]scission time in zs (outpot) \end{description}
+\end{Desc}
+\index{CNucleus@{CNucleus}!getHeavyDaughter@{getHeavyDaughter}}
 \index{getHeavyDaughter@{getHeavyDaughter}!CNucleus@{CNucleus}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}\bf{CNucleus} $\ast$ CNucleus::get\-Heavy\-Daughter ()}\label{classCNucleus_54899d78693911b9470a0f6204b89a1a}
 
@@ -842,7 +881,12 @@ Returns the fragments kinetic energy in Me\-V. \index{CNucleus@{CNucleus}!getLig
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}\bf{CNucleus} $\ast$ CNucleus::get\-Light\-Daughter ()}\label{classCNucleus_c60029827d9cdf0cde1bcfce370f55f6}
 
 
-Returns a pointer to the light daughter nucleus if NULL is returned, then this fragment was stable or a fission event stated, in which case the heavy daughter pointer will not be NULL \index{CNucleus@{CNucleus}!getMomentum@{getMomentum}}
+Returns a pointer to the light daughter nucleus if NULL is returned, then this fragment was stable or a fission event stated, in which case the heavy daughter pointer will not be NULL \index{CNucleus@{CNucleus}!getLogLevelDensity@{getLogLevelDensity}}
+\index{getLogLevelDensity@{getLogLevelDensity}!CNucleus@{CNucleus}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CNucleus::get\-Log\-Level\-Density ()}\label{classCNucleus_3e2c21ae91f4c11d6f48fbddccfa0b57}
+
+
+returns the natural log of the level density in Me\-V-1 \index{CNucleus@{CNucleus}!getMomentum@{getMomentum}}
 \index{getMomentum@{getMomentum}!CNucleus@{CNucleus}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CNucleus::get\-Momentum ()}\label{classCNucleus_f892eb68af466cbb5c806f696f2d70e1}
 
@@ -969,7 +1013,12 @@ Returns the transition-state decay width. \begin{Desc}
 \begin{description}
 \item[{\em saddle\-Point}]is the saddle-point energy in Me\-V \item[{\em i\-Af\-An}]indicates that the saddle-point ld parameter is increased by afan \end{description}
 \end{Desc}
-\index{CNucleus@{CNucleus}!hauserFeshbach@{hauserFeshbach}}
+\index{CNucleus@{CNucleus}!getZmaxEvap@{getZmaxEvap}}
+\index{getZmaxEvap@{getZmaxEvap}!CNucleus@{CNucleus}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int CNucleus::get\-Zmax\-Evap ()}\label{classCNucleus_7394e77ea5fb8bb9ba16f066dfa5a7e2}
+
+
+returns the max Z for evaporation \index{CNucleus@{CNucleus}!hauserFeshbach@{hauserFeshbach}}
 \index{hauserFeshbach@{hauserFeshbach}!CNucleus@{CNucleus}}
 \subsubsection{\setlength{\rightskip}{0pt plus 5cm}float CNucleus::hauser\-Feshbach (int {\em i\-Channel})\hspace{0.3cm}{\tt  [protected]}}\label{classCNucleus_857cfbc13d8036a7ad9d1ed10a26e75a}
 

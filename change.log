@@ -245,3 +245,34 @@
 	       assocaited with symmetric and asymmetric fission. 
 6th August 2012 The classes CEvap, CLevelDensity, CChart are now made to 
 	       be singletons.
+4th Sept 2012 The level density returned from getLogLevelDensitySpherical
+	      was missing some constants. This was found by Cheng Lei.
+	      These probably got lost in the conversion from fortran.
+	      This is generally not a big deal as the decay 
+	      widths are only sensitive to the relativel level density. 
+	      But to be consistant I included these constants.
+	      Also stopped the code crashing if k0 == kInfinity
+4th October  for the "statistical" decay of Z=2+3 fragments 
+	     if the decay did not occur, so no velocity was assigned 
+	     to the final fragments. I noticed a few 6Li and 7Li 
+	     fragments with zero velocity. Fixed this.
+	     Noticed some strange artifacts form the TlBarDist code for 
+	     protons in lighter nuclei. 
+	     These are a result of bad extrapolations of the IWBC
+	     transmission coefficents at large l when the barrier distrance 
+	     is decreased. Until I find a better extrapolation, I have turned 
+	     off barrier distributions for proton. Should not have a big 
+	     effect.
+8th Nov 2012 a)Created a CNucleus() constructor, i.e no arguements
+	     b)The J-dependent level density was still used for the 
+	     compound nucleus in the Weisskopf formalism. We now use a 
+	     J-independent value
+	     c) The code automatically switches to the high-ecitation energy
+	        form of the level density above E/A=3, but if liitle 
+	        is constant, i.e., aKappa = 0, then this level density 
+	        prescription does not work, so in such cases we now 
+	        use the low excitation-energy formalism
+26th Nov 2012 A previous modification tried to restrict negative excitation 
+	      energies, however these are possible during saddle to scission 
+	      emission. so these were allowed again.
+	

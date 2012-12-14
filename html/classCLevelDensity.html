@@ -25,8 +25,6 @@
 <a href="classCLevelDensity-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#e6428caecb1135b705ac39adf873b135">CLevelDensity</a> ()</td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#58fc95dcb009f6594ccc069026c03e9c">getLittleA</a> (int iA, float fU0, float fPairing=0., float fShell=0., float fJ=0., short iFission=0)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#29ce0edb568e2c2e261438e99dbebb81">getAden</a> ()</td></tr>
@@ -42,6 +40,10 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#ad13f8bf607fc24ad3b1f3b6258a507b">getLogLevelDensityScission</a> (int iA, float U, float adenInv=8.)</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="fe25e210704d8333f87261835305e5a3"></a><!-- doxytag: member="CLevelDensity::instance" ref="fe25e210704d8333f87261835305e5a3" args="()" -->
+static <a class="el" href="classCLevelDensity.html">CLevelDensity</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#fe25e210704d8333f87261835305e5a3">instance</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">instance member to make this class a singleton <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#f92ce917d4fc2c1c57bed9cf904c1da4">setLittleA</a> (float k00, float aKappa0=0., float cKappa0=0., float <a class="el" href="classCLevelDensity.html#7e962db0e85758cc3aa150bd33c7df56">kInfinity</a>=12.)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#cc0135aa7baed8b5748e0bff737f9502">setAfAn</a> (float af_an0)</td></tr>
@@ -62,6 +64,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#36a2a7b8bed24bcff27e47c51cc2134d">printParameters</a> ()</td></tr>
 
+<tr><td colspan="2"><br><h2>Private Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#e6428caecb1135b705ac39adf873b135">CLevelDensity</a> ()</td></tr>
+
 <tr><td colspan="2"><br><h2>Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="1806204a907f25a442252c512adfbee8"></a><!-- doxytag: member="CLevelDensity::aden" ref="1806204a907f25a442252c512adfbee8" args="" -->
 float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#1806204a907f25a442252c512adfbee8">aden</a></td></tr>
@@ -80,6 +85,10 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">thermal excitation energy in MeV <br></td></tr>
 <tr><td colspan="2"><br><h2>Static Private Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="cd22bebf963abe34264ebd60b30f35e8"></a><!-- doxytag: member="CLevelDensity::fInstance" ref="cd22bebf963abe34264ebd60b30f35e8" args="" -->
+static <a class="el" href="classCLevelDensity.html">CLevelDensity</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#cd22bebf963abe34264ebd60b30f35e8">fInstance</a> = 0</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">instance member to make this class a singleton <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="2d81b36293e089d0ea9e207eb92f9839"></a><!-- doxytag: member="CLevelDensity::k0" ref="2d81b36293e089d0ea9e207eb92f9839" args="" -->
 static float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCLevelDensity.html#2d81b36293e089d0ea9e207eb92f9839">k0</a> = 7.3</td></tr>
 
@@ -133,7 +142,7 @@ This class deals with level densities and related paramters. the level-density p
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [private]</code></td>
         </tr>
       </table>
 </div>
@@ -659,7 +668,7 @@ Sets the constants for level-density parameter where <img class="formulaInl" alt
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="CLevelDensity_8h-source.html">CLevelDensity.h</a><li>LevelDensity.cpp</ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Apr 6 08:27:07 2012 by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Mon Aug 6 14:13:09 2012 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

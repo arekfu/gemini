@@ -8,9 +8,13 @@ stores info for light particle evaporation
 \subsection*{Public Member Functions}
 \begin{CompactItemize}
 \item 
-\bf{CEvap} ()
-\item 
 \bf{$\sim$CEvap} ()
+\end{CompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{CompactItemize}
+\item 
+static \bf{CEvap} $\ast$ \textbf{instance} ()\label{classCEvap_e449f192ce43cfd9d864628398e8d9ba}
+
 \end{CompactItemize}
 \subsection*{Public Attributes}
 \begin{CompactItemize}
@@ -30,6 +34,11 @@ int \bf{max\-Z}\label{classCEvap_0a69feb1d6e867e57a11a8dd952fe855}
 float $\ast$ \bf{prob}\label{classCEvap_8d5f62d335f958c5ea80546e3c8fce77}
 
 \begin{CompactList}\small\item\em probability for decay \item\end{CompactList}\end{CompactItemize}
+\subsection*{Protected Member Functions}
+\begin{CompactItemize}
+\item 
+\bf{CEvap} ()
+\end{CompactItemize}
 \subsection*{Protected Attributes}
 \begin{CompactItemize}
 \item 
@@ -42,6 +51,12 @@ float $\ast$ \bf{prob}\label{classCEvap_8d5f62d335f958c5ea80546e3c8fce77}
 int \bf{n\-Tl}\label{classCEvap_eaa49009f3e2afb26b390690babc7d0f}
 
 \begin{CompactList}\small\item\em number of transmission coef generating objects \item\end{CompactList}\end{CompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{CompactItemize}
+\item 
+static \bf{CEvap} $\ast$ \bf{f\-Instance} = 0\label{classCEvap_00f7ca875136d0ba0d26b6648aa4ade7}
+
+\begin{CompactList}\small\item\em instance member to make this class a singleton \item\end{CompactList}\end{CompactItemize}
 
 
 \subsection{Detailed Description}
@@ -56,7 +71,7 @@ class to store indormation on all the light particle evaporation channels
 \subsection{Constructor \& Destructor Documentation}
 \index{CEvap@{CEvap}!CEvap@{CEvap}}
 \index{CEvap@{CEvap}!CEvap@{CEvap}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}CEvap::CEvap ()}\label{classCEvap_5e9710c313ea5ce45cdc50d09ac8e947}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}CEvap::CEvap ()\hspace{0.3cm}{\tt  [protected]}}\label{classCEvap_5e9710c313ea5ce45cdc50d09ac8e947}
 
 
 Constructor \index{CEvap@{CEvap}!~CEvap@{$\sim$CEvap}}

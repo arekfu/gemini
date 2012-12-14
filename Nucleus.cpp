@@ -54,6 +54,25 @@ bool const CNucleus::noSymmetry = 1; // no symmetric fission calculated in
                                  // asyFissionWidth if there is a fission peak
 int CNucleus::iPoint = -1;                           
 float CNucleus::threshold = .001;
+//*****************************************************
+CNucleus::CNucleus()
+{
+  bStable = false;
+  saddleToSciss = false;
+  timeSinceSaddle = 0.;
+  velocity[0] = 0.;
+  velocity[1] = 0.;
+  velocity[2] = 0.;
+  spin = CAngle((float)0.,(float)0.); 
+  daughterLight = NULL;
+  daughterHeavy = NULL;
+  parent = NULL;
+  abortEvent = 0;
+  evap = CEvap::instance();
+  yrast = CYrast::instance();
+  levelDensity = CLevelDensity::instance();
+}
+
 //*******************************************
 /**
  * constructor specifies the isotope.
@@ -275,6 +294,7 @@ void CNucleus::binaryDecay()
           daughterHeavy->runningWeight = runningWeight;
           daughterHeavy->fact = fact;
           daughterHeavy->bStable = 1;
+          for (int i=0;i<3;i++) daughterHeavy->velocity[i] = velocity[i];
 	  sumGammaEnergy += fEx;
           allProducts[iProducts] = daughterHeavy;
           iProducts++;
@@ -897,9 +917,9 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
       //case or else the program would get stuck in the following loop
       fissionZ = iZ/2;
       fissionA = iA/2;
-      cout << "iStore == 0 in saddle to scission" << endl;
-      cout << " A = " << iA << " Z = " << iZ << " J= " << fJ <<
-        " Ex= " << fEx << " U= " << fU0 << endl; 
+      //cout << "iStore == 0 in saddle to scission" << endl;
+      //cout << " A = " << iA << " Z = " << iZ << " J= " << fJ <<
+      //  " Ex= " << fEx << " U= " << fU0 << endl; 
 
     }
   else
@@ -1531,8 +1551,11 @@ void CNucleus::excite(float fEx0, float fJ0)
   HF = 0;
   if ( (Erot > fU0/4. && fJ > 10) || iHF == 1) HF = 1;
 
+  if (HF == 1)
   logLevelDensity = levelDensity->getLogLevelDensitySpherical(
 		   	     iA,fU0,fPairing,fShell,fJ,fMInertia);
+  else logLevelDensity = levelDensity->getLogLevelDensitySpherical
+	(iA,fU0,fPairing,fShell,-fJ,fMInertia);
 
   if (fU0 < 0. || fU0 > 2000.)
     {
@@ -4503,7 +4526,7 @@ void CNucleus::getSpin(bool saddle)
          const float S2MinRes = (lightP->residue.iA%2==0 ? 0.0 : 0.5);
          const float EYrastRes = yrast->getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
          Ex = fEx - lightP->separationEnergy - Ek;
-         if (Ek >= 0. && Ex >= EYrastRes) break;
+         if ( Ek >= 0. && Ex >= EYrastRes) break;
          if (iTry ==4) 
          {
            if(Ek>0.) { // all goes into kinetic energy -- assume maximum L and minimum S2
@@ -4569,7 +4592,12 @@ void CNucleus::getSpin(bool saddle)
       const float S2MinRes = (lightP->residue.iA%2==0 ? 0.0 : 0.5);
       const float EYrastRes = yrast->getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
       Ex = fEx - lightP->separationEnergy - Ek;
-      if (Ek >= 0. && Ex >= EYrastRes) break;
+      //for saddle-point, excitation energy can be less than zero,
+      //as we are evaporing from the scission point which can be below 
+      //the ground state
+      if (!saddle && Ek >= 0. && Ex >= EYrastRes) break;
+      if (saddle) break;
+
       if (iTry ==4) 
       {
         if(Ek>0.) { // all goes into kinetic energy -- assume maximum L and minimum S2
