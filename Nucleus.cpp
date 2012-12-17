@@ -1761,7 +1761,6 @@ float CNucleus::asyFissionWidth()
   yrast->prepareAsyBarrier(iZ,iA,fJ);
   //float Wigner0 = yrast->WignerEnergy(iZ,iA);
   scission.init(iZ,iA,fJ,1);
-
   iZ1_IMF_Max = 400;
   for (int iZ1=evap->maxZ+1;iZ1<=iZ/2;iZ1++)
     {
@@ -2071,7 +2070,6 @@ float CNucleus::asyFissionWidthZA()
   //yrast->printAsyBarrier();
   //float Wigner0 = yrast->WignerEnergy(iZ,iA);
   scission.init(iZ,iA,fJ,1);
-
   iZ1_IMF_Max = 400;
   for (int iZ1=evap->maxZ+1;iZ1<=iZ/2;iZ1++)
     {

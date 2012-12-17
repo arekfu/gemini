@@ -145,6 +145,6 @@ class CHistory {
   static const int maxInt32Len;
   HistoryMap theMap;
   int maxEvapZ; //!< maximum Z for evaporation
-  static CEvap *evap;  //!< class for evaporation of light particles
+  static CEvap *evap;
 };
 #endif // chistory_h

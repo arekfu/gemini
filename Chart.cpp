@@ -10,8 +10,6 @@
 
 #include "CChart.h"
 
-CChart* CChart::fInstance = 0;
-
 int const CChart::iZmax = 136;
 
 CChart* CChart::fInstance = 0;
