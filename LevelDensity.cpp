@@ -102,7 +102,7 @@ float CLevelDensity::getLittleA(int iA, float fU0, float fPairing/*=0.*/,
   float fA = (float)iA;
   float kappa = 0.;
   float daden_dU;
-  if (normal && fU/fA < 3. || aKappa == 0.)
+  if ((normal && fU/fA < 3.) || aKappa == 0.)
      {
        if (k0 == kInfinity)
 	 {
