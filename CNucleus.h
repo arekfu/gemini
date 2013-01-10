@@ -115,7 +115,7 @@ class CNucleus : public CNuclide, public CWeight
   static float timeTransient; //!< transient fission delay 
   static float fissionScaleFactor; //!< fission width scaled by this factor
   static float barAdd; //!< adds to Sierk fission barrier
-  static int iPoint; //!< pointer to array of stable fragments
+  static unsigned iPoint; //!< pointer to array of stable fragments
   static int iHF; //!< set evaporation mode 
   int HF; //!< evaporation mode chosen for a given decay
   static bool noIMF; //!< no imf emission is considered
@@ -219,15 +219,10 @@ class CNucleus : public CNuclide, public CWeight
   //!< total number of possible  decay products from all decays
 
 
-  static CNucleus *allProducts[]; 
+  static vector<CNucleus *> allProducts;
   //!< array of pointer to all decay products (stable or intermediate) 
- 
-  static int iProducts; //!< number of decay products from all decays
 
-
-  static int const Nstable; //!< max number of stable decay products
-  static int iStable; //!< number of stable decay products
-  static CNucleus * stableProducts[]; 
+  static vector<CNucleus *> stableProducts;
   //!< array of pointers to all stable decay products for all CN decays
 
 

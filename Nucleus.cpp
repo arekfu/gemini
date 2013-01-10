@@ -28,12 +28,8 @@ float         CNucleus::de = 1.0;
 int const CNucleus::nSub = 800;
 int const CNucleus::nSubTl = 80;
 
-int const CNucleus::Nproducts =180;
-int const CNucleus::Nstable=100;
-CNucleus* CNucleus::allProducts[Nproducts]={0};
-CNucleus* CNucleus::stableProducts[Nstable]={0};
-int CNucleus::iProducts=0;
-int CNucleus::iStable=0;
+vector<CNucleus*> CNucleus::allProducts;
+vector<CNucleus*> CNucleus::stableProducts;
 float const CNucleus::r0=1.16;
 float const CNucleus::sep=2.;
 float const CNucleus::pi=acos(-1.);
@@ -52,7 +48,7 @@ float CNucleus::barAdd = 0.;
 float const CNucleus::kRotate = 41.563;
 bool const CNucleus::noSymmetry = 1; // no symmetric fission calculated in
                                  // asyFissionWidth if there is a fission peak
-int CNucleus::iPoint = -1;                           
+unsigned CNucleus::iPoint = -1;                           
 float CNucleus::threshold = .001;
 
 template<typename T, typename X>
@@ -242,21 +238,8 @@ void CNucleus::binaryDecay()
      
 
      angleEvap(); // find the emission angles of the two fragments
-     allProducts[iProducts] = daughterLight;
-     iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
-     allProducts[iProducts] = daughterHeavy;
-     iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
+     allProducts.push_back(daughterLight);
+     allProducts.push_back(daughterHeavy);
 
      return;          
     }
@@ -303,13 +286,7 @@ void CNucleus::binaryDecay()
           daughterHeavy->bStable = 1;
           for (int i=0;i<3;i++) daughterHeavy->velocity[i] = velocity[i];
 	  sumGammaEnergy += fEx;
-          allProducts[iProducts] = daughterHeavy;
-          iProducts++;
-          if (iProducts == Nproducts)
-             {
-               cout << "increase Nproducts" << endl;
-	       abort();
-              }
+          allProducts.push_back(daughterHeavy);
 
           return;
 	}
@@ -366,21 +343,8 @@ void CNucleus::binaryDecay()
            daughterHeavy->velocity[i] += velocity[i];
           }
 
-          allProducts[iProducts] = daughterLight;
-          iProducts++;
-          if (iProducts == Nproducts)
-            {
-              cout << "increase Nproducts" << endl;
-	      abort();
-            }
-
-          allProducts[iProducts] = daughterHeavy;
-          iProducts++;
-          if (iProducts == Nproducts)
-            {
-              cout << "increase Nproducts" << endl;
-	      abort();
-             }
+          allProducts.push_back(daughterLight);
+          allProducts.push_back(daughterHeavy);
 	 return;
 	}
 
@@ -562,22 +526,8 @@ void CNucleus::binaryDecay()
      else daughterLight->bStable = 1;
 
      angleEvap(); // find the emission angles of the two fragments
-     allProducts[iProducts] = daughterLight;
-     iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
-     allProducts[iProducts] = daughterHeavy;
-     iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
+     allProducts.push_back(daughterLight);
+     allProducts.push_back(daughterHeavy);
 
     }
   else if (iChan == 1) //complex fragment or asymmetric fission decay
@@ -675,22 +625,8 @@ void CNucleus::binaryDecay()
      asyFissionDivide(); // find spin and excitation energy of two fragments
 
 
-     allProducts[iProducts] = daughterLight;
-     iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
-     allProducts[iProducts] = daughterHeavy;
-     iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
+     allProducts.push_back(daughterLight);
+     allProducts.push_back(daughterHeavy);
 
     }
   else if (iChan == 2) //fission decay
@@ -756,14 +692,7 @@ void CNucleus::binaryDecay()
       daughterLight = NULL;      
 
 
-     allProducts[iProducts] = daughterHeavy;
-     iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
+     allProducts.push_back(daughterHeavy);
 
     }
   else //gamma decay
@@ -783,14 +712,7 @@ void CNucleus::binaryDecay()
      daughterHeavy->fact = fact;
      
      angleGamma();
-     allProducts[iProducts] = daughterHeavy;
-     iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
+     allProducts.push_back(daughterHeavy);
 
    }
 
@@ -1007,21 +929,8 @@ void CNucleus::saddleToScission()
       CAngle angle(0.,0.);
       daughterLight->setSpinAxis(angle); 
       daughterHeavy->setSpinAxis(spin);
-      allProducts[iProducts] = daughterLight;
-      iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
-      allProducts[iProducts] = daughterHeavy;
-      iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
+      allProducts.push_back(daughterLight);
+      allProducts.push_back(daughterHeavy);
 
     }
   else 
@@ -1079,22 +988,8 @@ void CNucleus::saddleToScission()
       
       asyFissionDivide();
 
-      allProducts[iProducts] = daughterLight;
-      iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
-      allProducts[iProducts] = daughterHeavy;
-      iProducts++;
-     if (iProducts == Nproducts)
-       {
-         cout << "increase Nproducts" << endl;
-	 abort();
-       }
-
+      allProducts.push_back(daughterLight);
+      allProducts.push_back(daughterHeavy);
 
     }
 
@@ -1143,21 +1038,8 @@ void CNucleus::force8Be()
      
  
   angleEvap(); // find the emission angles of the two fragments
-  allProducts[iProducts] = daughterLight;
-  iProducts++;
-  if (iProducts == Nproducts)
-    {
-      cout << "increase Nproducts" << endl;
-      abort();
-    }
-
-  allProducts[iProducts] = daughterHeavy;
-  iProducts++;
-  if (iProducts == Nproducts)
-    {
-      cout << "increase Nproducts" << endl;
-      abort();
-    }
+  allProducts.push_back(daughterLight);
+  allProducts.push_back(daughterHeavy);
 
   return;
 }          
@@ -1199,21 +1081,8 @@ void CNucleus::force5Li()
      
 
   angleEvap(); // find the emission angles of the two fragments
-  allProducts[iProducts] = daughterLight;
-  iProducts++;
-  if (iProducts == Nproducts)
-    {
-      cout << "increase Nproducts" << endl;
-      abort();
-    }
-
-  allProducts[iProducts] = daughterHeavy;
-  iProducts++;
-  if (iProducts == Nproducts)
-    {
-      cout << "increase Nproducts" << endl;
-      abort();
-    }
+  allProducts.push_back(daughterLight);
+  allProducts.push_back(daughterHeavy);
   return;
 }          
 //************************************************************
@@ -1254,21 +1123,8 @@ void CNucleus::force5He()
      
 
   angleEvap(); // find the emission angles of the two fragments
-  allProducts[iProducts] = daughterLight;
-  iProducts++;
-  if (iProducts == Nproducts)
-    {
-      cout << "increase Nproducts" << endl;
-      abort();
-    }
-
-  allProducts[iProducts] = daughterHeavy;
-  iProducts++;
-  if (iProducts == Nproducts)
-    {
-      cout << "increase Nproducts" << endl;
-      abort();
-    }
+  allProducts.push_back(daughterLight);
+  allProducts.push_back(daughterHeavy);
   return;
 }          
 //************************************************************
@@ -1308,21 +1164,8 @@ void CNucleus::force9B()
      
 
   angleEvap(); // find the emission angles of the two fragments
-  allProducts[iProducts] = daughterLight;
-  iProducts++;
-  if (iProducts == Nproducts)
-    {
-      cout << "increase Nproducts" << endl;
-      abort();
-    }
-
-  allProducts[iProducts] = daughterHeavy;
-  iProducts++;
-  if (iProducts == Nproducts)
-    {
-      cout << "increase Nproducts" << endl;
-      abort();
-    }
+  allProducts.push_back(daughterLight);
+  allProducts.push_back(daughterHeavy);
   return;
 }          
 //**********************************************************
@@ -1330,9 +1173,9 @@ void CNucleus::force9B()
  * recursive function does multiple binary decays until excitation energy 
  * is exhausted.
  * 
- * After executation, the pointer array allProducts- points to each of the
- *intermediate and final products produced. The array stableProducts points
- * to just the final stable products. This array can be accessed to get 
+ * After executation, the pointer vector allProducts- points to each of the
+ *intermediate and final products produced. The vector stableProducts points
+ * to just the final stable products. This vector can be accessed to get
  * these fragments 
  */
 
@@ -1359,13 +1202,7 @@ void CNucleus:: recursiveDecay()
       {
 
 
-        stableProducts[iStable]=this;
-        iStable++;
-       if (iStable == Nstable)
-         {
-           cout << "increase Nstable" << endl;
-	   abort();
-         }
+        stableProducts.push_back(this);
   
         return;
       }
@@ -1397,22 +1234,19 @@ void CNucleus:: recursiveDecay()
 }
 //**********************************************************
  /**
- * set the pointers to the static arrays of products to NULL.
+ * reset the static vectors of products.
  * 
  */
 void CNucleus::resetGlobal()
 {
-
-  for (int i = iProducts-1;i>=0;i--)
-    {
-      allProducts[i]->daughterLight = NULL;
-      allProducts[i]->daughterHeavy = NULL;
-      delete allProducts[i];
-      allProducts[i] = NULL;
-    }
-  for (int i=0;i<iStable;i++) stableProducts[i] = NULL;
-  iProducts = 0;
-  iStable = 0;
+  while(!allProducts.empty()) {
+    CNucleus *toDelete = allProducts.back();
+    toDelete->daughterLight = NULL;
+    toDelete->daughterHeavy = NULL;
+    delete toDelete;
+    allProducts.pop_back();
+  };
+  stableProducts.clear();
   iPoint = -1;
 }
 //*********************************************************
@@ -1441,9 +1275,9 @@ void CNucleus::reset()
 void CNucleus::printStableProducts()
 {
 
-  for (int i=0;i<iStable;i++)
+  for (unsigned int i=0;i<stableProducts.size();i++)
     {
-     stableProducts[i]->print();
+     stableProducts.at(i)->print();
     }
 }
 //*******************************************************************
@@ -1455,7 +1289,7 @@ void CNucleus::printStableProducts()
 void CNucleus::printAllProducts()
 {
 // prints out the information on qll of the  decay products
-  for (int i=0;i<iProducts;i++)
+  for (unsigned int i=0;i<allProducts.size();i++)
     {
      allProducts[i]->print();
     }
@@ -3019,7 +2853,7 @@ void CNucleus::angleIsotropic()
 void CNucleus::vCMofAllProducts()
 {
   float momTot[3] = {0.,0.,0.};
-  for (int i=0;i<iStable;i++)
+  for (unsigned int i=0;i<stableProducts.size();i++)
     {
       for (int j=0;j<3;j++)
         momTot[j] += stableProducts[i]->velocity[j]*(float)stableProducts[i]->iA;
@@ -3588,7 +3422,7 @@ CNucleus * CNucleus::getProducts(int i/*=-1*/)
   if (i >= 0) iPoint = i;
   else iPoint++;
 
-  return stableProducts[iPoint];
+  return (iPoint<stableProducts.size()) ? stableProducts.at(iPoint) : NULL;
 }
 //*************************************************
 /**
@@ -3635,7 +3469,7 @@ CNucleus * CNucleus::getLightDaughter()
 
 int CNucleus::getNumberOfProducts()
 {
-  return iStable;
+  return stableProducts.size();
 }
 //**************************************************************
 /**
@@ -3643,8 +3477,8 @@ int CNucleus::getNumberOfProducts()
  */
 void CNucleus::decay()
 {
-  int iProductsOld = iProducts;
-  int iStableOld = iStable;
+  unsigned int iProductsOld = allProducts.size();
+  unsigned int iStableOld = stableProducts.size();
   int tries = 0;
   for (;;)
     {
@@ -3656,27 +3490,17 @@ void CNucleus::decay()
      // set arrays points back to NULL and try again
 
      abortEvent = 0;
-     if (iProducts > iProductsOld)
+     if (allProducts.size() > iProductsOld)
        {
-         for (int i=iProducts-1;i>=iProductsOld;i--)
-            {
-              allProducts[i]->daughterLight = NULL;
-              allProducts[i]->daughterHeavy = NULL;
-              delete allProducts[i];
-              allProducts[i] = NULL;
-            }
+         while(allProducts.size()>iProductsOld) {
+           delete allProducts.back();
+           allProducts.pop_back();
+         };
        }
 
-     if (iStable > iStableOld)
-       {
-         for (int i=iStable-1;i>=iStableOld;i--)
-            {
-              stableProducts[i] = NULL;
-            }
-       }
+     if (stableProducts.size() > iStableOld)
+       stableProducts.resize(iStableOld);
 
-     iProducts = iProductsOld;
-     iStable = iStableOld;
      daughterLight = NULL;
      daughterHeavy = NULL;
      tries++;
@@ -3696,14 +3520,14 @@ void CNucleus::decay()
   multPostHeavy = 0;
   multSaddleToScission = 0;
   multPreSaddle = 0;
-  for (int i=0;i<iStable;i++)
+  for (unsigned int i=0;i<stableProducts.size();i++)
     {
-      if (stableProducts[i]->iZ == 0 && stableProducts[i]->iA == 1)
+      if (stableProducts.at(i)->iZ == 0 && stableProducts.at(i)->iA == 1)
 	{
-	  if (stableProducts[i]->origin2 == 2) multPostLight++;
-	  if (stableProducts[i]->origin2 == 3) multPostHeavy++;
-	  if (stableProducts[i]->origin2 == 1) multSaddleToScission++;
-	  if (stableProducts[i]->origin2 == 0) multPreSaddle++;
+	  if (stableProducts.at(i)->origin2 == 2) multPostLight++;
+	  if (stableProducts.at(i)->origin2 == 3) multPostHeavy++;
+	  if (stableProducts.at(i)->origin2 == 1) multSaddleToScission++;
+	  if (stableProducts.at(i)->origin2 == 0) multPreSaddle++;
 	}
     }
 }
@@ -3823,11 +3647,11 @@ void CNucleus::energyConservation()
   float sumKE = 0.;
   float sumMass = 0.;
   float sumEx = 0.; 
-  for (int i=0;i<iStable;i++)
+  for (unsigned int i=0;i<stableProducts.size();i++)
     {
-      sumKE += stableProducts[i]->getKE();
-      sumMass += stableProducts[i]->getExcessMass();
-      sumEx += stableProducts[i]->fEx;
+      sumKE += stableProducts.at(i)->getKE();
+      sumMass += stableProducts.at(i)->getExcessMass();
+      sumEx += stableProducts.at(i)->fEx;
     }
   float Qvalue = fExpMass - sumMass;
   cout << sumKE << " " << Qvalue << " " << sumEx << " " <<

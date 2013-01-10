@@ -3,7 +3,7 @@ OBJECTS = Nucleus.o Mass.o Chart.o Yrast.o TlArray.o  LevelDensity.o Angle.o Nuc
 
 ALLOBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 FOBJECTS:=$(patsubst %.f,%.o,$(wildcard *.f))
-CFLAGS= -c -Wall -W -O2 
+CFLAGS= -c -Wall -W -O0 -ggdb
 COMPILER= c++ 
 
 
