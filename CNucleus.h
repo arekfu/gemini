@@ -18,6 +18,7 @@
 #include "CScission.h"
 #include "CWeight.h"
 #include "SStoreEvap.h"
+#include <vector>
 using namespace std;
 
 /**
@@ -44,7 +45,8 @@ struct SStore
   short unsigned iA; //!< mass number of complex fragment
 };
 
-
+typedef vector<SStore> SStoreVector;
+typedef vector<SStore>::const_iterator SStoreIter;
 
 /**
  *!\brief storage
@@ -119,7 +121,6 @@ class CNucleus : public CNuclide, public CWeight
   static bool noIMF; //!< no imf emission is considered
   static bool BohrWheeler; //!< no imf emission is considered
   float selectJ(float,float,float,float);
-  static int const nStore; //!< number of evap sub Channels allowed
 
   static short unsigned Zshell; //!< enforce shell effects in evaporation
   static CYrast *yrast; //!< gives fission barriers and rotational energies
@@ -192,7 +193,6 @@ class CNucleus : public CNuclide, public CWeight
   static float const gammaInhibition[3]; 
 //!<scaling of gamma width from Weisskopf value
   static float const wue[3]; //!<coeff for Weisskopf units (gamma decay)
-  static int const nGamma; //!< number of gamma decay modes considered
   void binaryDecay();
   void exciteScission(float,float,bool sym=1);
   float asyFissionWidth();

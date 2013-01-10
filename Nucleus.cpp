@@ -1,4 +1,6 @@
 #include "CNucleus.h"
+#include <algorithm>
+#include <numeric>
 
 
 double const CNucleus::EkFraction = 0.01;
@@ -23,7 +25,6 @@ CLevelDensity *CNucleus::levelDensity;
 CAngleDist    CNucleus::angleDist;
 float         CNucleus::de = 1.0;
 
-int const CNucleus::nStore=5000;
 int const CNucleus::nSub = 800;
 int const CNucleus::nSubTl = 80;
 
@@ -41,7 +42,6 @@ short unsigned const CNucleus:: lMaxQuantum = 50;
 CEvap *CNucleus::evap;
 float const CNucleus::gammaInhibition[3]={0.,.025,9.};
 float const CNucleus::wue[3]={0.,6.8e-8,4.9e-14};//gives weisskopf units in MeV
-int const CNucleus::nGamma = 4000;
 float const CNucleus::viscosity_scission = 1.;
 float const CNucleus::viscosity_saddle = 1.5;
 float CNucleus::timeTransient = 0.;
@@ -54,6 +54,13 @@ bool const CNucleus::noSymmetry = 1; // no symmetric fission calculated in
                                  // asyFissionWidth if there is a fission peak
 int CNucleus::iPoint = -1;                           
 float CNucleus::threshold = .001;
+
+template<typename T, typename X>
+class CompareGammaToX {
+  public:
+    bool operator()(T const &t, X const &x) const { return t.gamma<x; }
+};
+
 //*****************************************************
 CNucleus::CNucleus()
 {
@@ -816,9 +823,7 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
   //configuration for symmetric division. 
 
  
-  int const nStore = 10000;
-  SStore store[nStore];
-  int iStore = 0;
+  SStoreVector store;
   int iZ1,iZ2,iA1,iA2;
   iA1 = iA/2;
   float Amax = 0.;
@@ -872,15 +877,11 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
           if (iA1 == iA2 && iZ1==iZ2 ) gamma /= 2.;
           gammaA += gamma;
 
-          store[iStore].gamma = (double)gamma;
-          store[iStore].iZ = iZ1;
-          store[iStore].iA = iA1;
-          iStore++;
-          if (iStore >= nStore) 
-	    {
-	      cout << " increase nStore in saddleToScission " << endl;
-              abort();
-	    }
+          SStore aStore;
+          aStore.gamma = (double)gamma;
+          aStore.iZ = iZ1;
+          aStore.iA = iA1;
+          store.push_back(aStore);
           Zmax = max(gamma,Zmax);
           if (gamma < Zmax*.01) break;
           iZ1++;
@@ -894,7 +895,7 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
            if (iA1 == iA2) prob /= 2.;
 
            double scale = prob/gammaA;
-           int jj = iStore-1;
+           int jj = store.size()-1;
            for (;;)
 	     {
                if (jj < 0) break;
@@ -911,7 +912,7 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
       iA1--;
       if (iA1 < (float)iA/17.) break;
     }
-  if (iStore == 0) 
+  if (store.empty())
     {
       //this shouldn't be possible, but this statement is here just in 
       //case or else the program would get stuck in the following loop
@@ -924,20 +925,16 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
     }
   else
     {
-      for(int i=1;i<iStore;i++) store[i].gamma += store[i-1].gamma;
+      for(unsigned int i=1;i<store.size();i++) store[i].gamma += store.at(i-1).gamma;
 
 
-    double xran = ran.Rndm();
-    int i = 0;
-    for (;;)
-      {
-        double prob = store[i].gamma/store[iStore-1].gamma;
-        if (prob >= xran) break;
-        if (i == iStore-1) break;
-        i++; 
-      }
-    fissionZ = store[i].iZ;
-    fissionA = store[i].iA;
+      double xran = ran.Rndm();
+      SStoreIter selectedChannel = std::lower_bound(store.begin(),
+                                             store.end(),
+                                             xran*store.back().gamma,
+                                             CompareGammaToX<SStore, float>());
+    fissionZ = selectedChannel->iZ;
+    fissionA = selectedChannel->iA;
     }
 
 
@@ -1752,10 +1749,8 @@ float CNucleus::getWidthZA(float saddlePoint,short iAfAn)
 float CNucleus::asyFissionWidth()
 {
   short iAfAn = 2;
-  int const nStore =1000;
-  SStore store[1000];
+  SStoreVector store;
   needSymmetricFission = 0;
-  int iStore = 0;
   float gammaTot = 0;
   float saddlePointOld = -10000.;
   yrast->prepareAsyBarrier(iZ,iA,fJ);
@@ -1795,7 +1790,7 @@ float CNucleus::asyFissionWidth()
       int iaMax = min(iaMax1,iaMax2);
       if (iZ1 == iZ - iZ1) iaMax = min(iA/2,iaMax);
       float gammaZ = 0;
-      int iStart = iStore;
+      int iStart = store.size();
       for (int iA1 = iaMin;iA1<=iaMax;iA1++)
 	{
           int iA2 = iA - iA1;
@@ -1823,52 +1818,40 @@ float CNucleus::asyFissionWidth()
           float gamma = getWidthZA(saddlePoint,iAfAn);
           if (iZ1 == iZ - iZ1 && iA1 == iA - iA1) gamma /= 2.;
           if (gamma <= 0.) continue;
-          store[iStore].gamma = gamma;
-          store[iStore].iZ = iZ1;
-          store[iStore].iA = iA1;
-
-          iStore++;
-	  if (iStore == nStore)
-	    {
-              cout << "increase nStore in asyFissionWidth" << endl;
-	      abort();
-	    }
+          SStore aStore;
+          aStore.gamma = gamma;
+          aStore.iZ = iZ1;
+          aStore.iA = iA1;
+          store.push_back(aStore);
           gammaZ += gamma;
 	}
 
       // normalize gamma
-     
-      if (gammaZ == 0.) iStore=iStart;
-      else 
-	{
-	  for (int j=iStart;j<iStore;j++) store[j].gamma *= gammaZ0/gammaZ;
-	  gammaTot += gammaZ0;
-
-	}
+      if (gammaZ != 0.)
+      {
+        for (unsigned int j=iStart;j<store.size();j++) store[j].gamma *= gammaZ0/gammaZ;
+        gammaTot += gammaZ0;
+      }
      
     }
 
-  if (iStore == 0) return 0.;
+  if (store.empty()) return 0.;
 
-  for (int j=0;j<iStore;j++)
+  for (unsigned int j=0;j<store.size();j++)
     {
       store[j].gamma /= gammaTot;
-      if (j > 0) store[j].gamma += store[j-1].gamma;
+      if (j > 0) store[j].gamma += store.at(j-1).gamma;
     }
 
 
   //call random nummber
   float x = ran.Rndm();
-  int j=0;
-  for (;;)
-    {
-      if (x < store[j].gamma) break;
-      if (j == iStore - 1) break;
-      j++;
-      
-    }
-  fissionZ = store[j].iZ;
-  fissionA = store[j].iA;
+  SStoreIter selectedChannel = std::lower_bound(store.begin(),
+                                                store.end(),
+                                                x,
+                                                CompareGammaToX<SStore, float>());
+  fissionZ = selectedChannel->iZ;
+  fissionA = selectedChannel->iA;
   float saddlePoint = yrast->getSaddlePointEnergy(fissionZ,fissionA);
   saddlePoint = (saddlePoint-Erot)*scaleImf + Erot; 
 
@@ -1896,10 +1879,8 @@ float CNucleus::asyFissionWidthBW()
 
 
   short  iAfAn = 1;
-  int const nnstore=4000;
-  SStore store[nnstore];
+  SStoreVector store;
   needSymmetricFission = 0;
-  int iStore = 0;
   int iFission = -1;
   float gammaTot = 0;
   float saddlePointOld = -10000.;
@@ -1939,7 +1920,7 @@ float CNucleus::asyFissionWidthBW()
 	{
 	  if (iZ/2 - iZ1 > 5) 
 	    {
-              iFission = iStore;
+              iFission = store.size();
                
 	    }
 	}
@@ -1959,7 +1940,7 @@ float CNucleus::asyFissionWidthBW()
       int iaMax = min(iaMax1,iaMax2);
       if (iZ1 == iZ - iZ1) iaMax = min(iA/2,iaMax);
       float gammaZ = 0;
-      int iStart = iStore;
+      int iStart = store.size();
       for (int iA1 = iaMin;iA1<=iaMax;iA1++)
 	{
 
@@ -1969,29 +1950,27 @@ float CNucleus::asyFissionWidthBW()
           float gamma = getWidthZA(saddlePoint,iAfAn);
           if (iZ1 == iZ - iZ1 && iA1 == iA - iA1) gamma /= 2.;
           if (gamma <= 0.) continue;
-          store[iStore].gamma = gamma;
-          store[iStore].iZ = iZ1;
-          store[iStore].iA = iA1;
-
-          iStore++;
-          if (iStore == nnstore) abort();
+          SStore aStore;
+          aStore.gamma = gamma;
+          aStore.iZ = iZ1;
+          aStore.iA = iA1;
+          store.push_back(aStore);
           gammaZ += gamma;
 
 	}
 
       // normalize gamma
 
-      if (gammaZ == 0.) iStore=iStart;
-      else 
-	{
-	  for (int j=iStart;j<iStore;j++) store[j].gamma *= gammaZ0/gammaZ;
-	  gammaTot += gammaZ0;
+      if (gammaZ != 0.)
+      {
+        for (unsigned int j=iStart;j<store.size();j++) store[j].gamma *= gammaZ0/gammaZ;
+        gammaTot += gammaZ0;
 
-	}
+      }
     }
 
 
-  if (iStore == 0) 
+  if (store.empty())
     {
      fissionZ = iZ/2;
      fissionA = iA/2;
@@ -2005,27 +1984,27 @@ float CNucleus::asyFissionWidthBW()
   if (iFission > 0)
     {
       float gammaFission = 0.;
-      for (int i=iFission;i<iStore;i++)
+      for (unsigned int i=iFission;i<store.size();i++)
 	{
-	  gammaFission += store[i].gamma;
+	  gammaFission += store.at(i).gamma;
 	}
       float gammaBW = BohrWheelerWidth();
       float ratio = gammaBW/gammaFission;
       gammaTot = gammaBW;
-      for (int i=iFission;i<iStore;i++)
+      for (unsigned int i=iFission;i<store.size();i++)
 	{
           store[i].gamma *= ratio;
 	}
 
       //set other imf's to zero
-      for (int i=0;i<iFission;i++)
-	{
-          store[i].gamma = 0.;
-	}
-      
+      for (unsigned int i=0;i<(unsigned int)iFission;i++)
+      {
+        store[i].gamma = 0.;
+      }
+
     }
 
-  for (int j=0;j<iStore;j++)
+  for (unsigned int j=0;j<store.size();j++)
     {
       store[j].gamma /= gammaTot;
       if (j > 0) store[j].gamma += store[j-1].gamma;
@@ -2034,15 +2013,12 @@ float CNucleus::asyFissionWidthBW()
 
   //call random nummber
   float x = ran.Rndm();
-  int j=0;
-  for (;;)
-    {
-      if (x < store[j].gamma) break;
-      if (j == iStore - 1) break;
-      j++;
-    }
-  fissionZ = store[j].iZ;
-  fissionA = store[j].iA;
+  SStoreIter selectedChannel = std::lower_bound(store.begin(),
+                                                store.end(),
+                                                x,
+                                                CompareGammaToX<SStore, float>());
+  fissionZ = selectedChannel->iZ;
+  fissionA = selectedChannel->iA;
   float saddlePoint = yrast->getSaddlePointEnergy(fissionZ,fissionA);
   if (iZ > Zshell) saddlePoint -= fPairing + fShell;
   fissionU = fEx - saddlePoint;
@@ -2061,9 +2037,8 @@ float CNucleus::asyFissionWidthBW()
 float CNucleus::asyFissionWidthZA()
 {
   short iAfAn = 2;
-  SStore store[nStore];
+  SStoreVector store;
   needSymmetricFission = 0;
-  int iStore = 0;
   float gammaTot = 0;
   float saddlePointOld = -10000.;
   yrast->prepareAsyBarrier(iZ,iA,fJ);
@@ -2160,39 +2135,32 @@ float CNucleus::asyFissionWidthZA()
 	  */          
 
           gammaTot += gamma;
-          store[iStore].gamma = gamma;
-          store[iStore].iZ = iZ1;
-          store[iStore].iA = iA1;
+          SStore aStore;
+          aStore.gamma = gamma;
+          aStore.iZ = iZ1;
+          aStore.iA = iA1;
 
-          iStore++;
-	  if (iStore == nStore)
-	    {
-              cout << "increase nStore in asyFissionWidthZA" << endl;
-	      abort();
-	    }
+          store.push_back(aStore);
 	}
     }
 
-  if (iStore == 0) return 0.;
+  if (store.empty()) return 0.;
 
-  for (int j=0;j<iStore;j++)
+  for (unsigned int j=0;j<store.size();j++)
     {
       store[j].gamma /= gammaTot;
-      if (j > 0) store[j].gamma += store[j-1].gamma;
+      if (j > 0) store[j].gamma += store.at(j-1).gamma;
     }
 
 
   //call random nummber
   float x = ran.Rndm();
-  int j=0;
-  for (;;)
-    {
-      if (x < store[j].gamma) break;
-      if (j == iStore -1) break;
-      j++;
-    }
-  fissionZ = store[j].iZ;
-  fissionA = store[j].iA;
+  SStoreIter selectedChannel = std::lower_bound(store.begin(),
+                                                store.end(),
+                                                x,
+                                                CompareGammaToX<SStore, float>());
+  fissionZ = selectedChannel->iZ;
+  fissionA = selectedChannel->iA;
   float saddlePoint = yrast->getSaddlePointEnergy(fissionZ,fissionA);
   saddlePoint = (saddlePoint-Erot)*scaleImf + Erot; 
   //add on a congruence energy
@@ -3106,7 +3074,7 @@ float CNucleus::gammaWidthMultipole(int iMode)
 
   //iMode =1 is E1 and Imode=2 is E2
   //width given in units of MeV
-  storeEvap = new SStoreEvap [nGamma];
+  SStoreEvapVector storeEvap;
 
   float deltaE = 1;
   if (fEx-Erot <= 15.0) deltaE = 0.2;
@@ -3120,7 +3088,6 @@ float CNucleus::gammaWidthMultipole(int iMode)
   S0 = S0Min;
   float sumGammaMax = 0.0;
   float width = 0.;
-  int jj = 0;
   for (;;) //loop over S0 nucleus spin
     {
       float Erotation = yrast->getYrast(iZ,iA,S0);
@@ -3143,19 +3110,15 @@ float CNucleus::gammaWidthMultipole(int iMode)
             exp(logLevelDensityDaughter-logLevelDensity)/2./pi;
 
 
-          storeEvap[jj].gamma = gamma;
-          storeEvap[jj].spin = (int)S0;
-          storeEvap[jj].energy = e;
+            SStoreEvap aStoreEvap;
+          aStoreEvap.gamma = gamma;
+          aStoreEvap.spin = (int)S0;
+          aStoreEvap.energy = e;
 
           gammaMax = max(gamma,gammaMax);
           sumGamma += gamma;
-          if (jj > 0) storeEvap[jj].gamma += storeEvap[jj-1].gamma;
-          jj++;
-          if (jj > nGamma) 
-             {
-               cout << " increase nGamma" << endl;
-               abort();
-             }
+          if (!storeEvap.empty()) aStoreEvap.gamma += storeEvap.back().gamma;
+          storeEvap.push_back(aStoreEvap);
           if (gamma < 0.01*gammaMax) break;
           e+=deltaE;
         }
@@ -3167,20 +3130,15 @@ float CNucleus::gammaWidthMultipole(int iMode)
     if (S0 > S0Max) break;  
    }
 
-  if (jj == 0  || width <= 0.) 
+  if (storeEvap.empty()  || width <= 0.) 
     {
-      delete [] storeEvap;
       return 0.;
     }
-  int i = 0;
   float xran = ran.Rndm();
-  for (;;)
-    {
-      float prob = storeEvap[i].gamma/width;
-      if (xran <= prob) break;
-      i++;
-      if (i == jj) break;
-    }
+  SStoreEvapIter selectedChannel = std::lower_bound(storeEvap.begin(),
+                                                storeEvap.end(),
+                                                xran*width,
+                                                CompareGammaToX<SStoreEvap, float>());
 
   //choose gamma energy and excitation energy of residual
   float e; // gamma ray energy
@@ -3188,20 +3146,19 @@ float CNucleus::gammaWidthMultipole(int iMode)
   int iTry = 0;
   for (;;)
      {
-     e = storeEvap[i].energy  + deltaE*(0.5*ran.Rndm());
+     e = selectedChannel->energy  + deltaE*(0.5*ran.Rndm());
      GammaEx = fEx - e;
      if (e > 0. && GammaEx > 0.) break;
      iTry++;
      if (iTry > 10)
        {
-	 e = storeEvap[i].energy;
+	 e = selectedChannel->energy;
          GammaEx = fEx - e;
          break;
        }
      }
-  GammaJ = storeEvap[i].spin;
+  GammaJ = selectedChannel->spin;
   if (iA%2 == 1) GammaJ += 0.5;
-  delete [] storeEvap;
   return width;
 }
 //*****************************************************************
@@ -3213,7 +3170,7 @@ float CNucleus::gammaWidthMultipole(int iMode)
 float CNucleus::gammaWidthE1GDR()
 {
   //gives the statistical E1 gamma width  in units of MeV
-  storeEvap = new SStoreEvap [nGamma];
+  SStoreEvapVector storeEvap;
 
   float deltaE = 1;
   if (fEx-Erot <= 15.0) deltaE = 0.2;
@@ -3231,7 +3188,6 @@ float CNucleus::gammaWidthE1GDR()
   S0 = S0Min;
   float sumGammaMax = 0.0;
   float width = 0.;
-  int jj = 0;
   for (;;) //loop over S0 nucleus spin
     {
       float Erotation = yrast->getYrast(iZ,iA,S0);
@@ -3256,19 +3212,15 @@ float CNucleus::gammaWidthE1GDR()
             *deltaE*exp(logLevelDensityDaughter-logLevelDensity)/2./pi;
 
 
-          storeEvap[jj].gamma = gamma;
-          storeEvap[jj].spin = (int)S0;
-          storeEvap[jj].energy = e;
+        SStoreEvap aStoreEvap;
+          aStoreEvap.gamma = gamma;
+          aStoreEvap.spin = (int)S0;
+          aStoreEvap.energy = e;
 
           gammaMax = max(gamma,gammaMax);
           sumGamma += gamma;
-          if (jj > 0) storeEvap[jj].gamma += storeEvap[jj-1].gamma;
-          jj++;
-          if (jj > nGamma) 
-             {
-               cout << " increase nGamma" << endl;
-               abort();
-             }
+          if (!storeEvap.empty()) aStoreEvap.gamma += storeEvap.back().gamma;
+          storeEvap.push_back(aStoreEvap);
           if (gamma < 0.01*gammaMax) break;
           e+=deltaE;
         }
@@ -3280,28 +3232,22 @@ float CNucleus::gammaWidthE1GDR()
     if (S0 > S0Max) break;  
    }
 
-  if (jj == 0  || width <= 0.) 
+  if (storeEvap.empty() || width <= 0.) 
     {
-      delete [] storeEvap;
       return 0.;
     }
 
-  int i = 0;
   float xran = ran.Rndm();
-  for (;;)
-    {
-      float prob = storeEvap[i].gamma/width;
-      if (xran <= prob) break;
-      i++;
-      if (i == jj) break;
-    }
-  float e = storeEvap[i].energy;
+  SStoreEvapIter selectedChannel = std::lower_bound(storeEvap.begin(),
+                                                storeEvap.end(),
+                                                xran*width,
+                                                CompareGammaToX<SStoreEvap, float>());
+  float e = selectedChannel->energy;
   e += deltaE*(0.5*ran.Rndm());
   if (e < 0.) e=0.;
   GammaEx = fEx - e;
-  GammaJ = storeEvap[i].spin;
+  GammaJ = selectedChannel->spin;
   if (iA%2 == 1) GammaJ += 0.5;
-  delete [] storeEvap;
   return width;
 }
 //*****************************************************************
@@ -3396,7 +3342,7 @@ float CNucleus::weiskopf( bool saddle)
 {
   //calculates the evaporation decay width with the Weiskopf formalism
   lightP->width = 0.;
-  lightP->iStore = 0;
+  lightP->storeEvap.clear();
   if (exp(-lightP->fEx/temp) < 0.01) return 0.;
 
   lightP->residue.iZ = iZ - lightP->iZ;
@@ -3489,16 +3435,12 @@ float CNucleus::weiskopf( bool saddle)
       float gamma = sigmaInverse*exp(logLevelDensity2-logLevelDensity)
                     *constant;
       lightP->width += gamma;
-      lightP->storeEvap[lightP->iStore].gamma = gamma;
-      if (lightP->iStore > 0) lightP->storeEvap[lightP->iStore].gamma += lightP->storeEvap[lightP->iStore-1].gamma;
-      lightP->storeEvap[lightP->iStore].energy = fEk;
-      lightP->storeEvap[lightP->iStore].L = 0;
-      lightP->iStore++;
-      if (lightP->iStore == lightP->nStore)
-	{
-	  cout << "increase nStore in nucleus.h "<< endl;
-          abort();
-	}
+      SStoreEvap aStoreEvap;
+      aStoreEvap.gamma = gamma;
+      if (lightP->storeEvap.size() > 0) aStoreEvap.gamma += lightP->storeEvap.back().gamma;
+      aStoreEvap.energy = fEk;
+      aStoreEvap.L = 0;
+      lightP->storeEvap.push_back(aStoreEvap);
       maxGamma = max(maxGamma,gamma);
 
       if (gamma < maxGamma*.01) 
@@ -4236,7 +4178,7 @@ CNucleus* CNucleus::getCompoundNucleus()
 float CNucleus::S2Loop(float Ekvalue)
 {
 
-  lightP->iStore = 0;
+  lightP->storeEvap.clear();
   S2 = S2Start;
   float width0 = S2Width(Ekvalue);
   S2 += 1.;
@@ -4331,18 +4273,13 @@ float CNucleus::EkWidth(float ek)
      float gamma = de*sumTl*exp(daughterLD-logLevelDensity)/2./pi;
      if (gamma <= 0.) return 0.;
 
-     lightP->storeEvap[lightP->iStore].gamma = gamma;
-     lightP->storeEvap[lightP->iStore].spin = (int)S2;
-     lightP->storeEvap[lightP->iStore].energy = ek;
-     lightP->storeEvap[lightP->iStore].L = EvapL;
-     if (lightP->iStore > 0) lightP->storeEvap[lightP->iStore].gamma += 
-           lightP->storeEvap[lightP->iStore-1].gamma;
-     lightP->iStore++;
-     if (lightP->iStore > lightP->nStore)
-       {
-         cout << " increase nStore in Ek loop" << endl;
-         abort();
-       }
+     SStoreEvap aStoreEvap;
+     aStoreEvap.gamma = gamma;
+     aStoreEvap.spin = (int)S2;
+     aStoreEvap.energy = ek;
+     aStoreEvap.L = EvapL;
+     if (lightP->storeEvap.size() > 0) aStoreEvap.gamma += lightP->storeEvap.back().gamma;
+     lightP->storeEvap.push_back(aStoreEvap);
      /*
      if (lightP->iA == 1 && lightP->iZ == 1)
        {
@@ -4508,19 +4445,16 @@ void CNucleus::getSpin(bool saddle)
      float xran = 1.5;
      while(floor(xran) > 0.5)xran = ran.Rndm();
 
-     int i = 0;
-     for(;;)
-       {
-         float prob = lightP->storeEvap[i].gamma/lightP->width;
-         if (prob >= xran) break;
-         if ( i == lightP->iStore-1) break;
-         i++;
-       }
+     SStoreEvapIter selectedChannel = std::lower_bound(lightP->storeEvap.begin(),
+                                             lightP->storeEvap.end(),
+                                             xran*lightP->width,
+                                             CompareGammaToX<SStoreEvap, float>());
+
      float Ek,Ex;
      int iTry = 0;
      for (;;)
        {
-         Ek = lightP->storeEvap[i].energy + (1.-2.*ran.Rndm())*de/2.;
+         Ek = selectedChannel->energy + (1.-2.*ran.Rndm())*de/2.;
          const float S2MinRes = (lightP->residue.iA%2==0 ? 0.0 : 0.5);
          const float EYrastRes = yrast->getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
          Ex = fEx - lightP->separationEnergy - Ek;
@@ -4561,10 +4495,10 @@ void CNucleus::getSpin(bool saddle)
        }
   
      EvapEx2 = Ex;
-     EvapS2 = lightP->storeEvap[i].spin;
+     EvapS2 = selectedChannel->spin;
      if (lightP->odd) EvapS2 += 0.5;
      EvapEk = Ek;
-     EvapL = lightP->storeEvap[i].L;
+     EvapL = selectedChannel->L;
      return;  
 
     }
@@ -4573,20 +4507,16 @@ void CNucleus::getSpin(bool saddle)
   //now for HF == 0
   //choose the residue spin and evaporated particles energy;
   float xran = ran.Rndm();
-  int i = 0;
-  for(;;)
-    {
-      float prob = lightP->storeEvap[i].gamma/lightP->width;
-      if (prob >= xran) break;
-      if ( i == lightP->iStore-1) break;
-      i++;
-    }
+  SStoreEvapIter selectedChannel = std::lower_bound(lightP->storeEvap.begin(),
+                                  lightP->storeEvap.end(),
+                                  xran*lightP->width,
+                                  CompareGammaToX<SStoreEvap, float>());
 
   float Ek,Ex;
   int iTry = 0;
   for (;;)
     {
-      Ek = lightP->storeEvap[i].energy + (1.-2.*ran.Rndm())*de/2.;
+      Ek = selectedChannel->energy + (1.-2.*ran.Rndm())*de/2.;
       const float S2MinRes = (lightP->residue.iA%2==0 ? 0.0 : 0.5);
       const float EYrastRes = yrast->getYrast(lightP->residue.iZ,lightP->residue.iA,S2MinRes);
       Ex = fEx - lightP->separationEnergy - Ek;
@@ -4645,7 +4575,7 @@ void CNucleus::getSpin(bool saddle)
   else 
     {
 
-     lightP->iStore = 0;
+     lightP->storeEvap.clear();
      S2Start = roundf(lightP->fMInertia/
               (lightP->fMInertia+lightP->fMInertiaOrbit)*fJ);
 
@@ -4669,18 +4599,14 @@ void CNucleus::getSpin(bool saddle)
      float xran = 1.5;
      while(floor(xran) > 0.5)xran = ran.Rndm();
 
-     int i = 0;
-     for(;;)
-       {
-         float prob = lightP->storeEvap[i].gamma/width;
-         if (prob >= xran) break;
-         if ( i == lightP->iStore-1) break;
-         i++;
-       }
+     SStoreEvapIter selectedChannel = std::lower_bound(lightP->storeEvap.begin(),
+                                         lightP->storeEvap.end(),
+                                         xran*width,
+                                         CompareGammaToX<SStoreEvap, float>());
 
-     EvapS2 = lightP->storeEvap[i].spin;
+     EvapS2 = selectedChannel->spin;
      if (lightP->odd) EvapS2 += 0.5;
-     EvapL = lightP->storeEvap[i].L;
+     EvapL = selectedChannel->L;
 
      
      /*

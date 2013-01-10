@@ -5,6 +5,7 @@
 #include "CTlBarDist.h"
 #include "CSigBarDist.h"
 #include "SStoreEvap.h"
+#include <vector>
 
 /**
  *!\brief deals with a particular evaporation channel
@@ -36,9 +37,7 @@ class CLightP : public CNuclide
   float fShell; //!< shell correction for residue
   CNuclide residue; //!< contains info on the daughter nucleus  
   bool odd; //!< true for odd mass
-  static int const nStore; //!< number of evap sub Channels allowed
-  SStoreEvap *  storeEvap; //!<store evaporation info
-  int iStore; //!< number of storeEvap used
+  SStoreEvapVector storeEvap; //!<store evaporation info
   float width; //!<decay width in MeV
   float rLight; //!< radius of light particle in fm
 };
