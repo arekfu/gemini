@@ -9,7 +9,7 @@
  * subchannels (SStoreChan)
  */ 
 
-
+#include <vector>
 
 
 
@@ -20,4 +20,8 @@ struct SStoreEvap
   short unsigned  spin; //!< spin of daughter
   short unsigned L; //!< orbitla angular momentum of evaporated particle
 };
+
+typedef std::vector<SStoreEvap> SStoreEvapVector;
+typedef std::vector<SStoreEvap>::const_iterator SStoreEvapIter;
+
 #endif

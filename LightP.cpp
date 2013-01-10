@@ -1,7 +1,6 @@
 #include "CLightP.h"
 
 
-int const CLightP::nStore=50000;
   //! constructor which creates a CTlBarDist object
   /**
     \param iZ0 proton number of particle
@@ -16,7 +15,6 @@ CLightP::CLightP(int iZ0, int iA0, float fJ0, string name0)
 
    tlArray = new CTlBarDist(name0);
    sigBarDist = new CSigBarDist(name0,(float)iZ0,(float)iA0);   
-   storeEvap = new SStoreEvap[nStore];
 
 }
 //******************************************************
@@ -38,7 +36,6 @@ CLightP::CLightP(int iZ0, int iA0, float fJ0, CTlBarDist* tlArray0,
    tlArray = tlArray0;
    sigBarDist = sigBarDist0;
    mustDelete = 0;
-   storeEvap = new SStoreEvap[nStore];
 
 } 
 
@@ -52,6 +49,5 @@ CLightP::~CLightP()
     {
       delete tlArray;
       delete sigBarDist;
-      delete [] storeEvap;
     }
 }

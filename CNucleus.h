@@ -18,6 +18,7 @@
 #include "CScission.h"
 #include "CWeight.h"
 #include "SStoreEvap.h"
+#include <vector>
 using namespace std;
 
 /**
@@ -27,9 +28,12 @@ using namespace std;
  */
 struct SStoreSub
 {
-  float weight; //!< weight factor for the orbital amgular momentum
+  float gamma; //!< weight factor for the orbital amgular momentum
   short unsigned L; //!< orbital angular momentum
 };
+
+typedef vector<SStoreSub> SStoreSubVector;
+typedef vector<SStoreSub>::const_iterator SStoreSubIter;
 
 /**
  *!\brief storage
@@ -44,7 +48,8 @@ struct SStore
   short unsigned iA; //!< mass number of complex fragment
 };
 
-
+typedef vector<SStore> SStoreVector;
+typedef vector<SStore>::const_iterator SStoreIter;
 
 /**
  *!\brief storage
@@ -113,13 +118,12 @@ class CNucleus : public CNuclide, public CWeight
   static float timeTransient; //!< transient fission delay 
   static float fissionScaleFactor; //!< fission width scaled by this factor
   static float barAdd; //!< adds to Sierk fission barrier
-  static int iPoint; //!< pointer to array of stable fragments
+  static unsigned iPoint; //!< pointer to array of stable fragments
   static int iHF; //!< set evaporation mode 
   int HF; //!< evaporation mode chosen for a given decay
   static bool noIMF; //!< no imf emission is considered
   static bool BohrWheeler; //!< no imf emission is considered
   float selectJ(float,float,float,float);
-  static int const nStore; //!< number of evap sub Channels allowed
 
   static short unsigned Zshell; //!< enforce shell effects in evaporation
   static CYrast *yrast; //!< gives fission barriers and rotational energies
@@ -139,8 +143,6 @@ class CNucleus : public CNuclide, public CWeight
 
 
   CLightP * lightP; //!< points to the light-particle decay mode
-  static int const nSub; //!< number of l-waves stores in HF
-  static int const nSubTl; //!< number of l-waves stores in HF in sumTl
   float S2Loop(float Ekvalue);
   float S2Width(float Ekvalue);
   float EkWidth(float ek);
@@ -192,7 +194,6 @@ class CNucleus : public CNuclide, public CWeight
   static float const gammaInhibition[3]; 
 //!<scaling of gamma width from Weisskopf value
   static float const wue[3]; //!<coeff for Weisskopf units (gamma decay)
-  static int const nGamma; //!< number of gamma decay modes considered
   void binaryDecay();
   void exciteScission(float,float,bool sym=1);
   float asyFissionWidth();
@@ -219,15 +220,10 @@ class CNucleus : public CNuclide, public CWeight
   //!< total number of possible  decay products from all decays
 
 
-  static CNucleus *allProducts[]; 
+  static vector<CNucleus *> allProducts;
   //!< array of pointer to all decay products (stable or intermediate) 
- 
-  static int iProducts; //!< number of decay products from all decays
 
-
-  static int const Nstable; //!< max number of stable decay products
-  static int iStable; //!< number of stable decay products
-  static CNucleus * stableProducts[]; 
+  static vector<CNucleus *> stableProducts;
   //!< array of pointers to all stable decay products for all CN decays
 
 
