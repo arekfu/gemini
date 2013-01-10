@@ -25,9 +25,6 @@ CLevelDensity *CNucleus::levelDensity;
 CAngleDist    CNucleus::angleDist;
 float         CNucleus::de = 1.0;
 
-int const CNucleus::nSub = 800;
-int const CNucleus::nSubTl = 80;
-
 vector<CNucleus*> CNucleus::allProducts;
 vector<CNucleus*> CNucleus::stableProducts;
 float const CNucleus::r0=1.16;
@@ -2610,8 +2607,7 @@ float CNucleus::getSumTl(float ek,float temp)
   float sumTl = 0.;
   float tlWeightMax = 0.;
 
-  storeSub = new SStoreSub[nSubTl];
-  int iSub = 0;
+  SStoreSubVector storeSub;
   int iL = lMin;
   float scale = 1.;
   if (lightP->iA == 1 && lightP->iZ == 1)
@@ -2641,17 +2637,12 @@ float CNucleus::getSumTl(float ek,float temp)
       float maxLplusS = min(iL+lightP->fJ,lPlusSMax);
       float minLplusS = max(fabs(iL-lightP->fJ),lPlusSMin);
       float tlWeight = tl*(maxLplusS - minLplusS + 1.);
-      storeSub[iSub].weight = tlWeight;
-      if (iSub > 0) storeSub[iSub].weight += storeSub[iSub-1].weight; 
-      storeSub[iSub].L = iL;
-      iSub++;
+      SStoreSub aStoreSub;
+      aStoreSub.gamma = tlWeight;
+      if (!storeSub.empty()) aStoreSub.gamma += storeSub.back().gamma;
+      aStoreSub.L = iL;
+      storeSub.push_back(aStoreSub);
 
-
-      if (iSub > nSubTl)
-	{
-          cout << " increase nSubTl" << endl;
-	  abort();
-	}
       sumTl += tlWeight;
       tlWeightMax = max(tlWeight,tlWeightMax);
       if (tlWeight < 0.01*tlWeightMax) break;
@@ -2661,22 +2652,17 @@ float CNucleus::getSumTl(float ek,float temp)
 
 
   float xran = ran.Rndm();
-  int i = 0;
+
   if(sumTl<=0.) {
-    delete [] storeSub;
     return 0.;
   }
-  for (;;)
-    {
-      float prob = storeSub[i].weight/sumTl;
-      if (prob >= xran) break;
-      if ( i == iSub-1) break;
-      i++;
-    }
-  EvapL = storeSub[i].L;
-  
 
-  delete [] storeSub;
+  SStoreSubIter selectedChannel = std::lower_bound(storeSub.begin(),
+                                                storeSub.end(),
+                                                xran*sumTl,
+                                                CompareGammaToX<SStoreSub, float>());
+  EvapL = selectedChannel->L;
+
   return sumTl;
 }
 //**************************************************************************

@@ -28,9 +28,12 @@ using namespace std;
  */
 struct SStoreSub
 {
-  float weight; //!< weight factor for the orbital amgular momentum
+  float gamma; //!< weight factor for the orbital amgular momentum
   short unsigned L; //!< orbital angular momentum
 };
+
+typedef vector<SStoreSub> SStoreSubVector;
+typedef vector<SStoreSub>::const_iterator SStoreSubIter;
 
 /**
  *!\brief storage
@@ -140,8 +143,6 @@ class CNucleus : public CNuclide, public CWeight
 
 
   CLightP * lightP; //!< points to the light-particle decay mode
-  static int const nSub; //!< number of l-waves stores in HF
-  static int const nSubTl; //!< number of l-waves stores in HF in sumTl
   float S2Loop(float Ekvalue);
   float S2Width(float Ekvalue);
   float EkWidth(float ek);
