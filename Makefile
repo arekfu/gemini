@@ -3,24 +3,29 @@ OBJECTS = Nucleus.o Mass.o Chart.o Yrast.o TlArray.o  LevelDensity.o Angle.o Nuc
 
 ALLOBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 FOBJECTS:=$(patsubst %.f,%.o,$(wildcard *.f))
-CFLAGS= -c -Wall -W -O0 -ggdb
+CFLAGS= -c -Wall -W -O3 -ggdb
 COMPILER= c++ 
+FC=gfortran
 
+all:  testDecay testDecayROOT testTheWidth testFusion testGemini testWidth
 
-testDecay:  testDecay.o $(OBJECTS)
-	$(COMPILER) -o testDecay testDecay.o $(OBJECTS)  
+testDecay:  testDecay.o gemini.a
+	$(COMPILER) -o testDecay testDecay.o gemini.a
 
-testTheWidth:  testTheWidth.o $(OBJECTS)
-	$(COMPILER) -o testTheWidth testTheWidth.o $(OBJECTS)  
+testDecayROOT:  testDecayROOT.o gemini.a
+	$(COMPILER) -o testDecayROOT testDecayROOT.o gemini.a $(shell root-config --cflags --libs) 
 
-testFusion:  testFusion.o $(OBJECTS)
-	$(COMPILER) -o testFusion testFusion.o $(OBJECTS)  
+testTheWidth:  testTheWidth.o gemini.a
+	$(COMPILER) -o testTheWidth testTheWidth.o gemini.a
 
-testGemini:: testGemini.o gemini.o $(OBJECTS)
-	f77 -o testGemini testGemini.o gemini.o $(OBJECTS) -lstdc++
+testFusion:  testFusion.o gemini.a
+	$(COMPILER) -o testFusion testFusion.o gemini.a  
 
-testWidth:: testWidth.o gemini.o $(OBJECTS)
-	f77 -o testWidth testWidth.o gemini.o $(OBJECTS) -lstdc++
+testGemini:: testGemini.o gemini.o gemini.a
+	$(FC) -o testGemini testGemini.o gemini.o gemini.a -lstdc++
+
+testWidth:: testWidth.o gemini.o gemini.a
+	$(FC) -o testWidth testWidth.o gemini.o gemini.a -lstdc++
 
 gemini.a: $(OBJECTS)
 	ar rcs gemini.a $(OBJECTS)
@@ -30,9 +35,9 @@ $(ALLOBJECTS): %.o : %.cpp
 	$(COMPILER) $(CFLAGS) $< -o $@
 
 $(FOBJECTS): %.o : %.f
-	f77 $(CFLAGS) $< -o $@
+	$(FC) $(CFLAGS) $< -o $@
 
 
 clean:
-	rm -f *.o
+	rm -f *.o gemini.a
 
