@@ -2,6 +2,7 @@ OBJECTS = Nucleus.o Mass.o Chart.o Yrast.o TlArray.o  LevelDensity.o Angle.o Nuc
 
 
 ALLOBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+ALLOBJECTS := $(filter-out testDecayROOT.o,$(ALLOBJECTS))
 FOBJECTS:=$(patsubst %.f,%.o,$(wildcard *.f))
 CFLAGS= -c -Wall -W -O3 -ggdb
 COMPILER= c++ 
@@ -13,7 +14,7 @@ testDecay:  testDecay.o gemini.a
 	$(COMPILER) -o testDecay testDecay.o gemini.a
 
 testDecayROOT:  testDecayROOT.o gemini.a
-	$(COMPILER) -o testDecayROOT testDecayROOT.o gemini.a $(shell root-config --cflags --libs) 
+	$(COMPILER) -o testDecayROOT testDecayROOT.o gemini.a $(shell root-config --cflags --libs)
 
 testTheWidth:  testTheWidth.o gemini.a
 	$(COMPILER) -o testTheWidth testTheWidth.o gemini.a
@@ -33,6 +34,9 @@ gemini.a: $(OBJECTS)
 
 $(ALLOBJECTS): %.o : %.cpp
 	$(COMPILER) $(CFLAGS) $< -o $@
+
+testDecayROOT.o: testDecayROOT.cpp
+	$(COMPILER) $(CFLAGS) $< -o $@ $(shell root-config --cflags)
 
 $(FOBJECTS): %.o : %.f
 	$(FC) $(CFLAGS) $< -o $@
