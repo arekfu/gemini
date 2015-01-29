@@ -852,8 +852,14 @@ void CNucleus::massAsymmetry(bool saddleOrScission)
                                              store.end(),
                                              xran*store.back().gamma,
                                              CompareGammaToX<SStore, float>());
-    fissionZ = selectedChannel->iZ;
-    fissionA = selectedChannel->iA;
+      // graciously handle corner cases
+      if(selectedChannel==store.end()) {
+        cout << "selectedChannel==store.end() in massAsymmetry(), using last element" << endl;
+        --selectedChannel;
+      }
+
+      fissionZ = selectedChannel->iZ;
+      fissionA = selectedChannel->iA;
     }
 
 
@@ -1681,6 +1687,12 @@ float CNucleus::asyFissionWidth()
                                                 store.end(),
                                                 x,
                                                 CompareGammaToX<SStore, float>());
+  // graciously handle corner cases
+  if(selectedChannel==store.end()) {
+    cout << "selectedChannel==store.end() in asyFissionWidth(), using last element" << endl;
+    --selectedChannel;
+  }
+
   fissionZ = selectedChannel->iZ;
   fissionA = selectedChannel->iA;
   float saddlePoint = yrast->getSaddlePointEnergy(fissionZ,fissionA);
@@ -1848,6 +1860,12 @@ float CNucleus::asyFissionWidthBW()
                                                 store.end(),
                                                 x,
                                                 CompareGammaToX<SStore, float>());
+  // graciously handle corner cases
+  if(selectedChannel==store.end()) {
+    cout << "selectedChannel==store.end() in asyFissionWidthBW(), using last element" << endl;
+    --selectedChannel;
+  }
+
   fissionZ = selectedChannel->iZ;
   fissionA = selectedChannel->iA;
   float saddlePoint = yrast->getSaddlePointEnergy(fissionZ,fissionA);
@@ -1990,6 +2008,12 @@ float CNucleus::asyFissionWidthZA()
                                                 store.end(),
                                                 x,
                                                 CompareGammaToX<SStore, float>());
+  // graciously handle corner cases
+  if(selectedChannel==store.end()) {
+    cout << "selectedChannel==store.end() in asyFissionZA, using last element" << endl;
+    --selectedChannel;
+  }
+
   fissionZ = selectedChannel->iZ;
   fissionA = selectedChannel->iA;
   float saddlePoint = yrast->getSaddlePointEnergy(fissionZ,fissionA);
@@ -2661,6 +2685,12 @@ float CNucleus::getSumTl(float ek,float temp)
                                                 storeSub.end(),
                                                 xran*sumTl,
                                                 CompareGammaToX<SStoreSub, float>());
+  // graciously handle corner cases
+  if(selectedChannel==storeSub.end()) {
+    cout << "selectedChannel==storeSub.end() in getSumTl(), using last element" << endl;
+    --selectedChannel;
+  }
+
   EvapL = selectedChannel->L;
 
   return sumTl;
@@ -2960,6 +2990,12 @@ float CNucleus::gammaWidthMultipole(int iMode)
                                                 xran*width,
                                                 CompareGammaToX<SStoreEvap, float>());
 
+  // graciously handle corner cases
+  if(selectedChannel==storeEvap.end()) {
+    cout << "selectedChannel==storeEvap.end() in gammaWidthMultipole(), using last element" << endl;
+    --selectedChannel;
+  }
+
   //choose gamma energy and excitation energy of residual
   float e; // gamma ray energy
   GammaEx = -1.;
@@ -3062,6 +3098,12 @@ float CNucleus::gammaWidthE1GDR()
                                                 storeEvap.end(),
                                                 xran*width,
                                                 CompareGammaToX<SStoreEvap, float>());
+  // graciously handle corner cases
+  if(selectedChannel==storeEvap.end()) {
+    cout << "selectedChannel==storeEvap.end() in gammaWidthE1GDR(), using last element" << endl;
+    --selectedChannel;
+  }
+
   float e = selectedChannel->energy;
   e += deltaE*(0.5*ran.Rndm());
   if (e < 0.) e=0.;
@@ -4259,6 +4301,11 @@ void CNucleus::getSpin(bool saddle)
                                              lightP->storeEvap.end(),
                                              xran*lightP->width,
                                              CompareGammaToX<SStoreEvap, float>());
+     // graciously handle corner cases
+     if(selectedChannel==lightP->storeEvap.end()) {
+       cout << "selectedChannel==lightP->storeEvap.end() in getSpin(), using last element" << endl;
+       --selectedChannel;
+     }
 
      float Ek,Ex;
      int iTry = 0;
@@ -4321,6 +4368,12 @@ void CNucleus::getSpin(bool saddle)
                                   lightP->storeEvap.end(),
                                   xran*lightP->width,
                                   CompareGammaToX<SStoreEvap, float>());
+  // graciously handle corner cases
+  if(selectedChannel==lightP->storeEvap.end()) {
+    cout << "selectedChannel==lightP->storeEvap.end() in getSpin(), using last element" << endl;
+    --selectedChannel;
+  }
+
 
   float Ek,Ex;
   int iTry = 0;
@@ -4413,6 +4466,11 @@ void CNucleus::getSpin(bool saddle)
                                          lightP->storeEvap.end(),
                                          xran*width,
                                          CompareGammaToX<SStoreEvap, float>());
+     // graciously handle corner cases
+     if(selectedChannel==lightP->storeEvap.end()) {
+       cout << "selectedChannel==lightP->storeEvap.end() in getSpin(), using last element" << endl;
+       --selectedChannel;
+     }
 
      EvapS2 = selectedChannel->spin;
      if (lightP->odd) EvapS2 += 0.5;
